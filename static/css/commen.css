@@ -1,0 +1,250 @@
+body {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    box-sizing: border-box;
+    margin: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+
+.parent {
+    display: grid;
+    flex-wrap: wrap;
+    position: relative;
+    grid-template-columns: 200px repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: calc(100vh - 40px);
+
+}
+
+
+.div1 {
+    grid-area: 1 / 1 / 5 / 2;
+    background-color: #ffffff;
+    width: 200px;
+    border-top-left-radius: 6px;
+    border-right: 1px solid #ccc;
+
+}
+
+.div2 {
+    grid-area: 5 / 1 / 6 / 2;
+    background-color: #ffffff;
+    width: 200px;
+    border-bottom-left-radius: 6px;
+    border-right: 1px solid #ccc;
+}
+
+.div3 {
+    grid-area: 1 / 2 / 6 / 5;
+    border-right: 1px solid #ccc;
+
+}
+
+.input {
+    width: calc(100% - 20px);
+    height: calc(100vh - 75px);
+    border: 2px solid #26b6b6;
+    outline: none;
+    font: 16px 微软雅黑;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border-radius: 6px;
+
+}
+
+
+.div4 {
+    grid-area: 1 / 5 / 6 / 8;
+    border-left: 1px solid #ccc;
+}
+
+
+.blue {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: blue;
+    border-radius: 50%;
+    /*position: absolute;*/
+
+}
+
+.black {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: black;
+    border-radius: 50%;
+    /*position: absolute;*/
+
+}
+
+.white {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: white;
+    border-radius: 50%;
+    /*position: absolute;*/
+
+}
+
+.red {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: red;
+    border-radius: 50%;
+    /*position: absolute;*/
+
+}
+
+.green {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: green;
+    border-radius: 50%;
+    /*position: absolute;*/
+
+}
+
+.pink {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: pink;
+    border-radius: 50%;
+    /*position: absolute;*/
+
+}
+
+.yellow {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: yellow;
+    border-radius: 50%;
+    /*position: absolute;*/
+
+
+}
+
+
+.output {
+    width: calc(100% - 20px);
+    height: calc(100vh - 75px);
+    border: 2px solid #26b6b6;
+    outline: none;
+    font: 16px 微软雅黑;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border-radius: 6px;
+}
+
+
+.menu {
+    width: 200px;
+    height: 100%;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.menu-div {
+
+    border: 2px solid #faf6f6;
+    border-radius: 6px;
+    text-align: left;
+    padding: 10px 20px;
+    font: 16px 微软雅黑;
+    height: 20px;
+    margin-bottom: 10px;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.menu-div.selected {
+    border: 1px solid #4b9e5f;
+    color: #4b9e5f;
+}
+
+.button-div {
+    background-color: #ffffff;
+
+    border: 1px solid #4b9e5f;
+    font: 16px 微软雅黑;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+
+    margin: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.button-div:hover {
+    background-color: #1d8c65;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #cccaca;
+    border-radius: 10px;
+}
+
+.color-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.color-buttons button {
+    margin: 0 5px;
+}
+
+#image-container img {
+    max-width: 100%; /* 限制图片宽度 */
+    height: auto; /* 保持纵横比 */
+  }
+
+
+@media screen and (max-width: 700px) {
+    .menu, .input, .output {
+        width: 100%;
+    }
+}
