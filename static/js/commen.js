@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             input.style.display = 'none';
             imageContainer.style.display = 'block';
             imageContainer.addEventListener('paste', handlePaste);
+
         } else {
             input.style.display = 'block';
             imageContainer.style.display = 'none';
@@ -91,21 +92,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 添加处理粘贴事件的函数
         function handlePaste(e) {
-            const items = e.clipboardData.items;
-            let isImagePasted = false;
+    const items = e.clipboardData.items;
+    let isImagePasted = false;
 
-            for (const item of items) {
-                if (item.type.indexOf('image') !== -1) {
-                    e.preventDefault(); // 阻止默认的粘贴行为
-                    isImagePasted = true;
+    for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+            e.preventDefault(); // 阻止默认的粘贴行为
+            isImagePasted = true;
 
-                    const img = new Image();
-                    img.src = URL.createObjectURL(item.getAsFile());
-                    img.onload = () => {
-                        URL.revokeObjectURL(img.src);
-                    };
+            const img = new Image();
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                img.src = event.target.result;
+                img.onload = () => {
                     imageContainer.innerHTML = ''; // 清空已有图片
                     imageContainer.appendChild(img); // 添加新图片
+                    ocrTransform(imageContainer); // 调用OCR转换函数
+
                     // 创建一个空的文本节点并将其添加到 image-container 的末尾
                     const textNode = document.createTextNode('');
                     imageContainer.appendChild(textNode);
@@ -118,21 +122,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     const selection = window.getSelection();
                     selection.removeAllRanges();
                     selection.addRange(range);
-                    break;
-                }
-            }
-
-            if (!isImagePasted) {
-                e.preventDefault(); // 在此处添加阻止默认粘贴行为，以禁止粘贴文本
-                layer.msg('请粘贴图片，文字输入已被禁止', {
-                    time: 2000, // 设置显示时间，单位为毫秒
-                    skin: 'layui-layer-lan', // 设置样式
-                    offset: '100px', // 设置距离顶部的距离
-                    icon: 2,
-                });
-
-            }
+                };
+            };
+            reader.readAsDataURL(item.getAsFile());
+            break;
         }
+    }
+
+    if (!isImagePasted) {
+        e.preventDefault(); // 在此处添加阻止默认粘贴行为，以禁止粘贴文本
+        layer.msg('请粘贴图片，文字输入已被禁止', {
+            time: 2000, // 设置显示时间，单位为毫秒
+            skin: 'layui-layer-lan', // 设置样式
+            offset: '100px', // 设置距离顶部的距离
+            icon: 2,
+        });
+    }
+}
+
+
 
 
     }
