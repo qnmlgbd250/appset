@@ -1,0 +1,2251 @@
+[
+		{
+			"handleType": 1,
+			"matchCode": 0,
+			"matchDesc": "Read timed out",
+			"msgID": 6006,
+			"reTryCount": 2
+		},
+		{
+			"handleType": 0,
+			"matchCode": 200,
+			"matchDesc": "成功",
+			"msgID": 200,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 201,
+			"matchDesc": "待申报",
+			"msgID": 201,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 202,
+			"matchDesc": "税种已申报",
+			"msgID": 202,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 203,
+			"matchDesc": "已申报，已扣款",
+			"msgID": 203,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 204,
+			"matchDesc": "已申报，无需扣款",
+			"msgID": 204,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 205,
+			"matchDesc": "山东申报成功后需要5分钟后获取刷新纳税记录",
+			"msgID": 205,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 206,
+			"matchDesc": "合力中税返回受理成功",
+			"msgID": 206,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 207,
+			"matchDesc": "申报成功后需要去税局获取状态 || 获取税局数据任务处理延时获取申报状态的情况",
+			"msgID": 207,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 208,
+			"matchDesc": "企业所得税获取期初时财务报表未申报，需要进行提示（暂时只有江苏地区",
+			"msgID": 208,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 209,
+			"matchDesc": "安徽申报成功后留抵退税提示",
+			"msgID": 209,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 210,
+			"matchDesc": "该税种部分申报",
+			"msgID": 210,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 211,
+			"matchDesc": "该税种部分申报, 部分扣款",
+			"msgID": 211,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 212,
+			"matchDesc": "该税种部分扣款",
+			"msgID": 212,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 213,
+			"matchDesc": "深圳缴款延时查询",
+			"msgID": 213,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 214,
+			"matchDesc": "当期正常申报已提交，该公司还存在补缴申报，请再次点击获取税局数据进行补缴申报",
+			"msgID": 214,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 215,
+			"matchDesc": "申报成功,无有效的三方协议信息，请先办理三方协议签订",
+			"msgID": 215,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 2,
+			"matchCode": 400,
+			"matchDesc": "Bad Request",
+			"msgID": 400,
+			"reTryCount": 3
+		},
+		{
+			"handleType": 1,
+			"matchCode": 403,
+			"matchDesc": "Forbidden",
+			"msgID": 403,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 404,
+			"matchDesc": "Not Found",
+			"msgID": 404,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 405,
+			"matchDesc": "method not allowed",
+			"msgID": 405,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 406,
+			"matchDesc": "Not Acceptable",
+			"msgID": 406,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 407,
+			"matchDesc": "Proxy authentication required",
+			"msgID": 407,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 500,
+			"matchDesc": "Internal Server Error",
+			"msgID": 500,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 501,
+			"matchDesc": "Not Implemented",
+			"msgID": 501,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 502,
+			"matchDesc": "Proxy Error",
+			"msgID": 502,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 503,
+			"matchDesc": "HTTP Error ",
+			"msgID": 503,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 504,
+			"matchDesc": "gateway timeout",
+			"msgID": 504,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 505,
+			"matchDesc": "超时",
+			"msgID": 505,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 506,
+			"matchDesc": "成功",
+			"msgID": 506,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 600,
+			"matchDesc": "需要展示给用户的错误描述信息",
+			"msgID": 600,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 601,
+			"matchDesc": "账号或密码错误",
+			"msgID": 601,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 602,
+			"matchDesc": "缓存失效",
+			"msgID": 602,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 603,
+			"matchDesc": "登录失败，COOKIE已失效",
+			"msgID": 603,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 604,
+			"matchDesc": "税局不稳定，请求异常",
+			"msgID": 604,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 605,
+			"matchDesc": "需要补报",
+			"msgID": 605,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 606,
+			"matchDesc": "需要先申报主税",
+			"msgID": 606,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 607,
+			"matchDesc": "广东申报待PDF确认",
+			"msgID": 607,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 609,
+			"matchDesc": "已提交申报，请稍后重新获取数据",
+			"msgID": 609,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 611,
+			"matchDesc": "非正常户",
+			"msgID": 611,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 612,
+			"matchDesc": "注销户",
+			"msgID": 612,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 613,
+			"matchDesc": "清算户",
+			"msgID": 613,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 614,
+			"matchDesc": "逾期户",
+			"msgID": 614,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 615,
+			"matchDesc": "监控户",
+			"msgID": 615,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 619,
+			"matchDesc": "留抵退税",
+			"msgID": 619,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 671,
+			"matchDesc": "企业信息有误请重新验证",
+			"msgID": 671,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 701,
+			"matchDesc": "税局不稳定，申报请求异常，请稍后重试",
+			"msgID": 701,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 801,
+			"matchDesc": "税局不稳定，新增税源信息无法查询，半小时后为您重试",
+			"msgID": 801,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 901,
+			"matchDesc": "该属期月份此税种未申报",
+			"msgID": 901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 1001,
+			"matchDesc": "发票请求失败",
+			"msgID": 1000,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 1001,
+			"matchDesc": "登录税局失败",
+			"msgID": 1001,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 1002,
+			"matchDesc": "未抄税",
+			"msgID": 1002,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 1003,
+			"matchDesc": "票表比对不通过",
+			"msgID": 1003,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 1004,
+			"matchDesc": "申报校验不通过",
+			"msgID": 1004,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2014,
+			"matchDesc": "缓存查询时抛出异常",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2015,
+			"matchDesc": "该任务错误密码登录次数过多，有锁盘风险,不予登录",
+			"msgID": 2015,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2101,
+			"matchDesc": "缓存不存在,开始登录",
+			"msgID": 2001,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "2",
+			"handleType": 0,
+			"matchCode": 2101,
+			"matchDesc": "税局不稳定，稍后自动重试",
+			"msgID": 2101,
+			"reTryCount": 3
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2102,
+			"matchDesc": "缓存失效,重新登录",
+			"msgID": 2001,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2103,
+			"matchDesc": "不查缓存,直接登录",
+			"msgID": 2001,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2104,
+			"matchDesc": "登录时缓存异常",
+			"msgID": 2104,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2105,
+			"matchDesc": "您的密码错误3次以上，已锁定，您可重新确认密码后联系账无忧人员解除锁定",
+			"msgID": 2105,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2106,
+			"matchDesc": "失败中断",
+			"msgID": 2106,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2107,
+			"matchDesc": "缓存失效，请重新验证",
+			"msgID": 2107,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2108,
+			"matchDesc": "短信登录缓存失效，手机不在线，不予登录",
+			"msgID": 2108,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2109,
+			"matchDesc": "短信条数超过限制",
+			"msgID": 2109,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 2110,
+			"matchDesc": "有同身份的同时在登录，开始重新登陆",
+			"msgID": 2110,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 2111,
+			"matchDesc": "活性检测失败，重新登录",
+			"msgID": 2111,
+			"reTryCount": 3
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2120,
+			"matchDesc": "等待com组件时出现异常弹框",
+			"msgID": 2120,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2130,
+			"matchDesc": "传入参数错误",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2131,
+			"matchDesc": "对应省份未开通",
+			"msgID": 2131,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2132,
+			"matchDesc": "登录方式不存在",
+			"msgID": 2007,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2133,
+			"matchDesc": "传入税号错误",
+			"msgID": 2133,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2134,
+			"matchDesc": "请传端口号",
+			"msgID": 2133,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2135,
+			"matchDesc": "设备正在被使用或端口上无设备",
+			"msgID": 2195,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2140,
+			"matchDesc": "请求税局失败",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2141,
+			"matchDesc": "请求被重定向",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2142,
+			"matchDesc": "请求路径不存在",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2143,
+			"matchDesc": "请求被禁用",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2144,
+			"matchDesc": "税局服务器无响应",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2145,
+			"matchDesc": "验证失败，税局接口有变动",
+			"msgID": 403,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2146,
+			"matchDesc": "滑块验证码异常",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2147,
+			"matchDesc": "验证失败，办税人员匹配失败",
+			"msgID": 2147,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2148,
+			"matchDesc": "请使用企业登录",
+			"msgID": 2009,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "10",
+			"handleType": 1,
+			"matchCode": 2149,
+			"matchDesc": "请求税局失败,代理异常",
+			"msgID": 2149,
+			"reTryCount": 3
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2150,
+			"matchDesc": "失败,登录过程中发生未知异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2151,
+			"matchDesc": "未收到短信验证码",
+			"msgID": 2151,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2152,
+			"matchDesc": "发送短信app失去连接",
+			"msgID": 2152,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2153,
+			"matchDesc": "发送短信失败",
+			"msgID": 2153,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2154,
+			"matchDesc": "未获取到短信验证码",
+			"msgID": 2154,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2155,
+			"matchDesc": "手机号码不匹配",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2156,
+			"matchDesc": "短信验证码不正确",
+			"msgID": 2156,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2157,
+			"matchDesc": "短信验证码过期",
+			"msgID": 2157,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2158,
+			"matchDesc": "短信验证失败或异常",
+			"msgID": 2158,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2159,
+			"matchDesc": "请检查，该税号在税局无可匹配的纳税身份",
+			"msgID": 2159,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2160,
+			"matchDesc": "任务存放redis出错,请重试",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2161,
+			"matchDesc": "登录税局发生未知异常",
+			"msgID": 2161,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2162,
+			"matchDesc": "用户状态异常，不能办理业务",
+			"msgID": 2162,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2163,
+			"matchDesc": "您的账户已被禁用，请与账户登记税务机关联系。",
+			"msgID": 2163,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2164,
+			"matchDesc": "系统检测到您是新注册用户，您必须实名认证后方能使用，请点击确认进行实名认证",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2165,
+			"matchDesc": "您的账号下没有绑定企业信息，请在电子税局绑定企业信息后再进行后续操作",
+			"msgID": 2165,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2166,
+			"matchDesc": "检测到您的税务登记信息中【主管税务所（科、分局）】为空不能办理此业务，请先联系税务人员维护",
+			"msgID": 2166,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2167,
+			"matchDesc": "登录失败,错误代码:81,81,错误信息：身份认证失败",
+			"msgID": 2167,
+			"reTryCount": 3
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2168,
+			"matchDesc": "该机柜没插电联网",
+			"msgID": 2168,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2169,
+			"matchDesc": "税盘加载中，获取链路id超时",
+			"msgID": 2009,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2170,
+			"matchDesc": "税盘加载失败",
+			"msgID": 2177,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2171,
+			"matchDesc": "该机柜号没有数据",
+			"msgID": 2008,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2172,
+			"matchDesc": "税盘加载驱动异常",
+			"msgID": 2005,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2173,
+			"matchDesc": "机柜号长度不正确",
+			"msgID": 2008,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2174,
+			"matchDesc": "建立websocket长连接失败",
+			"msgID": 2005,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2175,
+			"matchDesc": "证书已过期",
+			"msgID": 2175,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2176,
+			"matchDesc": "税盘已在占用中",
+			"msgID": 2176,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2177,
+			"matchDesc": "获取税盘数据失败,请检查税盘是否插好",
+			"msgID": 2177,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2178,
+			"matchDesc": "税盘打开失败，驱动加载异常",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2179,
+			"matchDesc": "税盘加载，获取链路id超时",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2180,
+			"matchDesc": "账号密码错误",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2181,
+			"matchDesc": "CA密码错误",
+			"msgID": 2181,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 2,
+			"matchCode": 2182,
+			"matchDesc": "图形验证码错误",
+			"msgID": 2003,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2183,
+			"matchDesc": "短信验证码错误",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 2,
+			"matchCode": 2184,
+			"matchDesc": "滑块验证码错误",
+			"msgID": 2003,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2185,
+			"matchDesc": "获取登录参数出错",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2186,
+			"matchDesc": "登录用户不存在",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2187,
+			"matchDesc": "验证码识别异常",
+			"msgID": 2187,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2188,
+			"matchDesc": "获取选择报税人身份数据异常",
+			"msgID": 2188,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2189,
+			"matchDesc": "报税人选择信息异常",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2190,
+			"matchDesc": "selenium交互报错",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2191,
+			"matchDesc": "页面元素未加载完成",
+			"msgID": 2001,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2192,
+			"matchDesc": "不支持税种（如不支持湖北制造业扣款）",
+			"msgID": 2192,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2193,
+			"matchDesc": "不支持的浏览器类型",
+			"msgID": 2002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2194,
+			"matchDesc": "当前公司的端口号没有录入，请录入端口号后重新验证",
+			"msgID": 2134,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2195,
+			"matchDesc": "该端口没插盘",
+			"msgID": 2195,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2196,
+			"matchDesc": "机柜号、税号和端口号都匹配上了",
+			"msgID": 2196,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2197,
+			"matchDesc": "该端口插盘了，可税号不匹配",
+			"msgID": 2197,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2198,
+			"matchDesc": "该税号的盘在机柜上，可不在参数端口上",
+			"msgID": 2198,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2199,
+			"matchDesc": "未找到端口号，请填写端口号后重新验证",
+			"msgID": 2198,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2200,
+			"matchDesc": "该企业在电子税务局中未注册！",
+			"msgID": 2200,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2201,
+			"matchDesc": "未提取到税务登记信息，请联系税务局进行处理",
+			"msgID": 2201,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2202,
+			"matchDesc": "实名认证结果为认证不通过，不允许登录",
+			"msgID": 2202,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2203,
+			"matchDesc": "短信超时，请重新发送",
+			"msgID": 2203,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2204,
+			"matchDesc": "尊敬的纳税人您好：您已在工商注册登记，但未在税务系统进行登记信息确认。请通过电子税务局“登记信息确认”功能进行税务登记信息确认办理！",
+			"msgID": 2204,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 2,
+			"matchCode": 2205,
+			"matchDesc": "图形验证码错误，返回自定义提示",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "3",
+			"handleType": 1,
+			"matchCode": 2206,
+			"matchDesc": "登录后,检测不通过",
+			"msgID": 2206,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "0",
+			"handleType": 1,
+			"matchCode": 2207,
+			"matchDesc": "区块链发票平台暂未开通",
+			"msgID": 2207,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 2208,
+			"matchDesc": "未存在相关的实名认证信息",
+			"msgID": 2208,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "4",
+			"handleType": 2,
+			"matchCode": 2210,
+			"matchDesc": "短信发送失败，即将自动重试",
+			"msgID": 2210,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 2255,
+			"matchDesc": "当天短信验证次数超限，等待执行",
+			"msgID": 2255,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2300,
+			"matchDesc": "办税人员密码错误，请在客户资料中修改后再提交任务",
+			"msgID": 2300,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2301,
+			"matchDesc": "发送的多条验证码均未使用，手机号已被锁定",
+			"msgID": 2301,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2302,
+			"matchDesc": "账号被锁定，请稍后再试",
+			"msgID": 2900,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2303,
+			"matchDesc": "发送短信过多，短信锁定",
+			"msgID": 2303,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2304,
+			"matchDesc": "办税人身份不正确",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2305,
+			"matchDesc": "账号被注销",
+			"msgID": 2305,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2306,
+			"matchDesc": "办税人员为报验状态",
+			"msgID": 2306,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2307,
+			"matchDesc": "企业与自然人无绑定关系，返回税局提示",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2308,
+			"matchDesc": "手机号码不匹配,返回自定义或税局提示",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2309,
+			"matchDesc": "登录身份和办税人手机号不匹配",
+			"msgID": 2309,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2310,
+			"matchDesc": "短信验证码错误，将被锁定，返回税局提示",
+			"msgID": 2900,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2311,
+			"matchDesc": "办税人员姓名或办税人员身份有误,返回自定义提示",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2312,
+			"matchDesc": "该手机号码前验证任务未完成，请稍后操作",
+			"msgID": 2312,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2313,
+			"matchDesc": "发送短信过于频繁",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2314,
+			"matchDesc": "用户信息为个体户，系统暂时只支持企业登录！",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2315,
+			"matchDesc": "用户未实名",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2316,
+			"matchDesc": "您当前为风险纳税人，无法使用快捷登录",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2317,
+			"matchDesc": "未设置密码",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2318,
+			"matchDesc": "您的身份为办税人员，未查找到功能菜单授权信息，不能办理相关业务",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2319,
+			"matchDesc": "您的身份为代理人，未查找到委托人功能菜单授权信息，请联系委托人进行授权",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2320,
+			"matchDesc": "该纳税人的法人代表有其他关联企业存在非正常户",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2321,
+			"matchDesc": "税号错误",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2322,
+			"matchDesc": "用户信息不是个体户，请选择其他登录方式",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2323,
+			"matchDesc": "未获取到您的身份证号码或者姓名，无法进行同意书签订，请联系主管税务机关核实",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "5",
+			"handleType": 1,
+			"matchCode": 2324,
+			"matchDesc": "短信验证码错误",
+			"msgID": 2324,
+			"reTryCount": 1
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2400,
+			"matchDesc": "机柜和服务器的虚拟机需要使用同一路由器网络，请检查",
+			"msgID": 2400,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2401,
+			"matchDesc": "密码存在安全隐患，请重置密码",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2402,
+			"matchDesc": "账号密码错误，将被锁定",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "15",
+			"handleType": 1,
+			"matchCode": 2403,
+			"matchDesc": "未收到短信验证码",
+			"msgID": 2403,
+			"reTryCount": 10
+		},
+		{
+			"delayTime": "10",
+			"handleType": 1,
+			"matchCode": 2404,
+			"matchDesc": "系统监控提醒：为您发送的多条验证码均未使用，手机号已被锁定，请94分钟后再使用",
+			"msgID": 2404,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "1",
+			"handleType": 1,
+			"matchCode": 2405,
+			"matchDesc": "当前时间在上一次发送短信时间的一分钟之内，不允许重复发送！",
+			"msgID": 2405,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "5",
+			"handleType": 1,
+			"matchCode": 2406,
+			"matchDesc": "未收到短信验证码，5分钟后重试",
+			"msgID": 2406,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "15",
+			"handleType": 1,
+			"matchCode": 2407,
+			"matchDesc": "短信验证码错误，10分钟后自动重试",
+			"msgID": 2407,
+			"reTryCount": 2
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 2408,
+			"matchDesc": "虚拟机未开机，请及时开机后系统会自动为您提交任务！",
+			"msgID": 2408,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 2409,
+			"matchDesc": "税局登录异常，请登录电子税局查看",
+			"msgID": 2409,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2410,
+			"matchDesc": "用户名或手机号码错误",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2411,
+			"matchDesc": "短信验证码在有效期，请不要重复操作",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 2412,
+			"matchDesc": "该企业已注销,不可进行纳税申报",
+			"msgID": 2412,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2413,
+			"matchDesc": "账号状态异常",
+			"msgID": 2900,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2414,
+			"matchDesc": "您已被认定为风险纳税人，无法登录电子税务局",
+			"msgID": 2900,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "0",
+			"handleType": 1,
+			"matchCode": 2415,
+			"matchDesc": "请使用长税号登录",
+			"msgID": 2415,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "0",
+			"handleType": 1,
+			"matchCode": 2416,
+			"matchDesc": "未存在经办人身份信息，请先解绑后重新认证",
+			"msgID": 2416,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "0",
+			"handleType": 1,
+			"matchCode": 2417,
+			"matchDesc": "请在报税客户端填写江苏政务网的账号和密码后，再重新取票！",
+			"msgID": 2417,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 2418,
+			"matchDesc": "无法接收短信验证码导致无法取票，请确认当前手机号是否有绑定当前公司",
+			"msgID": 2418,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 2419,
+			"matchDesc": "政务网账号密码不正确",
+			"msgID": 2419,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 2420,
+			"matchDesc": "目前系统未能检测到您的实名数据，如果您已通过“全链通”等其他渠道进行过实名采集，可能是您本次登录的人员信息与已实名采集的信息不匹配所导致，您可通过下载“江苏税务”App或搜索微信小程序“江苏税务实名认证”进行补充采集。",
+			"msgID": 2420,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 2713,
+			"matchDesc": "登录失败，您的证书已被作废，请联系主管税务机关，谢谢",
+			"msgID": 2713,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 2901,
+			"matchDesc": "账号或密码错误",
+			"msgID": 2901,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 3002,
+			"matchDesc": "个税未获取到正确的反馈",
+			"msgID": 3002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 5000,
+			"matchDesc": "No module named",
+			"msgID": 5000,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "2",
+			"handleType": 1,
+			"matchCode": 5001,
+			"matchDesc": "http异常",
+			"msgID": 5001,
+			"reTryCount": 2
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 5002,
+			"matchDesc": "税局网络不稳定，请您稍候重试。",
+			"msgID": 5002,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "1",
+			"handleType": 2,
+			"matchCode": 5003,
+			"matchDesc": "税局网络不稳定，稍后为您重试。",
+			"msgID": 5003,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "5",
+			"handleType": 1,
+			"matchCode": 5004,
+			"matchDesc": "缓存问题导致获取企业信息不匹配，稍后自动重试",
+			"msgID": 5004,
+			"reTryCount": 3
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6001,
+			"matchDesc": "增值税和附加税申报成功",
+			"msgID": 6001,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 6002,
+			"matchDesc": "该税种未申报",
+			"msgID": 6002,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 6003,
+			"matchDesc": "该税种未缴款",
+			"msgID": 6003,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 6004,
+			"matchDesc": "出现了未预期的错误",
+			"msgID": 6004,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 2,
+			"matchCode": 6006,
+			"matchDesc": "出现登陆页面, 任务重试",
+			"msgID": 6006,
+			"reTryCount": 2
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 6007,
+			"matchDesc": "核定税种时有税种未收录在代码内",
+			"msgID": 6007,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6009,
+			"matchDesc": "获取社保扣款密文失败",
+			"msgID": 6009,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6010,
+			"matchDesc": "电子税局自动扣款",
+			"msgID": 6010,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "10",
+			"handleType": 1,
+			"matchCode": 6012,
+			"matchDesc": "获取数据异常",
+			"msgID": 6012,
+			"reTryCount": 2
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6013,
+			"matchDesc": "暂未支持该税种",
+			"msgID": 6013,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6014,
+			"matchDesc": "登录税局超时，请稍后重试！",
+			"msgID": 6014,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 6015,
+			"matchDesc": "上期申报表未申报",
+			"msgID": 6015,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6016,
+			"matchDesc": "需要使用CA登录",
+			"msgID": 6016,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6017,
+			"matchDesc": "纳税人为停业、非正常或注销状态，暂不支持申报，请在税局核实！",
+			"msgID": 6017,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6100,
+			"matchDesc": "纳税人信息异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6101,
+			"matchDesc": "纳税人资格认定异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6102,
+			"matchDesc": "核定征收信息异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6103,
+			"matchDesc": "获取企业税种认定信息异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6104,
+			"matchDesc": "获取本月需申报税种异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 6105,
+			"matchDesc": "查询申报历史异常",
+			"msgID": 6105,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6106,
+			"matchDesc": "获取缴款明细异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6107,
+			"matchDesc": "缴款异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6108,
+			"matchDesc": "申报截图异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6109,
+			"matchDesc": "缴款截图异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6110,
+			"matchDesc": "申报漏报检查异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6111,
+			"matchDesc": "缴款漏报检查异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6112,
+			"matchDesc": "该税种暂不支持申报",
+			"msgID": 6000,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6113,
+			"matchDesc": "该税种暂不支持缴款",
+			"msgID": 6000,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 2,
+			"matchCode": 6114,
+			"matchDesc": "获取期初异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6116,
+			"matchDesc": "保存报表异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6117,
+			"matchDesc": "打开浏览器异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6118,
+			"matchDesc": "未抄报税",
+			"msgID": 6000,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6119,
+			"matchDesc": "申报异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6120,
+			"matchDesc": "一窗式比对不通过或票表比对不通过",
+			"msgID": 6120,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6121,
+			"matchDesc": "申报检查失败：提交申报后未检查到申报成功的标志",
+			"msgID": 6000,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 0,
+			"matchCode": 6122,
+			"matchDesc": "该税种暂不支持且未申报",
+			"msgID": 6000,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 0,
+			"matchCode": 6123,
+			"matchDesc": "该税种暂不支持且已申报",
+			"msgID": 6000,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 0,
+			"matchCode": 6124,
+			"matchDesc": "该税种暂不支持且待扣款",
+			"msgID": 6000,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 0,
+			"matchCode": 6125,
+			"matchDesc": "该税种只保存不申报",
+			"msgID": 6007,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 0,
+			"matchCode": 6126,
+			"matchDesc": "执行任务成功并添加自定义信息返回",
+			"msgID": 6025,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "30",
+			"handleType": 1,
+			"matchCode": 6128,
+			"matchDesc": "前置报表未申报，请先申报前置报表",
+			"msgID": 6128,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 6129,
+			"matchDesc": "申报类型与税局本期应申报类型“税局的税种类型”不一致，请检查！",
+			"msgID": 6129,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 6130,
+			"matchDesc": "申报表数据对比不通过",
+			"msgID": 6130,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "3",
+			"handleType": 1,
+			"matchCode": 6131,
+			"matchDesc": "第三方接口异常(如江苏地区使用的第三方接口)",
+			"msgID": 6131,
+			"reTryCount": 3
+		},
+		{
+			"delayTime": "10",
+			"handleType": 1,
+			"matchCode": 6132,
+			"matchDesc": "电子税局“申报信息”尚未更新最新报表数据，稍后为您自动重试",
+			"msgID": 6132,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "10",
+			"handleType": 1,
+			"matchCode": 6133,
+			"matchDesc": "有同身份的同时在登录，系统尝试10分钟后为您重试",
+			"msgID": 6133,
+			"reTryCount": 5
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6201,
+			"matchDesc": "将税局期初数据转换为苍穹格式异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 6202,
+			"matchDesc": "将历史数据转换为苍穹格式时异常",
+			"msgID": 6105,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 6203,
+			"matchDesc": "将苍穹格式转换为税局申报数据格式异常",
+			"msgID": 6100,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7000,
+			"matchDesc": "任务执行失败，请联系技术支持",
+			"msgID": 7000,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7001,
+			"matchDesc": "任务数据处理失败，请稍后处理",
+			"msgID": 7001,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7002,
+			"matchDesc": "任务执行未成功，请稍后处理",
+			"msgID": 7002,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7004,
+			"matchDesc": "任务执行错误，未找到执行器",
+			"msgID": 7004,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7005,
+			"matchDesc": "找到多个执行器",
+			"msgID": 7005,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7006,
+			"matchDesc": "任务状态未匹配到执行器",
+			"msgID": 7006,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7007,
+			"matchDesc": "任务记录未找到",
+			"msgID": 7007,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7008,
+			"matchDesc": "纳税记录未找到",
+			"msgID": 7008,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 7009,
+			"matchDesc": "服务数据解析失败，请联系售后处理",
+			"msgID": 7009,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7010,
+			"matchDesc": "会话获取失败，请重新请求",
+			"msgID": 7010,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7011,
+			"matchDesc": "服务网络波动，请重新请求",
+			"msgID": 7011,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7012,
+			"matchDesc": "公式计算数据错误，请确认报表数据",
+			"msgID": 7012,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 0,
+			"matchCode": 7013,
+			"matchDesc": "报表数据处理失败，请联系售后处理",
+			"msgID": 7013,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7014,
+			"matchDesc": "未找到的税种编码，请确认税种数据",
+			"msgID": 7014,
+			"reTryCount": 0
+		},
+		{
+			"handleType": 1,
+			"matchCode": 7015,
+			"matchDesc": "税局未查到纳税信息",
+			"msgID": 7015,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 7019,
+			"matchDesc": "由于优先执行跳转税局任务，任务中断，稍后为您继续执行",
+			"msgID": 7019,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 7020,
+			"matchDesc": "期初数据解析失败，请联系售后处理",
+			"msgID": 7020,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 7021,
+			"matchDesc": "期初数据保存失败，请联系售后处理",
+			"msgID": 7021,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "",
+			"handleType": 1,
+			"matchCode": 7022,
+			"matchDesc": "客户中心的纳税识别号与税局的纳税识别号不一致，请检查当前税号是否与账号密码不匹配",
+			"msgID": 7022,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 7023,
+			"matchDesc": "任务执行超时,请稍后重新提交任务",
+			"msgID": 7023,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "0",
+			"handleType": 1,
+			"matchCode": 9000,
+			"matchDesc": "解析爬虫返回数据失败",
+			"msgID": 9000,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 0,
+			"matchCode": 91001,
+			"matchDesc": "获取cookie失败",
+			"msgID": 91001,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 91002,
+			"matchDesc": "代理异常，系统将自动重试",
+			"msgID": 91002,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 91003,
+			"matchDesc": "登录失败",
+			"msgID": 91003,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 91004,
+			"matchDesc": "访问登录接口失败",
+			"msgID": 91004,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 91006,
+			"matchDesc": "下载发票压缩文件失败",
+			"msgID": 91006,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 91007,
+			"matchDesc": "上传金山云失败",
+			"msgID": 91007,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 91008,
+			"matchDesc": "发票查验失败",
+			"msgID": 91008,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 91009,
+			"matchDesc": "您当前登录信息不支持税务数字账户的取票任务，请您在智能税务更新登录信息并重新验证",
+			"msgID": 91009,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92001,
+			"matchDesc": "发票平台不稳定，稍后为您自动重试",
+			"msgID": 92001,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92002,
+			"matchDesc": "访问token接口失败",
+			"msgID": 92002,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92003,
+			"matchDesc": "请求税局取票接口失败",
+			"msgID": 92003,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92004,
+			"matchDesc": "请求代开取票接口失败",
+			"msgID": 92004,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92005,
+			"matchDesc": "税局实际返回的错误",
+			"msgID": 92005,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92008,
+			"matchDesc": "发票平台已明确返回具体错误原因",
+			"msgID": 92008,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "43200",
+			"handleType": 0,
+			"matchCode": 92009,
+			"matchDesc": "30天内不能重复提交申请任务",
+			"msgID": 92009,
+			"reTryCount": 1
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92010,
+			"matchDesc": "税务数字账户下载压缩包文件失败",
+			"msgID": 92010,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92011,
+			"matchDesc": "压缩包解压失败",
+			"msgID": 92011,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92013,
+			"matchDesc": "全量发票下载文件失败",
+			"msgID": 92013,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92014,
+			"matchDesc": "全量发票下载前的查询失败",
+			"msgID": 92014,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92015,
+			"matchDesc": "小规模纳税人无勾选任务",
+			"msgID": 92015,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92016,
+			"matchDesc": "获取纳税人信息失败，请等待任务重试",
+			"msgID": 92016,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92017,
+			"matchDesc": "全量勾选取票失败",
+			"msgID": 92017,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92018,
+			"matchDesc": "查询出口退税勾选票数失败",
+			"msgID": 92018,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92019,
+			"matchDesc": "全量勾选发票下载失败",
+			"msgID": 92019,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92020,
+			"matchDesc": "全量勾选发票下载解析失败",
+			"msgID": 92020,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92021,
+			"matchDesc": "全电出口退税勾选失败",
+			"msgID": 92021,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92022,
+			"matchDesc": "（非全电地区）勾选认证发票获取失败，税局返回只允许确认后查看数据",
+			"msgID": 92022,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92023,
+			"matchDesc": "（非全电地区）勾选无权操作",
+			"msgID": 92023,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92024,
+			"matchDesc": "（非全电地区）勾选取票失败",
+			"msgID": 92024,
+			"reTryCount": 0
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92025,
+			"matchDesc": "获取当前税款所属期失败",
+			"msgID": 92025,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92026,
+			"matchDesc": "发票平台已明确返回具体错误原因",
+			"msgID": 92026,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 2,
+			"matchCode": 92027,
+			"matchDesc": "2.0申请任务发票平台重试任务返回错误信息",
+			"msgID": 92027,
+			"reTryCount": 5
+		},
+		{
+			"delayTime": "-1",
+			"handleType": 1,
+			"matchCode": 92130,
+			"matchDesc": "传入参数错误",
+			"msgID": 92130,
+			"reTryCount": 5
+		}
+	]

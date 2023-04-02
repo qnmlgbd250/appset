@@ -1,6 +1,8 @@
 //定义全局变量
 const input = document.getElementById('input');
 const output = document.getElementById('output');
+const clearBtn = document.getElementById('clearBtn');
+const copyBtn = document.getElementById('copyBtn');
 const menuFunctions = {
     'headerBtn': headersTransform,
     'cookieBtn': cookieTransform,
@@ -355,6 +357,27 @@ function ocrTransform(input) {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+
+
+clearBtn.addEventListener('click', () => {
+          input.innerHTML = '';
+          output.value = '';
+        });
+copyBtn.addEventListener('click', () => {
+          // 如果输出框没有文本内容，弹出提示
+          if (!output.value) {
+            layer.msg('输出框为空，无法复制', {offset: [$(window).height() - 450], icon: 2, time: 1000});
+            return;
+          }
+          // 选中输出框的文本内容
+          output.select();
+          // 执行复制命令
+          document.execCommand('copy');
+          // 弹出成功提示
+          layer.msg('复制成功!',  {offset: [$(window).height() - 450], icon: 1, time: 1000});
+        });
+
+
 
 
 
