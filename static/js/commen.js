@@ -33,6 +33,7 @@ for (var i = 0; i < divs.length; i++) {
 
 //主题颜色方法-点击按钮改变输入输出的边框颜色
 const inputBox = document.getElementById("input");
+const imgBox = document.getElementById("image-container");
 const outputBox = document.getElementById("output");
 const buttons = document.querySelectorAll("button");
 
@@ -40,6 +41,7 @@ buttons.forEach(button => {
     button.addEventListener("click", () => {
         inputBox.style.borderColor = button.className;
         outputBox.style.borderColor = button.className;
+        imgBox.style.borderColor = button.className;
 
     });
 });
@@ -251,8 +253,20 @@ function dataTransform(inputText) {
 
 }
 
+let timeoutId;
+
+function transTransform(input) {
+  // 取消前一个setTimeout
+  clearTimeout(timeoutId);
+
+  // 1秒后触发翻译请求
+  timeoutId = setTimeout(function() {
+    // 调用翻译API
+    translate(input);
+  }, 3000);
+}
 //翻译主函数
-function transTransform(inputText) {
+function translate(inputText) {
     inputText = inputText.trim();
     const url = '/t/';
     fetch(url + inputText)
@@ -293,6 +307,18 @@ function signTransform(inputText) {
 
     const input_time = inputText.replace(/[：:]/g, ':');
     const [HH, MM] = input_time.split(':').map(Number);
+
+    if (HH < 0 || HH > 24 || MM >= 60) {
+        layer.msg('非预期的时间(你这输入的是三体时间吗？)', {
+            time: 3000, // 设置显示时间，单位为毫秒
+            skin: 'layui-layer-lan', // 设置样式
+            offset: '100px', // 设置距离顶部的距离
+            icon: 2,
+        });
+        output.value = '';
+        return;
+
+    }
 
     if (HH < 8 || (HH === 8 && MM < 30)) {
         output.value = '正常打卡时间在 8:30 之后';
@@ -360,7 +386,7 @@ function ocrTransform(input) {
 
 
 clearBtn.addEventListener('click', () => {
-          input.innerHTML = '';
+          input.value = '';
           output.value = '';
         });
 copyBtn.addEventListener('click', () => {
