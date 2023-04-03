@@ -484,6 +484,27 @@ copyBtn.addEventListener('click', () => {
         });
         });
 
+output.addEventListener('dblclick', () => {
+  // 如果输出框没有文本内容，弹出提示
+  if (!output.value) {
+    layer.msg('输出框为空，无法复制', {offset: [$(window).height() - 450], icon: 2, time: 1000});
+    return;
+  }
+  // 选中输出框的文本内容
+  output.select();
+  // 执行复制命令
+  document.execCommand('copy');
+  // 弹出成功提示
+  layer.msg('复制成功!', {
+    time: 2000, // 设置显示时间，单位为毫秒
+    skin: 'layui-layer-lan', // 设置样式
+    offset: '100px', // 设置距离顶部的距离
+    icon: 1,
+  });
+});
+
+
+
 
 
 
