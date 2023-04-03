@@ -172,10 +172,52 @@ async def ocr(request: Request):
 async def chatapi(request: Request):
     output = {}
     try:
+        #1.javaex已经崩了
+        # headers = {
+        #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.54",
+        # }
+        # url = "https://chatapi.javaex.cn/chat"
+        # proxies = {
+        #     "http": None,
+        #     "https": None,
+        # }
+        # data = await request.json()
+        # chatword = data.get("chatword", "")
+        # if not chatword:
+        #     output = {}
+        # else:
+        #     post_data = {
+        #         "questions": [
+        #             {
+        #                 "role": "user",
+        #                 "content": chatword
+        #             }
+        #         ],
+        #         "pkey": None
+        #     }
+        #     post_data = json.dumps(post_data, separators=(',', ':'))
+        #     response = requests.post(url, headers=headers, data=post_data, proxies=proxies)
+        #     if '操作成功' in response.json()['message']:
+        #         output = response.json()['data']['choices'][0]['message']['content']
+        #     elif '每分钟只允许发起一次提问请求' in response.json()['message']:
+        #         output = '每分钟只允许发起一次提问请求,请稍后再试'
+        #     else:
+        #         logging.error(response.text)
+        #         output = '操作失败,请稍后再试'
+
+        #2.useless网站
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.54",
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Origin": "https://ai.usesless.com",
+            "Referer": "https://ai.usesless.com/chat/1680529289323",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
+
         }
-        url = "https://chatapi.javaex.cn/chat"
+        url = "https://ai.usesless.com/api/chat-process"
+
         proxies = {
             "http": None,
             "https": None,
@@ -186,23 +228,23 @@ async def chatapi(request: Request):
             output = {}
         else:
             post_data = {
-                "questions": [
-                    {
-                        "role": "user",
-                        "content": chatword
+                "prompt": chatword,
+                "options": {
+                    "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: 2023-04-03",
+                    "completionParams": {
+                        "presence_penalty": 0.8,
+                        "temperature": 1
                     }
-                ],
-                "pkey": None
+                }
             }
-            post_data = json.dumps(post_data, separators=(',', ':'))
-            response = requests.post(url, headers=headers, data=post_data, proxies=proxies)
-            if '操作成功' in response.json()['message']:
-                output = response.json()['data']['choices'][0]['message']['content']
-            elif '每分钟只允许发起一次提问请求' in response.json()['message']:
-                output = '每分钟只允许发起一次提问请求,请稍后再试'
+            post_data = json.dumps(post_data, separators = (',', ':'))
+            response = requests.post(url, headers = headers, data = post_data, proxies = proxies)
+            dicts = re.findall(r'"text":"(.*?)","numToken"', response.text)
+            if dicts:
+                output = dicts[-1]
             else:
                 logging.error(response.text)
-                output = '操作失败,请稍后再试'
+                output = '连接失败,请稍后再试'
 
 
     except Exception as e:
