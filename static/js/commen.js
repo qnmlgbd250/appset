@@ -476,7 +476,12 @@ copyBtn.addEventListener('click', () => {
           // 执行复制命令
           document.execCommand('copy');
           // 弹出成功提示
-          layer.msg('复制成功!',  {offset: [$(window).height() - 450], icon: 1, time: 1000});
+          layer.msg('复制成功!', {
+            time: 2000, // 设置显示时间，单位为毫秒
+            skin: 'layui-layer-lan', // 设置样式
+            offset: '100px', // 设置距离顶部的距离
+            icon: 1,
+        });
         });
 
 
