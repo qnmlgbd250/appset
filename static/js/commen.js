@@ -264,7 +264,7 @@ function transTransform(input) {
   timeoutId = setTimeout(function() {
     // 调用翻译API
     translate(input);
-  }, 3000);
+  }, 1500);
 }
 //翻译主函数
 function translate(inputText) {
