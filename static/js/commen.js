@@ -11,6 +11,7 @@ const menuFunctions = {
     'transBtn': transTransform,
     'signBtn': signTransform,
     'ocrBtn': ocrTransform,
+    'chatBtn': chatTransform,
     // 添加更多功能函数...
 };
 
@@ -383,6 +384,81 @@ function ocrTransform(input) {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+
+
+function chatTransform(input) {
+  // 取消前一个setTimeout
+  clearTimeout(timeoutId);
+
+  // 1秒后触发翻译请求
+  timeoutId = setTimeout(function() {
+    // 调用翻译API
+    chatme(input);
+  }, 1500);
+}
+
+function chatme(input) {
+    // 获取倒计时元素
+    let chatBtn = document.getElementById('chatBtn');
+  const countdownElement = document.createElement('span');
+  countdownElement.innerHTML = ' 15'; // 设定倒计时秒数
+  chatBtn.appendChild(countdownElement); // 添加倒计时元素
+
+  // 启动倒计时
+  const countdownInterval = setInterval(() => {
+    let countdown = parseInt(countdownElement.innerHTML);
+    countdown--;
+    countdownElement.innerHTML = " " + countdown.toString();
+    if (countdown === 0) {
+      clearInterval(countdownInterval);
+      countdownElement.remove(); // 删除倒计时元素
+    }
+  }, 1000);
+
+    const inputText = input.trim();
+      const url = '/chat';
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({chatword: inputText})
+      })
+      .then(response => {
+        if (response.ok) {
+            // 请求完成后，停止倒计时并更新按钮的状态
+          clearInterval(countdownInterval);
+          countdownElement.remove(); // 删除倒计时元素
+          return response.json(); // 将response对象转换为JSON格式
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .then(data => {
+        console.log(data); // 输出JSON格式的数据
+        output.value = data.output // 将返回的数据放入output元素中
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 clearBtn.addEventListener('click', () => {
