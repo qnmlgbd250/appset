@@ -175,7 +175,7 @@ async def chatapi(request: Request):
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.54",
         }
-        url = "https://chatapi.javaex.cn/chat/789"
+        url = "https://chatapi.javaex.cn/chat"
         proxies = {
             "http": None,
             "https": None,
