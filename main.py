@@ -198,6 +198,8 @@ async def chatapi(request: Request):
             response = requests.post(url, headers=headers, data=post_data, proxies=proxies)
             if '操作成功' in response.json()['message']:
                 output = response.json()['data']['choices'][0]['message']['content']
+            elif '每分钟只允许发起一次提问请求' in response.json()['message']:
+                output = '每分钟只允许发起一次提问请求,请稍后再试'
             else:
                 logging.error(response.text)
                 output = '操作失败,请稍后再试'
