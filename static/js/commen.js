@@ -381,7 +381,7 @@ function chatTransform(input) {
       })
       .then(data => {
         console.log(data); // 输出JSON格式的数据
-        output.value = data.output // 将返回的数据放入output元素中
+        output.value = data.output.replace(/\\n/g, "\n");// 将返回的数据放入output元素中
       })
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
