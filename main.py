@@ -227,6 +227,7 @@ async def chatapi(request: Request):
         if not chatword:
             output = {}
         else:
+            logging.info(chatword)
             post_data = {
                 "prompt": chatword,
                 "options": {
