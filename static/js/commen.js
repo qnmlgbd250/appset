@@ -62,8 +62,23 @@ document.addEventListener('DOMContentLoaded', () => {
             // 为当前点击的菜单项添加选中状态
             menuDiv.classList.add('selected');
 
-            // 尝试执行 headers 转换
-            tryExecuteMenuFunction();
+            function handleEnterKey(event) {
+              if (event.key === 'Enter') {
+                event.preventDefault(); // 防止回车键默认换行
+                chatTransform(input.value);
+              }
+            }
+
+            if (menuDiv.id === 'chatBtn') {
+              input.addEventListener('keydown', handleEnterKey);
+            } else {
+              input.removeEventListener('keydown', handleEnterKey);
+              // 尝试执行 各种菜单项的函数
+              //   tryExecuteMenuFunction();
+            }
+
+
+
         });
     });
 
@@ -77,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedMenu = document.querySelector('.menu-div.selected');
         if (selectedMenu && input.value.trim() !== '') {
             const menuFunction = menuFunctions[selectedMenu.id];
-            if (menuFunction) {
+            if (menuFunction && menuFunction !== chatTransform) {
                 menuFunction(input.value);
             }
         }
@@ -386,18 +401,8 @@ function ocrTransform(input) {
 }
 
 
+
 function chatTransform(input) {
-  // 取消前一个setTimeout
-  clearTimeout(timeoutId);
-
-  // 1秒后触发翻译请求
-  timeoutId = setTimeout(function() {
-    // 调用翻译API
-    chatme(input);
-  }, 1500);
-}
-
-function chatme(input) {
     // 获取倒计时元素
     let chatBtn = document.getElementById('chatBtn');
   const countdownElement = document.createElement('span');
