@@ -1,6 +1,7 @@
 //定义全局变量
 const input = document.getElementById('input');
 const output = document.getElementById('output');
+const ocrBtn = document.getElementById('ocrBtn');
 const clearBtn = document.getElementById('clearBtn');
 const copyBtn = document.getElementById('copyBtn');
 const menuFunctions = {
@@ -28,6 +29,11 @@ for (var i = 0; i < divs.length; i++) {
         this.classList.add("selected");
         input.value = "";
         output.value = "";
+        if (this.id !== 'ocrBtn') {
+             input.style.display = 'block';
+            imageContainer.style.display = 'none';
+            imageContainer.removeEventListener('paste', handlePaste);
+        }
     };
 }
 
@@ -46,7 +52,12 @@ buttons.forEach(button => {
 
     });
 });
-
+function handleEnterKey(event) {
+              if (event.key === 'Enter') {
+                event.preventDefault(); // 防止回车键默认换行
+                chatTransform(input.value);
+              }
+            }
 
 //
 document.addEventListener('DOMContentLoaded', () => {
@@ -62,12 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 为当前点击的菜单项添加选中状态
             menuDiv.classList.add('selected');
 
-            function handleEnterKey(event) {
-              if (event.key === 'Enter') {
-                event.preventDefault(); // 防止回车键默认换行
-                chatTransform(input.value);
-              }
-            }
+
 
             if (menuDiv.id === 'chatBtn') {
               input.addEventListener('keydown', handleEnterKey);
@@ -96,73 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 menuFunction(input.value);
             }
         }
-        // 如果选中的菜单项是 "OCR 文字识别"，则显示图片容器，隐藏输入框
-        const imageContainer = document.getElementById('image-container');
-        if (selectedMenu && selectedMenu.id === 'ocrBtn') {
-            input.style.display = 'none';
-            imageContainer.style.display = 'block';
-            imageContainer.addEventListener('paste', handlePaste);
-
-        } else {
-            input.style.display = 'block';
-            imageContainer.style.display = 'none';
-            imageContainer.removeEventListener('paste', handlePaste);
-        }
-
-
-// 添加处理粘贴事件的函数
-        function handlePaste(e) {
-    const items = e.clipboardData.items;
-    let isImagePasted = false;
-
-    for (const item of items) {
-        if (item.type.indexOf('image') !== -1) {
-            e.preventDefault(); // 阻止默认的粘贴行为
-            isImagePasted = true;
-
-            const img = new Image();
-            const reader = new FileReader();
-
-            reader.onload = (event) => {
-                img.src = event.target.result;
-                img.onload = () => {
-                    imageContainer.innerHTML = ''; // 清空已有图片
-                    imageContainer.appendChild(img); // 添加新图片
-                    ocrTransform(imageContainer); // 调用OCR转换函数
-
-                    // 创建一个空的文本节点并将其添加到 image-container 的末尾
-                    const textNode = document.createTextNode('');
-                    imageContainer.appendChild(textNode);
-
-                    // 将光标设置到空的文本节点
-                    const range = document.createRange();
-                    range.selectNodeContents(textNode);
-                    range.collapse(false);
-
-                    const selection = window.getSelection();
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                };
-            };
-            reader.readAsDataURL(item.getAsFile());
-            break;
-        }
-    }
-
-    if (!isImagePasted) {
-        e.preventDefault(); // 在此处添加阻止默认粘贴行为，以禁止粘贴文本
-        layer.msg('请粘贴图片，文字输入已被禁止', {
-            time: 2000, // 设置显示时间，单位为毫秒
-            skin: 'layui-layer-lan', // 设置样式
-            offset: '100px', // 设置距离顶部的距离
-            icon: 2,
-        });
-    }
-}
-
-
-
-
     }
 });
 
@@ -453,11 +392,63 @@ function chatTransform(input) {
 
 
 
+function handlePaste(e) {
+    const items = e.clipboardData.items;
+    let isImagePasted = false;
+
+    for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+            e.preventDefault(); // 阻止默认的粘贴行为
+            isImagePasted = true;
+
+            const img = new Image();
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                img.src = event.target.result;
+                img.onload = () => {
+                    imageContainer.innerHTML = ''; // 清空已有图片
+                    imageContainer.appendChild(img); // 添加新图片
+                    ocrTransform(imageContainer); // 调用OCR转换函数
+
+                    // 创建一个空的文本节点并将其添加到 image-container 的末尾
+                    const textNode = document.createTextNode('');
+                    imageContainer.appendChild(textNode);
+
+                    // 将光标设置到空的文本节点
+                    const range = document.createRange();
+                    range.selectNodeContents(textNode);
+                    range.collapse(false);
+
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                };
+            };
+            reader.readAsDataURL(item.getAsFile());
+            break;
+        }
+    }
+
+    if (!isImagePasted) {
+        e.preventDefault(); // 在此处添加阻止默认粘贴行为，以禁止粘贴文本
+        layer.msg('请粘贴图片，文字输入已被禁止', {
+            time: 2000, // 设置显示时间，单位为毫秒
+            skin: 'layui-layer-lan', // 设置样式
+            offset: '100px', // 设置距离顶部的距离
+            icon: 2,
+        });
+    }
+}
 
 
+const imageContainer = document.getElementById('image-container');
+ocrBtn.addEventListener('click', () => {
 
-
-
+        input.style.display = 'none';
+        imageContainer.style.display = 'block';
+        imageContainer.addEventListener('paste', handlePaste);
+});
 
 
 
