@@ -384,14 +384,24 @@ function chatTransform(input) {
         outputSt = data.output.replace(/\\n/g, "\n");// 将返回的数据放入output元素中
           // 逐字输出翻译结果
         let i = 0;
-        output.value = ''
+        output.value = '';
+        let lastTimestamp = 0;
+        const delay = 15;
 
-        const intervalId = setInterval(() => {
-        if (i < outputSt.length) {
-        output.value += outputSt[i]; i++; }
-        else {
-        clearInterval(intervalId); }
-        }, 10); // 调整延迟时间以控制输出速度
+        const printOutput = (timestamp) => {
+            if (i < outputSt.length) {
+                if (timestamp - lastTimestamp >= delay) {
+                    let currentStr = output.value + outputSt[i];
+                    output.value = currentStr;
+                    i++;
+                    lastTimestamp = timestamp;
+                }
+                requestAnimationFrame(printOutput);
+            }
+        };
+
+        requestAnimationFrame(printOutput);
+
       })
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
