@@ -38,18 +38,26 @@
         </div>
     </div>
 
-    <div class="div3">
+    <div class="div3" id="div3">
         <textarea class="input" id="input"></textarea>
         <div class="input" contenteditable="true" id="image-container" style="display: none;"></div>
         <!-- 输入框内容 -->
     </div>
 
-    <div class="div4">
+    <div class="div4" id="div4">
         <textarea class="output" id="output"></textarea>
         <!-- 输出框内容 -->
     </div>
 
+    <div class="div5" id="chat-content" style="display: none;"></div>
+    <div class="div6" style="display: none;" id="div6">
+  <div class="messageInputWrapper">
+    <textarea type="text" id="messageInput" placeholder="说点什么吧... Shift + Enter 换行"></textarea>
+<!--    <button id="sendButton" onclick="sendMessage()">Send</button>-->
+<!--    <button id="deleteButton" onclick="deleteMessages()">Delete</button>-->
+  </div>
 </div>
+
 </div>
 <script src="../static/js/jquery.min.js"></script>
 <script src="../static/js/layer.js"></script>

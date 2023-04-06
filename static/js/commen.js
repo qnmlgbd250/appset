@@ -2,6 +2,7 @@
 const input = document.getElementById('input');
 const output = document.getElementById('output');
 const ocrBtn = document.getElementById('ocrBtn');
+const chatBtn = document.getElementById('chatBtn');
 const clearBtn = document.getElementById('clearBtn');
 const copyBtn = document.getElementById('copyBtn');
 const menuFunctions = {
@@ -29,6 +30,7 @@ for (var i = 0; i < divs.length; i++) {
         this.classList.add("selected");
         input.value = "";
         output.value = "";
+        showChatBox(false);
         if (this.id !== 'ocrBtn') {
              input.style.display = 'block';
             imageContainer.style.display = 'none';
@@ -342,22 +344,22 @@ function ocrTransform(input) {
 
 
 function chatTransform(input) {
-    // 获取倒计时元素
-    let chatBtn = document.getElementById('chatBtn');
-  const countdownElement = document.createElement('span');
-  countdownElement.innerHTML = ' 15'; // 设定倒计时秒数
-  chatBtn.appendChild(countdownElement); // 添加倒计时元素
-
-  // 启动倒计时
-  const countdownInterval = setInterval(() => {
-    let countdown = parseInt(countdownElement.innerHTML);
-    countdown--;
-    countdownElement.innerHTML = " " + countdown.toString();
-    if (countdown === 0) {
-      clearInterval(countdownInterval);
-      countdownElement.remove(); // 删除倒计时元素
-    }
-  }, 1000);
+  //   // 获取倒计时元素
+  //   let chatBtn = document.getElementById('chatBtn');
+  // const countdownElement = document.createElement('span');
+  // countdownElement.innerHTML = ' 15'; // 设定倒计时秒数
+  // chatBtn.appendChild(countdownElement); // 添加倒计时元素
+  //
+  // // 启动倒计时
+  // const countdownInterval = setInterval(() => {
+  //   let countdown = parseInt(countdownElement.innerHTML);
+  //   countdown--;
+  //   countdownElement.innerHTML = " " + countdown.toString();
+  //   if (countdown === 0) {
+  //     clearInterval(countdownInterval);
+  //     countdownElement.remove(); // 删除倒计时元素
+  //   }
+  // }, 1000);
 
     const inputText = input.trim();
       const url = '/chat';
@@ -372,8 +374,8 @@ function chatTransform(input) {
       .then(response => {
         if (response.ok) {
             // 请求完成后，停止倒计时并更新按钮的状态
-          clearInterval(countdownInterval);
-          countdownElement.remove(); // 删除倒计时元素
+          // clearInterval(countdownInterval);
+          // countdownElement.remove(); // 删除倒计时元素
           return response.json(); // 将response对象转换为JSON格式
         } else {
           throw new Error('Network response was not ok.');
@@ -405,6 +407,7 @@ function chatTransform(input) {
       })
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
+        return '网络错误，请稍后再试';
       });
 
 
@@ -471,6 +474,37 @@ ocrBtn.addEventListener('click', () => {
 });
 
 
+function showChatBox(show) {
+  const chatContent = document.getElementById('chat-content');
+  const div3 = document.getElementById('div3');
+  const div4 = document.getElementById('div4');
+  const div6 = document.getElementById('div6');
+  const output = document.getElementById('output');
+  if (show) {
+    div3.style.display = 'none';
+    div3.style.border = 'none';
+    div4.style.border = 'none';
+    div4.style.display = 'block';
+    div6.style.display = 'block';
+    output.style.display = 'none';
+    chatContent.style.display = 'block';
+  } else {
+    div3.style.display = 'block';
+    div3.style.border = '1px solid black';
+    div4.style.border = '1px solid black';
+    div4.style.display = 'block';
+    div6.style.display = 'none';
+    output.style.display = 'block';
+    chatContent.style.display = 'none';
+  }
+}
+
+chatBtn.addEventListener('click', () => {
+  showChatBox(true);
+});
+
+// 恢复样式
+
 
 
 
@@ -480,6 +514,10 @@ ocrBtn.addEventListener('click', () => {
 clearBtn.addEventListener('click', () => {
           input.value = '';
           output.value = '';
+          if (this.id !== 'chatBtn') {
+            deleteMessages();
+          }
+
         });
 copyBtn.addEventListener('click', () => {
           // 如果输出框没有文本内容，弹出提示
@@ -518,6 +556,164 @@ output.addEventListener('dblclick', () => {
     icon: 1,
   });
 });
+
+
+
+
+
+
+let isTyping = false;
+
+function sendMessage() {
+  const chatContent = document.getElementById('chat-content');
+  const userInput = document.getElementById('messageInput');
+  const message = escapeHtml(userInput.value.trim());
+  let messageback = '';
+
+  if (message.length > 0 && !isTyping) {
+    isTyping = true;
+
+    const userAvatar = '../static/img/user.ico';
+    const replyAvatar = '../static/img/chat.ico';
+    const userMessage = `<div class="chat user"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
+    const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
+
+    chatContent.innerHTML += userMessage + replyMessage;
+    chatContent.scrollTop = chatContent.scrollHeight;
+
+    const url = '/chat';
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({chatword: message})
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Network response was not ok.');
+      }
+    })
+    .then(data => {
+      messageback = data.output.replace(/\\n/g, "\n");
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+      messageback = '网络错误，请稍后再试';
+    })
+    .finally(() => {
+      const replyElement = chatContent.getElementsByClassName('message').item(chatContent.getElementsByClassName('message').length - 1);
+      const blinkElement = chatContent.getElementsByClassName('blink').item(chatContent.getElementsByClassName('blink').length - 1);
+      typeReply(replyElement, messageback, 0, chatContent, blinkElement);
+
+      userInput.value = '';
+      // 恢复输入框默认高度
+      adjustTextareaHeight(userInput);
+    });
+  }
+}
+
+
+function typeReply(element, message, index, container, blinkElement) {
+  const delay = 10;
+   saveChatContent(); // 保存聊天记录
+  setTimeout(() => {
+    const text = message.slice(0, index + 1);
+    element.innerHTML = escapeHtml(text);
+
+    if (index < message.length - 1) {
+      typeReply(element, message, index + 1, container, blinkElement);
+      container.scrollTop = container.scrollHeight;
+      userInput.focus();
+    } else {
+      isTyping = false;
+      blinkElement.classList.remove('blink'); // 去除闪烁光标
+      userInput.focus();
+      container.scrollTop = container.scrollHeight;
+      saveChatContent(); // 保存聊天记录
+    }
+  }, delay);
+}
+
+
+
+
+
+        function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+function handleKeyDown(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault(); // 阻止默认行为（换行）
+        sendMessage();
+        const messageInput = document.getElementById('messageInput');
+        messageInput.value = '';
+    }
+}
+document.getElementById('messageInput').addEventListener('keydown', handleKeyDown); // 监听 keydown 事件
+
+
+// function typeReply(element, replyText, index, chatContent) {
+//     if (index < replyText.length) {
+//         element.innerHTML += replyText[index];
+//         chatContent.scrollTop = chatContent.scrollHeight;
+//         setTimeout(() => typeReply(element, replyText, index + 1, chatContent), 10);
+//     } else {
+//         saveChatContent(); // 保存聊天记录
+//     }
+// }
+
+function deleteMessages() {
+    const chatContent = document.getElementById('chat-content');
+    chatContent.innerHTML = '';
+    saveChatContent(); // 保存空的聊天记录以覆盖之前的记录
+}
+
+
+function saveChatContent() {
+    const chatContent = document.getElementById('chat-content');
+    localStorage.setItem('chatContent', chatContent.innerHTML);
+}
+
+function loadChatContent() {
+    const chatContent = document.getElementById('chat-content');
+    const savedContent = localStorage.getItem('chatContent');
+    if (savedContent) {
+        chatContent.innerHTML = savedContent;
+    }
+}
+
+window.onload = function() {
+    loadChatContent(); // 加载聊天记录
+}
+
+function adjustTextareaHeight(textarea) {
+    // 重置输入框高度，以便正确计算新的滚动高度
+    textarea.style.height = '100%';
+
+    // 计算新的输入框高度
+    const maxHeight = textarea.parentElement.offsetHeight * 0.8;
+    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+
+    // 更新输入框高度
+    textarea.style.height = `${newHeight}px`;
+}
+
+document.getElementById('messageInput').addEventListener('input', function () {
+    adjustTextareaHeight(this);
+});
+
+
+
+
 
 
 
