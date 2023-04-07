@@ -30,7 +30,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory = "static"), name = "static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 # 设置 logging
 logging.basicConfig(filename='app.log', level=logging.INFO)
@@ -51,7 +51,8 @@ async def log_requests(request: Request, call_next):
 
 @app.get("/")
 def getdate(request: Request):
-    return templates.TemplateResponse('main.html', context = {'request': request})
+    return templates.TemplateResponse('main.html', context={'request': request})
+
 
 @app.get("/d/{taskid}")
 def turn(taskid: str):
@@ -64,10 +65,10 @@ def turn(taskid: str):
             rule_json_list = f.read()
             rule_json_list = json.loads(rule_json_list)
 
-        proxies ={
-              "http": None,
-              "https": None,
-            }
+        proxies = {
+            "http": None,
+            "https": None,
+        }
         param = {
             'taskId': taskid
         }
@@ -168,11 +169,12 @@ async def ocr(request: Request):
 
     return {'output': output}
 
+
 @app.post("/chat")
 async def chatapi(request: Request):
     output = {}
     try:
-        #1.javaex已经崩了
+        # 1.javaex已经崩了
         # headers = {
         #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.54",
         # }
@@ -205,7 +207,7 @@ async def chatapi(request: Request):
         #         logging.error(response.text)
         #         output = '操作失败,请稍后再试'
 
-        #2.useless网站
+        # 2.useless网站-4.7更新需要token
         headers = {
             "Accept": "application/json, text/plain, */*",
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
@@ -214,6 +216,8 @@ async def chatapi(request: Request):
             "Origin": "https://ai.usesless.com",
             "Referer": "https://ai.usesless.com/chat/1680529289323",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cGRhdGVkX2F0IjoiMjAyMy0wNC0wN1QwMTo1OToyMS44NzhaIiwiYWRkcmVzcyI6eyJjb3VudHJ5IjpudWxsLCJwb3N0YWxfY29kZSI6bnVsbCwicmVnaW9uIjpudWxsLCJmb3JtYXR0ZWQiOm51bGx9LCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOmZhbHNlLCJwaG9uZV9udW1iZXIiOm51bGwsImxvY2FsZSI6bnVsbCwiem9uZWluZm8iOm51bGwsImJpcnRoZGF0ZSI6bnVsbCwiZ2VuZGVyIjoiVSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJlbWFpbCI6ImludGVtcWtiakBnbWFpbC5jb20iLCJ3ZWJzaXRlIjpudWxsLCJwaWN0dXJlIjoiaHR0cHM6Ly91aS1hdmF0YXJzLmNvbS9hcGkvP2JhY2tncm91bmQ9MEQ4QUJDJmNvbG9yPWZmZiZuYW1lPWludGVtcWtiakBnbWFpbC5jb20iLCJwcm9maWxlIjpudWxsLCJwcmVmZXJyZWRfdXNlcm5hbWUiOm51bGwsIm5pY2tuYW1lIjpudWxsLCJtaWRkbGVfbmFtZSI6bnVsbCwiZmFtaWx5X25hbWUiOm51bGwsImdpdmVuX25hbWUiOm51bGwsIm5hbWUiOm51bGwsInN1YiI6IjY0MmY3OGY5MzJmNzJiMmU2Y2Y0MDQ1MSIsImV4dGVybmFsX2lkIjpudWxsLCJ1bmlvbmlkIjpudWxsLCJ1c2VybmFtZSI6bnVsbCwiZGF0YSI6eyJ0eXBlIjoidXNlciIsInVzZXJQb29sSWQiOiI2NDFlMWExZTMxMDc1YWE5YjI5ZmJkMjMiLCJhcHBJZCI6IjY0MWUyZGVjNWYyODg5MzQ3NGU4OWYzZiIsImlkIjoiNjQyZjc4ZjkzMmY3MmIyZTZjZjQwNDUxIiwidXNlcklkIjoiNjQyZjc4ZjkzMmY3MmIyZTZjZjQwNDUxIiwiX2lkIjoiNjQyZjc4ZjkzMmY3MmIyZTZjZjQwNDUxIiwicGhvbmUiOm51bGwsImVtYWlsIjoiaW50ZW1xa2JqQGdtYWlsLmNvbSIsInVzZXJuYW1lIjpudWxsLCJ1bmlvbmlkIjpudWxsLCJvcGVuaWQiOm51bGwsImNsaWVudElkIjoiNjQxZTFhMWUzMTA3NWFhOWIyOWZiZDIzIn0sInVzZXJwb29sX2lkIjoiNjQxZTFhMWUzMTA3NWFhOWIyOWZiZDIzIiwiYXVkIjoiNjQxZTJkZWM1ZjI4ODkzNDc0ZTg5ZjNmIiwiZXhwIjoxNjgyMDQyMzYxLCJpYXQiOjE2ODA4MzI3NjEsImlzcyI6Imh0dHBzOi8vdXNlc2xlc3MuYXV0aGluZy5jbi9vaWRjIn0.EFeAQNI_z_ujY9n-schEdBrtG8v6ZMTmAPkoI5LASQI"
+
 
         }
         url = "https://ai.usesless.com/api/chat-process"
@@ -228,24 +232,29 @@ async def chatapi(request: Request):
             output = {}
         else:
             logging.info(chatword)
-            post_data = {
-                "prompt": chatword,
-                "options": {
-                    "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: 2023-04-03",
-                    "completionParams": {
-                        "presence_penalty": 0.8,
-                        "temperature": 1
-                    }
-                }
-            }
-            post_data = json.dumps(post_data, separators = (',', ':'))
-            response = requests.post(url, headers = headers, data = post_data, proxies = proxies)
+            # post_data = {
+            #     "prompt": chatword,
+            #     "options": {
+            #         "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: 2023-04-03",
+            #         "completionParams": {
+            #             "presence_penalty": 0.8,
+            #             "temperature": 1
+            #         }
+            #     }
+            # }
+
+            post_data = {"openaiKey": "",
+                         "prompt": chatword,
+                         "options": {"systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: 2023-04-07",
+                         "completionParams": {"presence_penalty": 0.8, "temperature": 1, "model": "gpt-3.5-turbo"}}}
+            post_data = json.dumps(post_data, separators=(',', ':'))
+            response = requests.post(url, headers=headers, data=post_data, proxies=proxies)
             dicts = re.findall(r'"text":"(.*?)","numToken"', response.text)
             if dicts:
                 output = dicts[-1]
             else:
                 logging.error(response.text)
-                output = '连接失败,请稍后再试'
+                output = response.text
 
 
     except Exception as e:
@@ -254,14 +263,5 @@ async def chatapi(request: Request):
     return {'output': output}
 
 
-
-
-
-
-
 if __name__ == '__main__':
     uvicorn.run('main:app', host="0.0.0.0", port=20234, reload=True)
-
-
-
-

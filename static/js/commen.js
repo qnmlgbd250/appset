@@ -618,27 +618,56 @@ function sendMessage() {
 }
 
 
-function typeReply(element, message, index, container, blinkElement) {
+function typeReply(element, message, container, blinkElement) {
   const delay = 10;
-   const userInput = document.getElementById('messageInput');
-   saveChatContent(); // 保存聊天记录
-  setTimeout(() => {
-    const text = message.slice(0, index + 1);
-    element.innerHTML = escapeHtml(text);
+  const userInput = document.getElementById('messageInput');
+  saveChatContent(); // 保存聊天记录
 
-    if (index < message.length - 1) {
-      typeReply(element, message, index + 1, container, blinkElement);
-      container.scrollTop = container.scrollHeight;
-      userInput.focus();
+  let index = 0;
+  const messageLength = message.length;
+  message = message.replace(/\\n/g, "\n");
+
+  // 创建一个监听 element 内容更改的 MutationObserver
+  const observer = new MutationObserver(() => {
+    container.scrollTop = container.scrollHeight;
+  });
+
+  // 开始监听 element 的子节点变化
+  observer.observe(element, { childList: true });
+
+  function next() {
+    if (index < messageLength) {
+      const text = message.slice(0, index + 1);
+      element.style.whiteSpace = 'pre-line';
+      element.innerHTML = escapeHtml(text);
+       const chatContent = document.getElementById('chat-content');
+       chatContent.scrollTop = chatContent.scrollHeight;
+
+      index++;
+
+      requestAnimationFrame(next);
     } else {
       isTyping = false;
       blinkElement.classList.remove('blink'); // 去除闪烁光标
-      userInput.focus();
       container.scrollTop = container.scrollHeight;
+      userInput.focus();
+
       saveChatContent(); // 保存聊天记录
+
+      // 停止监听 element 的子节点变化
+      observer.disconnect();
     }
-  }, delay);
+  }
+
+  userInput.focus();
+  requestAnimationFrame(next);
 }
+
+
+
+
+
+
 
 
 
