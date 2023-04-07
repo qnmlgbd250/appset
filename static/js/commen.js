@@ -514,7 +514,8 @@ chatBtn.addEventListener('click', () => {
 clearBtn.addEventListener('click', () => {
           input.value = '';
           output.value = '';
-          if (this.id !== 'chatBtn') {
+          const selectedid = document.querySelector('.menu-div.selected').id
+          if (selectedid === 'chatBtn') {
             deleteMessages();
           }
 
@@ -619,6 +620,7 @@ function sendMessage() {
 
 function typeReply(element, message, index, container, blinkElement) {
   const delay = 10;
+   const userInput = document.getElementById('messageInput');
    saveChatContent(); // 保存聊天记录
   setTimeout(() => {
     const text = message.slice(0, index + 1);
