@@ -589,7 +589,7 @@ function sendMessage() {
         "Content-Type": "application/json;charset=UTF-8",
         'Accept': 'application/json'
       },
-      body: JSON.stringify({chatword: message})
+      body: JSON.stringify({chatword: message,lastid:loadid()})
     })
     .then(response => {
       if (response.ok) {
@@ -600,6 +600,7 @@ function sendMessage() {
     })
     .then(data => {
       messageback = data.output.replace(/\\n/g, "\n");
+      saveid(data.id);
     })
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error);
@@ -720,6 +721,18 @@ function loadChatContent() {
     if (savedContent) {
         chatContent.innerHTML = savedContent;
     }
+}
+
+function saveid(id) {
+    localStorage.setItem('lastid', id);
+}
+
+function loadid() {
+    const savedid = localStorage.getItem('lastid');
+    if (savedid) {
+        return savedid;
+    }
+    return "";
 }
 
 window.onload = function() {
