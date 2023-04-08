@@ -260,6 +260,32 @@ async def chatapi(request: Request):
         # 3 aidutu网站
         headers = {
             "Accept": "application/json",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Origin": "https://chat.aidutu.cn",
+            "Referer": "https://chat.aidutu.cn/",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
+            "x-iam": "Dbllwtcm"
+        }
+
+        url = "https://chat.aidutu.cn/api/cg/chatgpt/user/info"
+        params = {
+            "v": "1.3"
+        }
+        data = {
+            "iam": "Dbllwtcm",
+            "q": ""
+        }
+        data = json.dumps(data, separators=(',', ':'))
+        response = requests.post(url, headers=headers, params=params, data=data)
+
+        token = re.findall(r'"token":"(.*?)","info"', response.text)
+        if token:
+            token = token[0]
+
+        headers = {
+            "Accept": "application/json",
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "Connection": "keep-alive",
@@ -269,7 +295,7 @@ async def chatapi(request: Request):
             "Origin": "https://chat.aidutu.cn",
             "Referer": "https://chat.aidutu.cn/",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
-            "x-token": "111112"
+            "x-token": token
         }
         url = "https://chat.aidutu.cn/api/chat-process"
         proxies = {
