@@ -193,7 +193,7 @@ async def curl2requests(request: Request):
 
             response = requests.post(url, data = json.dumps(post_data), headers = headers, proxies=proxies)
             if 'import requests' in str(response.text):
-                output = response.text.replace('(response)"', '(response)')
+                output = response.text.replace('\\nprint(response)"', '')
                 output = output.replace('"import', 'import')
                 output = re.sub(r'(?<!\\)\\(?=")', '', output)
                 output = output.replace('\\\\\\', '\\')
