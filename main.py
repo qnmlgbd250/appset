@@ -258,46 +258,7 @@ async def chatapi(request: Request):
         #         output = response.text
 
         # 3 aidutu网站
-        headers = {
-            "Accept": "application/json",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-            "Connection": "keep-alive",
-            "Content-Type": "application/json",
-            "Origin": "https://chat.aidutu.cn",
-            "Referer": "https://chat.aidutu.cn/",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
-            "x-iam": "Dbllwtcm"
-        }
 
-        url = "https://chat.aidutu.cn/api/cg/chatgpt/user/info"
-        params = {
-            "v": "1.3"
-        }
-        data = {
-            "iam": "Dbllwtcm",
-            "q": ""
-        }
-        data = json.dumps(data, separators=(',', ':'))
-        response = requests.post(url, headers=headers, params=params, data=data)
-
-        token = re.findall(r'"token":"(.*?)","info"', response.text)
-        if token:
-            token = token[0]
-
-        headers = {
-            "Accept": "application/json",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-            "Connection": "keep-alive",
-            "Content-Length": "175",
-            "Content-Type": "application/json",
-            "Host": "chat.aidutu.cn",
-            "Origin": "https://chat.aidutu.cn",
-            "Referer": "https://chat.aidutu.cn/",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
-            "x-token": token
-        }
-        url = "https://chat.aidutu.cn/api/chat-process"
         proxies = {
             "http": None,
             "https": None,
@@ -308,6 +269,47 @@ async def chatapi(request: Request):
             output = {}
         else:
             logging.info(chatword)
+            headers = {
+                "Accept": "application/json",
+                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+                "Connection": "keep-alive",
+                "Content-Type": "application/json",
+                "Origin": "https://chat.aidutu.cn",
+                "Referer": "https://chat.aidutu.cn/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
+                "x-iam": "Dbllwtcm",
+                'Cookie': 'Hm_lvt_8983c75dfe5366171d9541b4c4f70657=1680920048; _UHAO=%7B%22uid%22%3A%2245786%22%2C%22school%22%3A%22%22%2C%22time%22%3A1680920779%2C%22ts%22%3A%222%22%2C%22name%22%3A%22chat_lzhU%22%2C%22head%22%3A%22%5C%2Fres%5C%2Fhead%5C%2Fclassics%5C%2F30.jpg%22%2C%22term%22%3A%22201801%22%2C%22sign%22%3A%22dbe77c771bef1a19702fa421f77bafd5%22%7D; _UIP=1852066cd2ac859e3d8226b941fc8b13; Hm_lpvt_8983c75dfe5366171d9541b4c4f70657=1680936501'
+            }
+
+            url = "https://chat.aidutu.cn/api/cg/chatgpt/user/info"
+            params = {
+                "v": "1.3"
+            }
+            post_data = {
+                "iam": "Dbllwtcm",
+                "q": chatword
+            }
+            post_data = json.dumps(post_data, separators=(',', ':'))
+            response = requests.post(url, headers=headers, params=params, data=post_data)
+
+            token = re.findall(r'"token":"(.*?)","info"', response.text)
+            if token:
+                token = token[0]
+
+            headers = {
+                "Accept": "application/json",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+                "Connection": "keep-alive",
+                "Content-Length": "175",
+                "Content-Type": "application/json",
+                "Host": "chat.aidutu.cn",
+                "Origin": "https://chat.aidutu.cn",
+                "Referer": "https://chat.aidutu.cn/",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
+                "x-token": token
+            }
+            url = "https://chat.aidutu.cn/api/chat-process"
             last_id = data.get("lastid", "")
             options = {}
             if last_id:
