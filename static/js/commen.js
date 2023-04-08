@@ -8,6 +8,7 @@ const copyBtn = document.getElementById('copyBtn');
 const menuFunctions = {
     'headerBtn': headersTransform,
     'cookieBtn': cookieTransform,
+    'curlBtn': curlTransform,
     'rsaBtn': rsaTransform,
     'dataBtn': dataTransform,
     'transBtn': transTransform,
@@ -186,6 +187,29 @@ function rsaTransform(inputText) {
     const rsa = new JSEncrypt();
     rsa.setPrivateKey(privateKey);
     output.value = rsa.decrypt(inputText);
+}
+//curl转换主函数
+function curlTransform(inputText) {
+
+    const url = '/c';
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({input_str: inputText})
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // 将response对象转换为JSON格式
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+        })
+        .then(data => {
+            console.log(data); // 输出JSON格式的数据
+            output.value = data.output.replace(/\\n/g, "\n") // 将返回的数据放入output元素中
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 }
 
 //Data转换主函数

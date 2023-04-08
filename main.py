@@ -169,6 +169,43 @@ async def ocr(request: Request):
 
     return {'output': output}
 
+@app.post("/c")
+async def curl2requests(request: Request):
+    output = {}
+    try:
+        proxies = {
+            "http": None,
+            "https": None,
+        }
+        data = await request.json()
+        input_str = data.get("input_str", "")
+        if not input_str:
+            output = {}
+        else:
+            url = 'https://spidertools.cn/spidertools/tools/format'
+
+            post_data = {
+                "format_type": "curl_to_request",
+                "input_str": str(input_str)
+            }
+            headers = {
+                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34"}
+
+            response = requests.post(url, data = json.dumps(post_data), headers = headers, proxies=proxies)
+            if 'import requests' in str(response.text):
+                output = response.text.replace('(response)"', '(response)')
+                output = output.replace('"import', 'import')
+                output = re.sub(r'(?<!\\)\\(?=")', '', output)
+                output = output.replace('\\\\\\', '\\')
+
+            else:
+                output = "转换失败"
+
+    except Exception as e:
+        logging.error(e)
+
+    return {'output': output}
+
 
 @app.post("/chat")
 async def chatapi(request: Request):
