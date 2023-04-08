@@ -541,6 +541,8 @@ clearBtn.addEventListener('click', () => {
           const selectedid = document.querySelector('.menu-div.selected').id
           if (selectedid === 'chatBtn') {
             deleteMessages();
+          } if (selectedid === 'ocrBtn') {
+            imageContainer.innerHTML = '';
           }
 
         });
