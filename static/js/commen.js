@@ -14,7 +14,7 @@ const menuFunctions = {
     'transBtn': transTransform,
     'signBtn': signTransform,
     'ocrBtn': ocrTransform,
-    'chatBtn': chatTransform,
+
     // 添加更多功能函数...
 };
 
@@ -55,12 +55,7 @@ buttons.forEach(button => {
 
     });
 });
-function handleEnterKey(event) {
-              if (event.key === 'Enter') {
-                event.preventDefault(); // 防止回车键默认换行
-                chatTransform(input.value);
-              }
-            }
+
 
 //
 document.addEventListener('DOMContentLoaded', () => {
@@ -78,13 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-            if (menuDiv.id === 'chatBtn') {
-              input.addEventListener('keydown', handleEnterKey);
-            } else {
-              input.removeEventListener('keydown', handleEnterKey);
-              // 尝试执行 各种菜单项的函数
-              //   tryExecuteMenuFunction();
-            }
+
 
 
 
@@ -101,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedMenu = document.querySelector('.menu-div.selected');
         if (selectedMenu && input.value.trim() !== '') {
             const menuFunction = menuFunctions[selectedMenu.id];
-            if (menuFunction && menuFunction !== chatTransform) {
+            if (menuFunction) {
                 menuFunction(input.value);
             }
         }
@@ -367,76 +356,6 @@ function ocrTransform(input) {
 
 
 
-function chatTransform(input) {
-  //   // 获取倒计时元素
-  //   let chatBtn = document.getElementById('chatBtn');
-  // const countdownElement = document.createElement('span');
-  // countdownElement.innerHTML = ' 15'; // 设定倒计时秒数
-  // chatBtn.appendChild(countdownElement); // 添加倒计时元素
-  //
-  // // 启动倒计时
-  // const countdownInterval = setInterval(() => {
-  //   let countdown = parseInt(countdownElement.innerHTML);
-  //   countdown--;
-  //   countdownElement.innerHTML = " " + countdown.toString();
-  //   if (countdown === 0) {
-  //     clearInterval(countdownInterval);
-  //     countdownElement.remove(); // 删除倒计时元素
-  //   }
-  // }, 1000);
-
-    const inputText = input.trim();
-      const url = '/chat';
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({chatword: inputText})
-      })
-      .then(response => {
-        if (response.ok) {
-            // 请求完成后，停止倒计时并更新按钮的状态
-          // clearInterval(countdownInterval);
-          // countdownElement.remove(); // 删除倒计时元素
-          return response.json(); // 将response对象转换为JSON格式
-        } else {
-          throw new Error('Network response was not ok.');
-        }
-      })
-      .then(data => {
-        console.log(data); // 输出JSON格式的数据
-        outputSt = data.output.replace(/\\n/g, "\n");// 将返回的数据放入output元素中
-          // 逐字输出翻译结果
-        let i = 0;
-        output.value = '';
-        let lastTimestamp = 0;
-        const delay = 15;
-
-        const printOutput = (timestamp) => {
-            if (i < outputSt.length) {
-                if (timestamp - lastTimestamp >= delay) {
-                    let currentStr = output.value + outputSt[i];
-                    output.value = currentStr;
-                    i++;
-                    lastTimestamp = timestamp;
-                }
-                requestAnimationFrame(printOutput);
-            }
-        };
-
-        requestAnimationFrame(printOutput);
-
-      })
-      .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-        return '网络错误，请稍后再试';
-      });
-
-
-}
-
 
 
 function handlePaste(e) {
@@ -600,8 +519,8 @@ function sendMessage() {
   if (message.length > 0 && !isTyping) {
     isTyping = true;
 
-    const userAvatar = '../static/img/user.ico';
-    const replyAvatar = '../static/img/chat.ico';
+    const userAvatar = 'https://raw.githubusercontent.com/Chanzhaoyu/chatgpt-web/main/src/assets/avatar.jpg';
+    const replyAvatar = 'https://raw.githubusercontent.com/qnmlgbd250/appset/main/static/img/chat.png';
     const userMessage = `<div class="chat user"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
     const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
 
