@@ -433,8 +433,8 @@ function showChatBox(show) {
     chatContent.style.display = 'block';
   } else {
     div3.style.display = 'block';
-    div3.style.border = '1px solid black';
-    div4.style.border = '1px solid black';
+    // div3.style.border = '1px solid black';
+    // div4.style.border = '1px solid black';
     div4.style.display = 'block';
     div6.style.display = 'none';
     output.style.display = 'block';
