@@ -519,8 +519,8 @@ function sendMessage() {
   if (message.length > 0 && !isTyping) {
     isTyping = true;
 
-    const userAvatar = 'https://raw.githubusercontent.com/Chanzhaoyu/chatgpt-web/main/src/assets/avatar.jpg';
-    const replyAvatar = 'https://raw.githubusercontent.com/qnmlgbd250/appset/main/static/img/chat.png';
+    const userAvatar = '../static/img/user.png';
+    const replyAvatar = '../static/img/chat.png';
     const userMessage = `<div class="chat user"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
     const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
 
