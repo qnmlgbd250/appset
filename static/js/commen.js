@@ -410,11 +410,19 @@ function handlePaste(e) {
 
 const imageContainer = document.getElementById('image-container');
 ocrBtn.addEventListener('click', () => {
+        ocrshow(true);
+});
 
+function ocrshow(show) {
+    if (show) {
         input.style.display = 'none';
         imageContainer.style.display = 'block';
         imageContainer.addEventListener('paste', handlePaste);
-});
+    } else {
+    input.style.display = 'block';
+    imageContainer.style.display = 'none';
+    imageContainer.removeEventListener('paste', handlePaste);
+}}
 
 
 function showChatBox(show) {
@@ -433,8 +441,8 @@ function showChatBox(show) {
     chatContent.style.display = 'block';
   } else {
     div3.style.display = 'block';
-    // div3.style.border = '1px solid black';
-    // div4.style.border = '1px solid black';
+    div3.style.borderRight = '1px solid #ccc';
+    div4.style.borderLeft = '1px solid #ccc';
     div4.style.display = 'block';
     div6.style.display = 'none';
     output.style.display = 'block';
