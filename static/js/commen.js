@@ -517,12 +517,63 @@ output.addEventListener('dblclick', () => {
 
 
 let isTyping = false;
+const socket = new WebSocket('ws://127.0.0.1:20234/chat');
+
+socket.addEventListener('open', (event) => {
+  console.log('WebSocket connected:', event);
+});
+
+socket.addEventListener('message', (event) => {
+  const receivedData = JSON.parse(event.data);
+  const replyElement = document.getElementById('temporary-reply').querySelector('.message');
+  const blinkElement = replyElement.querySelector('.placeholder-cursor');
+  const chatContent = document.getElementById('chat-content');
+  const userInput = document.getElementById('messageInput');
+
+  // 创建一个监听 element 内容更改的 MutationObserver
+  const observer = new MutationObserver(() => {
+    chatContent.scrollTop = chatContent.scrollHeight;
+  });
+
+  // 开始监听 element 的子节点变化
+  observer.observe(replyElement, { childList: true });
+  if (receivedData) {
+      isTyping = false;
+      replyElement.style.whiteSpace = 'pre-line';
+      // 添加接收到的文本
+        const textNode = document.createElement('span');
+        textNode.textContent = receivedData.text;
+        replyElement.insertBefore(textNode, blinkElement);
+
+        // 移除光标
+        blinkElement.remove();
+
+      chatContent.scrollTop = chatContent.scrollHeight;
+      blinkElement.classList.remove('blink'); // 去除闪烁光标
+      userInput.focus();
+
+      saveChatContent(); //
+      saveid(receivedData.id)
+      // 停止监听 element 的子节点变化
+      observer.disconnect();
+
+  }
+  // typeReply(replyElement, receivedData.text, chatContent, blinkElement);
+});
+
+socket.addEventListener('close', (event) => {
+  console.log('WebSocket closed:', event);
+});
+
+socket.addEventListener('error', (event) => {
+  console.error('WebSocket error:', event);
+});
+
 
 function sendMessage() {
   const chatContent = document.getElementById('chat-content');
   const userInput = document.getElementById('messageInput');
   const message = escapeHtml(userInput.value.trim());
-  let messageback = '';
 
   if (message.length > 0 && !isTyping) {
     isTyping = true;
@@ -532,44 +583,24 @@ function sendMessage() {
     const userMessage = `<div class="chat user"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
     const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
 
-    chatContent.innerHTML += userMessage + replyMessage;
+    // 移除上一个 temporary-reply 的 id
+if (document.getElementById('temporary-reply')) {
+  document.getElementById('temporary-reply').removeAttribute('id');
+}
+
+// 添加新的聊天消息
+chatContent.insertAdjacentHTML('beforeend', userMessage + replyMessage);
+
     chatContent.scrollTop = chatContent.scrollHeight;
 
-    const url = '/chat';
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({chatword: message,lastid:loadid()})
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Network response was not ok.');
-      }
-    })
-    .then(data => {
-      messageback = data.output.replace(/\\n/g, "\n");
-      saveid(data.id);
-    })
-    .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
-      messageback = '网络错误，请稍后再试';
-    })
-    .finally(() => {
-      const replyElement = chatContent.getElementsByClassName('message').item(chatContent.getElementsByClassName('message').length - 1);
-      const blinkElement = chatContent.getElementsByClassName('blink').item(chatContent.getElementsByClassName('blink').length - 1);
-      typeReply(replyElement, messageback, 0, chatContent, blinkElement);
+    socket.send(JSON.stringify({ text: message, id: loadid()}));
 
-      userInput.value = '';
-      // 恢复输入框默认高度
-      adjustTextareaHeight(userInput);
-    });
+    userInput.value = '';
+    // 恢复输入框默认高度
+    adjustTextareaHeight(userInput);
   }
 }
+
 
 
 function typeReply(element, message, container, blinkElement) {
@@ -593,7 +624,7 @@ function typeReply(element, message, container, blinkElement) {
     if (index < messageLength) {
       const text = message.slice(0, index + 1);
       element.style.whiteSpace = 'pre-line';
-      element.innerHTML = escapeHtml(text);
+      element.innerHTML += escapeHtml(text);
        const chatContent = document.getElementById('chat-content');
        chatContent.scrollTop = chatContent.scrollHeight;
 
@@ -659,7 +690,8 @@ document.getElementById('messageInput').addEventListener('keydown', handleKeyDow
 function deleteMessages() {
     const chatContent = document.getElementById('chat-content');
     chatContent.innerHTML = '';
-    saveChatContent(); // 保存空的聊天记录以覆盖之前的记录
+    saveChatContent();
+      saveid('')// 保存空的聊天记录以覆盖之前的记录
 }
 
 

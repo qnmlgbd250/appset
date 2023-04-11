@@ -9,7 +9,8 @@ import json
 import rsa, base64
 import requests
 from datetime import datetime
-from fastapi import FastAPI, Form, Request
+from httpx import AsyncClient
+from fastapi import FastAPI, Form, Request, WebSocket
 import uvicorn
 from typing import Dict
 import urllib.parse
@@ -24,16 +25,17 @@ from datetime import datetime
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins = ["*"],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory = "static"), name = "static")
+templates = Jinja2Templates(directory = "templates")
 # 设置 logging
-logging.basicConfig(filename='app.log', level=logging.INFO)
+logging.basicConfig(filename = 'app.log', level = logging.INFO)
+
 
 # 添加 middleware
 @app.middleware("http")
@@ -51,7 +53,7 @@ async def log_requests(request: Request, call_next):
 
 @app.get("/")
 def getdate(request: Request):
-    return templates.TemplateResponse('main.html', context={'request': request})
+    return templates.TemplateResponse('main.html', context = {'request': request})
 
 
 @app.get("/d/{taskid}")
@@ -61,7 +63,7 @@ def turn(taskid: str):
         accname = ['test老地区转苍穹申报表']
         taskid = taskid.strip()
         rule_json = 'static/rule.json'
-        with open(rule_json, mode='rb') as f:
+        with open(rule_json, mode = 'rb') as f:
             rule_json_list = f.read()
             rule_json_list = json.loads(rule_json_list)
 
@@ -75,12 +77,15 @@ def turn(taskid: str):
         resp = {}
         if taskid.startswith('1'):
 
-            resp = requests.get('https://mtax.kdzwy.com/taxtask/api/task/history', params=param, proxies=proxies).json()
-            if ((not resp['data'].get('defaultRule')) and (resp['data']['region'] not in old_region_list)) or resp['data'].get('accName') in accname:
+            resp = requests.get('https://mtax.kdzwy.com/taxtask/api/task/history', params = param,
+                                proxies = proxies).json()
+            if ((not resp['data'].get('defaultRule')) and (resp['data']['region'] not in old_region_list)) or resp[
+                'data'].get('accName') in accname:
                 resp['data']['defaultRule'] = rule_json_list
 
         elif taskid.startswith('3'):
-            resp = requests.get('https://tax.kdzwy.com/taxtask/api/task/history', params=param, proxies=proxies).json()
+            resp = requests.get('https://tax.kdzwy.com/taxtask/api/task/history', params = param,
+                                proxies = proxies).json()
             if (not resp['data'].get('defaultRule')) and (resp['data']['region'] not in old_region_list):
                 resp['data']['defaultRule'] = rule_json_list
 
@@ -89,7 +94,8 @@ def turn(taskid: str):
     except Exception as e:
         output = str(e)
     else:
-        output = json.dumps(resp.get('data'), ensure_ascii=False) if (resp.get('code') == 200 and resp.get('msg') == 'success') else {}
+        output = json.dumps(resp.get('data'), ensure_ascii = False) if (
+                    resp.get('code') == 200 and resp.get('msg') == 'success') else {}
     return {'output': output}
 
 
@@ -119,7 +125,7 @@ def translate(tstr: str):
                 "content-type": "application/json",
                 "x-authorization": "token " + token,
             }
-            response = requests.request("POST", url, data=json.dumps(payload), headers=headers, proxies=proxies)
+            response = requests.request("POST", url, data = json.dumps(payload), headers = headers, proxies = proxies)
             output = json.loads(response.text)["target"]
     except:
         output = {}
@@ -144,7 +150,7 @@ async def ocr(request: Request):
         else:
             url = "https://aip.baidubce.com/oauth/2.0/token"
             params = {"grant_type": "client_credentials", "client_id": API_KEY, "client_secret": SECRET_KEY}
-            access_token = str(requests.post(url, params=params, proxies=proxies).json().get("access_token"))
+            access_token = str(requests.post(url, params = params, proxies = proxies).json().get("access_token"))
             url = f"https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token={access_token}"
 
             # 对二进制数据进行URL编码
@@ -155,7 +161,7 @@ async def ocr(request: Request):
                 'Accept': 'application/json'
             }
 
-            response = requests.request("POST", url, headers=headers, data=payload, proxies=proxies)
+            response = requests.request("POST", url, headers = headers, data = payload, proxies = proxies)
             if 'error' in str(response.text):
                 output = {}
             if 'words_result' in str(response.text):
@@ -168,6 +174,7 @@ async def ocr(request: Request):
         logging.error(e)
 
     return {'output': output}
+
 
 @app.post("/c")
 async def curl2requests(request: Request):
@@ -191,7 +198,7 @@ async def curl2requests(request: Request):
             headers = {
                 "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34"}
 
-            response = requests.post(url, data = json.dumps(post_data), headers = headers, proxies=proxies)
+            response = requests.post(url, data = json.dumps(post_data), headers = headers, proxies = proxies)
             if 'import requests' in str(response.text):
                 output = response.text.replace('\\nprint(response)"', '')
                 output = output.replace('"import', 'import')
@@ -326,8 +333,8 @@ async def chatapi(request: Request):
                 "iam": "Dbllwtcm",
                 "q": chatword
             }
-            post_data = json.dumps(post_data, separators=(',', ':'))
-            response = requests.post(url, headers=headers, params=params, data=post_data)
+            post_data = json.dumps(post_data, separators = (',', ':'))
+            response = requests.post(url, headers = headers, params = params, data = post_data)
 
             token = re.findall(r'"token":"(.*?)","info"', response.text)
             if token:
@@ -372,5 +379,67 @@ async def chatapi(request: Request):
     return {'output': output, 'id': id}
 
 
+async def get_chat(msgdict):
+    headers = {
+        "authority": "ai.usesless.com",
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "content-type": "application/json",
+        "origin": "https://ai.usesless.com",
+        "referer": "https://ai.usesless.com/chat/1681217446562",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34"
+    }
+    url = "https://ai.usesless.com/api/chat-process"
+    msg = msgdict.get('text')
+    lastid = msgdict.get('id')
+
+    data = {
+        "openaiKey": "",
+        "prompt": msg,
+        "options": {
+            "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\
+    Knowledge cutoff: 2021-09-01\
+    Current date: 2023-04-12",
+            "completionParams": {
+                "presence_penalty": 0.8,
+                "temperature": 1,
+                "model": "gpt-3.5-turbo"
+            }
+        }
+    }
+    if lastid:
+        data = {"openaiKey": "", "prompt": msg,
+                "options": {"parentMessageId": lastid,
+                            "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: 2023-04-11",
+                            "completionParams": {"presence_penalty": 0.8, "temperature": 1, "model": "gpt-3.5-turbo"}}}
+
+    async with AsyncClient() as client:
+        async with client.stream('POST', url, headers = headers, json = data) as response:
+            async for line in response.aiter_lines():
+                if line.strip() == "":
+                    continue
+                data = json.loads(line)
+                if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
+                        'finish_reason') is not None:
+                    return
+                yield data['detail']
+
+
+@app.websocket("/chat")
+async def chat(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_json()
+        logging.info(data)
+        if data == 'quit':
+            await websocket.close()
+            return
+        async for i in get_chat(data):
+            if i['choices'][0].get('delta').get('content'):
+                response_text = i['choices'][0].get('delta').get('content')
+                response_data = {"text": response_text, "id": i.get('id')}
+                await websocket.send_json(response_data)
+
+
 if __name__ == '__main__':
-    uvicorn.run('main:app', host="0.0.0.0", port=20234, reload=True)
+    uvicorn.run('main:app', host = "0.0.0.0", port = 20234, reload = True)
