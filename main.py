@@ -414,7 +414,7 @@ async def get_chat(msgdict):
                             "completionParams": {"presence_penalty": 0.8, "temperature": 1, "model": "gpt-3.5-turbo"}}}
 
     async with AsyncClient() as client:
-        async with client.stream('POST', url, headers = headers, json = data) as response:
+        async with client.stream('POST', url, headers = headers, json = data, timeout =30) as response:
             async for line in response.aiter_lines():
                 if line.strip() == "":
                     continue
