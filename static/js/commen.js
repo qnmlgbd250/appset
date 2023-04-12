@@ -452,6 +452,8 @@ function showChatBox(show) {
 
 chatBtn.addEventListener('click', () => {
   showChatBox(true);
+  const chatBox = document.getElementById("chat-content");
+  chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
 });
 
 // 恢复样式
@@ -517,7 +519,10 @@ output.addEventListener('dblclick', () => {
 
 
 let isTyping = false;
-const socket = new WebSocket('ws://127.0.0.1:20234/chat');
+const host = window.location.hostname;
+const port = window.location.port
+const url = `ws://${host}:${port}/chat`;
+const socket = new WebSocket(url);
 
 socket.addEventListener('open', (event) => {
   console.log('WebSocket connected:', event);
@@ -605,57 +610,6 @@ chatContent.insertAdjacentHTML('beforeend', userMessage + replyMessage);
 
 
 
-function typeReply(element, message, container, blinkElement) {
-  const delay = 10;
-  const userInput = document.getElementById('messageInput');
-  saveChatContent(); // 保存聊天记录
-
-  let index = 0;
-  const messageLength = message.length;
-  message = message.replace(/\\n/g, "\n");
-
-  // 创建一个监听 element 内容更改的 MutationObserver
-  const observer = new MutationObserver(() => {
-    container.scrollTop = container.scrollHeight;
-  });
-
-  // 开始监听 element 的子节点变化
-  observer.observe(element, { childList: true });
-
-  function next() {
-    if (index < messageLength) {
-      const text = message.slice(0, index + 1);
-      element.style.whiteSpace = 'pre-line';
-      element.innerHTML += escapeHtml(text);
-       const chatContent = document.getElementById('chat-content');
-       chatContent.scrollTop = chatContent.scrollHeight;
-
-      index++;
-
-      requestAnimationFrame(next);
-    } else {
-      isTyping = false;
-      blinkElement.classList.remove('blink'); // 去除闪烁光标
-      container.scrollTop = container.scrollHeight;
-      userInput.focus();
-
-      saveChatContent(); // 保存聊天记录
-
-      // 停止监听 element 的子节点变化
-      observer.disconnect();
-    }
-  }
-
-  userInput.focus();
-  requestAnimationFrame(next);
-}
-
-
-
-
-
-
-
 
 
 
@@ -719,23 +673,26 @@ window.onload = function() {
 }
 
 function adjustTextareaHeight(textarea) {
-    // 重置输入框高度，以便正确计算新的滚动高度
-    textarea.style.height = '100%';
+// 记录当前滚动条位置
+const scrollTop = textarea.scrollTop;
 
-    // 计算新的输入框高度
-    const maxHeight = textarea.parentElement.offsetHeight * 0.8;
-    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+// 重置输入框高度，以便正确计算新的滚动高度
+textarea.style.height = '100%';
 
-    // 更新输入框高度
-    textarea.style.height = `${newHeight}px`;
+// 计算新的输入框高度
+const maxHeight = textarea.parentElement.offsetHeight * 0.8;
+const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+
+// 更新输入框高度
+textarea.style.height = `${newHeight}px`;
+
+// 还原滚动条位置
+textarea.scrollTop = scrollTop;
 }
 
 document.getElementById('messageInput').addEventListener('input', function () {
-    adjustTextareaHeight(this);
+adjustTextareaHeight(this);
 });
-
-
-
 
 
 
