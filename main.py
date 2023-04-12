@@ -419,6 +419,8 @@ async def get_chat(msgdict):
                 if line.strip() == "":
                     continue
                 data = json.loads(line)
+                if '刷新试试~' in str(data):
+                    return
                 if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
                         'finish_reason') is not None:
                     return
@@ -431,9 +433,9 @@ async def chat(websocket: WebSocket):
     while True:
         data = await websocket.receive_json()
         logging.info(data)
-        if data == 'quit':
-            await websocket.close()
-            return
+        # if data == 'quit':
+        #     await websocket.close()
+        #     return
         async for i in get_chat(data):
             if i['choices'][0].get('delta').get('content'):
                 response_text = i['choices'][0].get('delta').get('content')

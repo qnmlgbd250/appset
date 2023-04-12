@@ -524,6 +524,7 @@ socket.addEventListener('open', (event) => {
 });
 
 socket.addEventListener('message', (event) => {
+    saveChatContent()
   const receivedData = JSON.parse(event.data);
   const replyElement = document.getElementById('temporary-reply').querySelector('.message');
   const blinkElement = replyElement.querySelector('.placeholder-cursor');
@@ -552,12 +553,13 @@ socket.addEventListener('message', (event) => {
       blinkElement.classList.remove('blink'); // 去除闪烁光标
       userInput.focus();
 
-      saveChatContent(); //
+
       saveid(receivedData.id)
       // 停止监听 element 的子节点变化
       observer.disconnect();
 
   }
+  saveChatContent(); //
   // typeReply(replyElement, receivedData.text, chatContent, blinkElement);
 });
 
@@ -677,15 +679,7 @@ function handleKeyDown(event) {
 document.getElementById('messageInput').addEventListener('keydown', handleKeyDown); // 监听 keydown 事件
 
 
-// function typeReply(element, replyText, index, chatContent) {
-//     if (index < replyText.length) {
-//         element.innerHTML += replyText[index];
-//         chatContent.scrollTop = chatContent.scrollHeight;
-//         setTimeout(() => typeReply(element, replyText, index + 1, chatContent), 10);
-//     } else {
-//         saveChatContent(); // 保存聊天记录
-//     }
-// }
+
 
 function deleteMessages() {
     const chatContent = document.getElementById('chat-content');
