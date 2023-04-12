@@ -423,7 +423,10 @@ async def get_chat(msgdict):
                     yield {"choices": [{"delta": {"content": "连接失败,请稍后再试"}}]}
                     return
                 if '今日剩余回答次数为0' in str(data):
-                    yield {"choices": [{"delta": {"content": "今日剩余回答次数为0"}}]}
+                    yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
+                    return
+                if '网站今日总共的免费额度已经用完' in str(data):
+                    yield {"choices": [{"delta": {"content": "网站今日回答次数已达上限"}}]}
                     return
                 if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
                         'finish_reason') is not None:
