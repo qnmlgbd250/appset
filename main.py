@@ -420,6 +420,10 @@ async def get_chat(msgdict):
                     continue
                 data = json.loads(line)
                 if '刷新试试~' in str(data):
+                    yield {"choices": [{"delta": {"content": "连接失败,请稍后再试"}}]}
+                    return
+                if '今日剩余回答次数为0' in str(data):
+                    yield {"choices": [{"delta": {"content": "今日剩余回答次数为0"}}]}
                     return
                 if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
                         'finish_reason') is not None:
