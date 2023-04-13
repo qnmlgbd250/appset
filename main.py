@@ -11,6 +11,7 @@ import rsa, base64
 import requests
 import time
 import os
+import redis
 from tokenList import *
 import threading
 from datetime import datetime
@@ -26,6 +27,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from datetime import datetime
+from dotenv import load_dotenv
+
+# 加载 .env 文件
+load_dotenv(".env")
+# 连接Redis数据库
+redis_pool = redis.Redis(host=os.getenv('REDIS_HOST'), port=int(os.getenv('REDIS_PORT')), db=int(os.getenv('REDIS_DB')), password=os.getenv('REDIS_PASS'))
 
 app = FastAPI()
 app.add_middleware(
@@ -452,7 +459,7 @@ async def chat(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_json()
-        token = get_token()
+        token = get_token_by_redis()
         logging.info(token)
         logging.info(data)
         async for i in get_chat(data,token=token):
@@ -461,38 +468,50 @@ async def chat(websocket: WebSocket):
                 response_data = {"text": response_text, "id": i.get('id')}
                 await websocket.send_json(response_data)
 
-if not os.path.exists(DATA_FILE):
-    used_tokens = {}
-    with open(DATA_FILE, 'w') as f:
-        json.dump(used_tokens, f)
-
-# 读取存储信息的文件
-with open(DATA_FILE, 'r') as f:
-    used_tokens = json.load(f)
-def get_token():
-    global counter
-    counter = getattr(get_token, 'counter', 0)
-    # 获取当前时间的时间戳和日期
-    timestamp = int(time.time())
-    date_str = time.strftime('%Y%m%d', time.localtime(timestamp))
-
-    # 使用 threading.Lock 作为线程锁
-    with lock:
-        # 将日期作为键，获取该键在 used_tokens 字典中对应的值（即上一次使用的索引）
-        last_index = used_tokens.get(date_str, -1)
-        # 计算下一个应当使用的索引
-        next_index = (last_index + 1) % len(token_list)
-        # 更新当前日期对应的 used_tokens 字典中的值为下一个索引
-        used_tokens[date_str] = next_index
-        # 自增计数器
-        counter += 1
-        # 每隔 100 次操作才将 used_tokens 字典存储到文件中
-        if counter % 100 == 0:
-            with open(DATA_FILE, 'w') as f:
-                json.dump(used_tokens, f)
+# if not os.path.exists(DATA_FILE):
+#     used_tokens = {}
+#     with open(DATA_FILE, 'w') as f:
+#         json.dump(used_tokens, f)
+#
+# # 读取存储信息的文件
+# with open(DATA_FILE, 'r') as f:
+#     used_tokens = json.load(f)
+# def get_token():
+#     global counter
+#     counter = getattr(get_token, 'counter', 0)
+#     # 获取当前时间的时间戳和日期
+#     timestamp = int(time.time())
+#     date_str = time.strftime('%Y%m%d', time.localtime(timestamp))
+#
+#     # 使用 threading.Lock 作为线程锁
+#     with lock:
+#         # 将日期作为键，获取该键在 used_tokens 字典中对应的值（即上一次使用的索引）
+#         last_index = used_tokens.get(date_str, -1)
+#         # 计算下一个应当使用的索引
+#         next_index = (last_index + 1) % len(token_list)
+#         # 更新当前日期对应的 used_tokens 字典中的值为下一个索引
+#         used_tokens[date_str] = next_index
+#         # 自增计数器
+#         counter += 1
+#         # 每隔 100 次操作才将 used_tokens 字典存储到文件中
+#         if counter % 100 == 0:
+#             with open(DATA_FILE, 'w') as f:
+#                 json.dump(used_tokens, f)
 
     # 返回该索引对应的 token
-    return token_list[next_index]
+    # return token_list[next_index]
+
+def get_token_by_redis():
+    tokenindex = redis_pool.get('tokenindex')
+    tokenindex = tokenindex.decode('utf-8')
+    token = redis_pool.lindex('tokenList', int(tokenindex))
+    token = token.decode('utf-8')
+    tokenindex_reset = int(tokenindex) + 1
+    if tokenindex_reset == 186:
+        tokenindex_reset = 0
+
+    redis_pool.set('tokenindex', str(tokenindex_reset))
+    return token
 
 
 if __name__ == '__main__':
