@@ -6,8 +6,13 @@
 # @Software: PyCharm
 import re
 import json
+import uuid
 import rsa, base64
 import requests
+import time
+import os
+from tokenList import *
+import threading
 from datetime import datetime
 from httpx import AsyncClient
 from fastapi import FastAPI, Form, Request, WebSocket
@@ -30,6 +35,10 @@ app.add_middleware(
     allow_methods = ["*"],
     allow_headers = ["*"],
 )
+
+DATA_FILE = 'used_tokens.json'
+# 创建线程锁
+lock = threading.Lock()
 
 app.mount("/static", StaticFiles(directory = "static"), name = "static")
 templates = Jinja2Templates(directory = "templates")
@@ -379,7 +388,7 @@ async def chatapi(request: Request):
     return {'output': output, 'id': id}
 
 
-async def get_chat(msgdict):
+async def get_chat(msgdict,token=None):
     headers = {
         "authority": "ai.usesless.com",
         "accept": "application/json, text/plain, */*",
@@ -387,6 +396,7 @@ async def get_chat(msgdict):
         "content-type": "application/json",
         "origin": "https://ai.usesless.com",
         "referer": "https://ai.usesless.com/chat/1681217446562",
+        "Authorization": 'Bearer ' + token,
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34"
     }
     url = "https://ai.usesless.com/api/chat-process"
@@ -428,6 +438,9 @@ async def get_chat(msgdict):
                 if '网站今日总共的免费额度已经用完' in str(data):
                     yield {"choices": [{"delta": {"content": "网站今日回答次数已达上限"}}]}
                     return
+                if '今日免费额度10000已经用完啦' in str(data):
+                    yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
+                    return
                 if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
                         'finish_reason') is not None:
                     return
@@ -439,15 +452,47 @@ async def chat(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_json()
+        token = get_token()
+        logging.info(token)
         logging.info(data)
-        # if data == 'quit':
-        #     await websocket.close()
-        #     return
-        async for i in get_chat(data):
+        async for i in get_chat(data,token=token):
             if i['choices'][0].get('delta').get('content'):
                 response_text = i['choices'][0].get('delta').get('content')
                 response_data = {"text": response_text, "id": i.get('id')}
                 await websocket.send_json(response_data)
+
+if not os.path.exists(DATA_FILE):
+    used_tokens = {}
+    with open(DATA_FILE, 'w') as f:
+        json.dump(used_tokens, f)
+
+# 读取存储信息的文件
+with open(DATA_FILE, 'r') as f:
+    used_tokens = json.load(f)
+def get_token():
+    global counter
+    counter = getattr(get_token, 'counter', 0)
+    # 获取当前时间的时间戳和日期
+    timestamp = int(time.time())
+    date_str = time.strftime('%Y%m%d', time.localtime(timestamp))
+
+    # 使用 threading.Lock 作为线程锁
+    with lock:
+        # 将日期作为键，获取该键在 used_tokens 字典中对应的值（即上一次使用的索引）
+        last_index = used_tokens.get(date_str, -1)
+        # 计算下一个应当使用的索引
+        next_index = (last_index + 1) % len(token_list)
+        # 更新当前日期对应的 used_tokens 字典中的值为下一个索引
+        used_tokens[date_str] = next_index
+        # 自增计数器
+        counter += 1
+        # 每隔 100 次操作才将 used_tokens 字典存储到文件中
+        if counter % 100 == 0:
+            with open(DATA_FILE, 'w') as f:
+                json.dump(used_tokens, f)
+
+    # 返回该索引对应的 token
+    return token_list[next_index]
 
 
 if __name__ == '__main__':
