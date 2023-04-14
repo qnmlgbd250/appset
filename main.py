@@ -505,9 +505,10 @@ def get_token_by_redis():
     tokenindex = redis_pool.get('tokenindex')
     tokenindex = tokenindex.decode('utf-8')
     token = redis_pool.lindex('tokenList', int(tokenindex))
+    list_length = redis_pool.llen('tokenList')
     token = token.decode('utf-8')
     tokenindex_reset = int(tokenindex) + 1
-    if tokenindex_reset == 186:
+    if tokenindex_reset == list_length - 1:
         tokenindex_reset = 0
 
     redis_pool.set('tokenindex', str(tokenindex_reset))
