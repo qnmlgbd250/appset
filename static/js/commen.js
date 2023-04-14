@@ -520,15 +520,23 @@ output.addEventListener('dblclick', () => {
 
 let isTyping = false;
 const host = window.location.hostname;
-const port = window.location.port
+const port = window.location.port;
 const url = `ws://${host}:${port}/chat`;
-const socket = new WebSocket(url);
 
-socket.addEventListener('open', (event) => {
-  console.log('WebSocket connected:', event);
-});
+let socket = null;
+let retryCount = 0; // 记录重连次数
+let isReconnecting = false; // 标记是否正在重连
 
-socket.addEventListener('message', (event) => {
+function connect() {
+  socket = new WebSocket(url);
+
+  socket.addEventListener('open', (event) => {
+    console.log('WebSocket connected:', event);
+    retryCount = 0; // 连接成功，将重连次数归零
+    isReconnecting = false; // 连接成功，将重连状态重置
+  });
+
+  socket.addEventListener('message', (event) => {
     saveChatContent()
   const receivedData = JSON.parse(event.data);
   const replyElement = document.getElementById('temporary-reply').querySelector('.message');
@@ -558,8 +566,9 @@ socket.addEventListener('message', (event) => {
       blinkElement.classList.remove('blink'); // 去除闪烁光标
       userInput.focus();
 
-
-      saveid(receivedData.id)
+        if (receivedData.id) {
+          saveid(receivedData.id)
+        }
       // 停止监听 element 的子节点变化
       observer.disconnect();
 
@@ -568,13 +577,25 @@ socket.addEventListener('message', (event) => {
   // typeReply(replyElement, receivedData.text, chatContent, blinkElement);
 });
 
-socket.addEventListener('close', (event) => {
-  console.log('WebSocket closed:', event);
-});
+  socket.addEventListener('close', (event) => {
+    console.log('WebSocket closed:', event);
+    if (!isReconnecting) {
+      isReconnecting = true;
+      const retryInterval = Math.min(30, Math.pow(2, retryCount)) * 1000; // 计算重连间隔，不超过 30 秒
+      setTimeout(connect, retryInterval); // 定时器中执行重连
+      retryCount++; // 增加重连次数
+    }
+  });
 
-socket.addEventListener('error', (event) => {
-  console.error('WebSocket error:', event);
-});
+  socket.addEventListener('error', (event) => {
+    console.error('WebSocket error:', event);
+  });
+}
+
+// 初始化连接
+connect();
+
+
 
 
 function sendMessage() {
@@ -600,9 +621,12 @@ chatContent.insertAdjacentHTML('beforeend', userMessage + replyMessage);
 
     chatContent.scrollTop = chatContent.scrollHeight;
 
-    socket.send(JSON.stringify({ text: message, id: loadid()}));
-
+     if (message && socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify({ text: message, id: loadid() }));
     userInput.value = '';
+  }
+
+
     // 恢复输入框默认高度
     adjustTextareaHeight(userInput);
   }

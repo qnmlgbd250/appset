@@ -429,7 +429,7 @@ async def get_chat(msgdict,token=None):
                     continue
                 data = json.loads(line)
                 if '刷新试试~' in str(data):
-                    yield {"choices": [{"delta": {"content": "连接失败,请稍后再试"}}]}
+                    yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
                     return
                 if '今日剩余回答次数为0' in str(data):
                     yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
