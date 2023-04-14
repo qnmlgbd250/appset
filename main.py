@@ -406,9 +406,9 @@ async def get_chat(msgdict,token=None):
         "openaiKey": "",
         "prompt": msg,
         "options": {
-            "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\
+            "systemMessage": f"You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\
     Knowledge cutoff: 2021-09-01\
-    Current date: 2023-04-12",
+    Current date: {datetime.today().strftime('%Y-%m-%d')}",
             "completionParams": {
                 "presence_penalty": 0.8,
                 "temperature": 1,
@@ -419,7 +419,7 @@ async def get_chat(msgdict,token=None):
     if lastid:
         data = {"openaiKey": "", "prompt": msg,
                 "options": {"parentMessageId": lastid,
-                            "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: 2023-04-11",
+                            "systemMessage": f"You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: {datetime.today().strftime('%Y-%m-%d')}",
                             "completionParams": {"presence_penalty": 0.8, "temperature": 1, "model": "gpt-3.5-turbo"}}}
 
     async with AsyncClient() as client:
