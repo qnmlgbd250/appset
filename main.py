@@ -6,24 +6,16 @@
 # @Software: PyCharm
 import re
 import json
-import uuid
-import rsa, base64
 import requests
-import time
 import os
 import redis
-from tokenList import *
 import threading
-from datetime import datetime
 from httpx import AsyncClient
-from fastapi import FastAPI, Form, Request, WebSocket
+from fastapi import FastAPI, Request, WebSocket
 import uvicorn
-from typing import Dict
 import urllib.parse
-import lzstring
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from datetime import datetime
@@ -467,39 +459,6 @@ async def chat(websocket: WebSocket):
                 response_text = i['choices'][0].get('delta').get('content')
                 response_data = {"text": response_text, "id": i.get('id')}
                 await websocket.send_json(response_data)
-
-# if not os.path.exists(DATA_FILE):
-#     used_tokens = {}
-#     with open(DATA_FILE, 'w') as f:
-#         json.dump(used_tokens, f)
-#
-# # 读取存储信息的文件
-# with open(DATA_FILE, 'r') as f:
-#     used_tokens = json.load(f)
-# def get_token():
-#     global counter
-#     counter = getattr(get_token, 'counter', 0)
-#     # 获取当前时间的时间戳和日期
-#     timestamp = int(time.time())
-#     date_str = time.strftime('%Y%m%d', time.localtime(timestamp))
-#
-#     # 使用 threading.Lock 作为线程锁
-#     with lock:
-#         # 将日期作为键，获取该键在 used_tokens 字典中对应的值（即上一次使用的索引）
-#         last_index = used_tokens.get(date_str, -1)
-#         # 计算下一个应当使用的索引
-#         next_index = (last_index + 1) % len(token_list)
-#         # 更新当前日期对应的 used_tokens 字典中的值为下一个索引
-#         used_tokens[date_str] = next_index
-#         # 自增计数器
-#         counter += 1
-#         # 每隔 100 次操作才将 used_tokens 字典存储到文件中
-#         if counter % 100 == 0:
-#             with open(DATA_FILE, 'w') as f:
-#                 json.dump(used_tokens, f)
-
-    # 返回该索引对应的 token
-    # return token_list[next_index]
 
 def get_token_by_redis():
     tokenindex = redis_pool.get('tokenindex')
