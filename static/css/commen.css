@@ -244,7 +244,7 @@ body {
 #image-container img {
     max-width: 100%; /* 限制图片宽度 */
     height: auto; /* 保持纵横比 */
-  }
+}
 
 
 @media screen and (max-width: 700px) {
@@ -256,144 +256,126 @@ body {
 
 /* Custom scrollbar for Chrome, Safari, and Opera */
 .div5::-webkit-scrollbar {
-  width: 5px;
+    width: 5px;
 }
 
 .div5::-webkit-scrollbar-track {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .div5::-webkit-scrollbar-thumb {
-  background-color: rgba(178, 178, 178, 0.4);
-  border-radius: 4px;
+    background-color: rgba(178, 178, 178, 0.4);
+    border-radius: 4px;
 }
 
 /* Custom scrollbar for Firefox */
 .div5 {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.1);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.1);
 }
 
 
-
-
-
-
-
-        .div5 {
-            grid-area: 1 / 2 / 5 / 8;
-            overflow-y: scroll;
-            border-radius: 6px;
-        }
-     .div6 {
-  grid-area: 5 / 2 / 6 / 8;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  position: relative;
-         padding-bottom: 20px; /* 添加此行 */
-  justify-content: space-between;
-  height: auto; /* 修改此行 */
+.div5 {
+    grid-area: 1 / 2 / 5 / 8;
+    overflow-y: scroll;
+    border-radius: 6px;
 }
 
+.div6 {
+    grid-area: 5 / 2 / 6 / 8;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    position: relative;
+    padding-bottom: 20px; /* 添加此行 */
+    justify-content: space-between;
+    height: auto; /* 修改此行 */
+}
 
 
 #messageInput {
-  padding: 10px;
+    padding: 10px;
 
-  resize: none;
-  height: 120px; /* 修改此行 */
-  overflow-y: auto;
-  width: calc(100% - 25px);
-  margin-top: 8px;
-font: 16px 微软雅黑;
-border-radius: 6px;
-  bottom: 0;
-  top: 0;
-     border: 1px solid #ccc; /* 添加此行 */
+    resize: none;
+    height: 120px; /* 修改此行 */
+    overflow-y: auto;
+    width: calc(100% - 25px);
+    margin-top: 8px;
+    font: 16px 微软雅黑;
+    border-radius: 6px;
+    bottom: 0;
+    top: 0;
+    border: 1px solid #ccc; /* 添加此行 */
     outline: none; /* 添加此行 */
 }
 
 #messageInput:focus {
-  border-color: green;
+    border-color: green;
     box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* 添加此行 */
 }
 
 
-
 .messageInputWrapper {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  width: calc(100% - 20px);
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    width: calc(100% - 20px);
 
     height: 100%; /* 修改此行 */
 
 }
 
 
+.chat {
+    display: flex;
+    margin: 5px;
+    align-items: flex-start;
+    border-radius: 6px;
+}
 
+.chat img {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+    border-radius: 6px;
+}
 
+.user {
+    justify-content: flex-end;
+}
 
+.user img {
+    margin-right: 0;
+    margin-left: 5px;
+    border-radius: 6px;
+}
 
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+    word-wrap: break-word;
+    position: relative; /* 添加此行 */
 
+}
 
+.user .message {
+    background-color: #95ec69;
+}
 
+.reply .message {
+    background-color: #f5eded;
+}
 
+.user .message::after, .reply .message::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+}
 
-
-
-
-
-        .chat {
-            display: flex;
-            margin: 5px;
-            align-items: flex-start;
-            border-radius: 6px;
-        }
-
-        .chat img {
-            width: 40px;
-            height: 40px;
-            margin-right: 5px;
-            border-radius: 6px;
-        }
-
-        .user {
-            justify-content: flex-end;
-        }
-
-        .user img {
-            margin-right: 0;
-            margin-left: 5px;
-            border-radius: 6px;
-        }
-
-         .message {
-            padding: 10px;
-            border-radius: 10px;
-            max-width: 60%;
-            word-wrap: break-word;
-              position: relative; /* 添加此行 */
-
-        }
-
-        .user .message {
-            background-color: #95ec69;
-        }
-
-        .reply .message {
-            background-color: #f5eded;}
-
-         .user .message::after, .reply .message::before {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: 10px solid transparent;
-        }
-
-        .user .message::after {
+.user .message::after {
     content: "";
     position: absolute;
     width: 0;
@@ -420,7 +402,6 @@ border-radius: 6px;
 }
 
 
-
 .reply .message::before {
     content: "";
     position: absolute;
@@ -430,7 +411,5 @@ border-radius: 6px;
     border-right-color: #f5eded;
     border-left: none;
     top: 8px; /* 修改此处 */
-    left: -4px;} /* 修改此处 *
-
-
-    </style>
+    left: -4px;
+}
