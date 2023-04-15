@@ -269,10 +269,7 @@ body {
 }
 
 /* Custom scrollbar for Firefox */
-.div5 {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.1);
-}
+
 
 
 .div5 {
@@ -319,7 +316,7 @@ body {
     display: flex;
     align-items: center;
     flex-grow: 1;
-    width: calc(100% - 20px);
+    width: calc(100% - 5px);
 
     height: 100%; /* 修改此行 */
 
