@@ -555,10 +555,8 @@ function connect() {
             const userInput = document.getElementById('messageInput');
 
             replyElement.style.whiteSpace = 'pre-line';
-            // 添加接收到的文本
-            const textNode = document.createElement('span');
-            textNode.textContent = '异常断开，请重新键入';
-            replyElement.insertBefore(textNode, blinkElement);
+
+            replyElement.innerHTML = '连接异常，请刷新重试或联系管理员';
 
             // 移除光标
             blinkElement.remove();
