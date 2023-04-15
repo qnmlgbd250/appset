@@ -34,7 +34,7 @@ for (var i = 0; i < divs.length; i++) {
         imageContainer.innerHTML = '';
         showChatBox(false);
         if (this.id !== 'ocrBtn') {
-             input.style.display = 'block';
+            input.style.display = 'block';
             imageContainer.style.display = 'none';
             imageContainer.removeEventListener('paste', handlePaste);
         }
@@ -73,11 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
             menuDiv.classList.add('selected');
 
 
-
-
-
-
-
         });
     });
 
@@ -100,18 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //headers转换主函数
 function headersTransform(inputText) {
-
-
     // 如果输入为空，将输出清空并返回
     if (!inputText.trim()) {
         output.value = '';
         return;
     }
-
     const headers = parseHeaders(inputText);
-
-    const outputText = JSON.stringify(headers, null, 2);
-    output.value = outputText;
+    output.value = JSON.stringify(headers, null, 2);
 }
 
 // 解析 HTTP 请求头字符串
@@ -153,8 +143,7 @@ function cookieTransform(inputText) {
         return acc;
     }, {});
 
-    const outputText = JSON.stringify(cookies, null, 2);
-    output.value = outputText;
+    output.value = JSON.stringify(cookies, null, 2);
 }
 
 //RSA转换主函数
@@ -178,6 +167,7 @@ function rsaTransform(inputText) {
     rsa.setPrivateKey(privateKey);
     output.value = rsa.decrypt(inputText);
 }
+
 //curl转换主函数
 function curlTransform(inputText) {
 
@@ -227,15 +217,16 @@ function dataTransform(inputText) {
 let timeoutId;
 
 function transTransform(input) {
-  // 取消前一个setTimeout
-  clearTimeout(timeoutId);
+    // 取消前一个setTimeout
+    clearTimeout(timeoutId);
 
-  // 1秒后触发翻译请求
-  timeoutId = setTimeout(function() {
-    // 调用翻译API
-    translate(input);
-  }, 500);
+    // 1秒后触发翻译请求
+    timeoutId = setTimeout(function () {
+        // 调用翻译API
+        translate(input);
+    }, 500);
 }
+
 //翻译主函数
 function translate(inputText) {
     inputText = inputText.trim();
@@ -356,9 +347,6 @@ function ocrTransform(input) {
 }
 
 
-
-
-
 function handlePaste(e) {
     const items = e.clipboardData.items;
     let isImagePasted = false;
@@ -411,7 +399,7 @@ function handlePaste(e) {
 
 const imageContainer = document.getElementById('image-container');
 ocrBtn.addEventListener('click', () => {
-        ocrshow(true);
+    ocrshow(true);
 });
 
 function ocrshow(show) {
@@ -420,84 +408,77 @@ function ocrshow(show) {
         imageContainer.style.display = 'block';
         imageContainer.addEventListener('paste', handlePaste);
     } else {
-    input.style.display = 'block';
-    imageContainer.style.display = 'none';
-    imageContainer.removeEventListener('paste', handlePaste);
-}}
+        input.style.display = 'block';
+        imageContainer.style.display = 'none';
+        imageContainer.removeEventListener('paste', handlePaste);
+    }
+}
 
 
 function showChatBox(show) {
-  const chatContent = document.getElementById('chat-content');
-  const div3 = document.getElementById('div3');
-  const div4 = document.getElementById('div4');
-  const div6 = document.getElementById('div6');
-  const output = document.getElementById('output');
-  if (show) {
-    div3.style.display = 'none';
-    div3.style.border = 'none';
-    div4.style.border = 'none';
-    div4.style.display = 'block';
-    div6.style.display = 'block';
-    output.style.display = 'none';
-    chatContent.style.display = 'block';
-  } else {
-    div3.style.display = 'block';
-    div3.style.borderRight = '1px solid #ccc';
-    div4.style.borderLeft = '1px solid #ccc';
-    div4.style.display = 'block';
-    div6.style.display = 'none';
-    output.style.display = 'block';
-    chatContent.style.display = 'none';
-  }
+    const chatContent = document.getElementById('chat-content');
+    const div3 = document.getElementById('div3');
+    const div4 = document.getElementById('div4');
+    const div6 = document.getElementById('div6');
+    const output = document.getElementById('output');
+    if (show) {
+        div3.style.display = 'none';
+        div3.style.border = 'none';
+        div4.style.border = 'none';
+        div4.style.display = 'block';
+        div6.style.display = 'block';
+        output.style.display = 'none';
+        chatContent.style.display = 'block';
+    } else {
+        div3.style.display = 'block';
+        div3.style.borderRight = '1px solid #ccc';
+        div4.style.borderLeft = '1px solid #ccc';
+        div4.style.display = 'block';
+        div6.style.display = 'none';
+        output.style.display = 'block';
+        chatContent.style.display = 'none';
+    }
 }
 
 chatBtn.addEventListener('click', () => {
-  showChatBox(true);
-  const chatBox = document.getElementById("chat-content");
-  chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
+    showChatBox(true);
+    const chatBox = document.getElementById("chat-content");
+    chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
 });
 
 // 恢复样式
 
 
-
-
-
-
-
 clearBtn.addEventListener('click', () => {
-          input.value = '';
-          output.value = '';
-          const selectedid = document.querySelector('.menu-div.selected').id
-          if (selectedid === 'chatBtn') {
-            deleteMessages();
-          } if (selectedid === 'ocrBtn') {
-            imageContainer.innerHTML = '';
-          }
+    input.value = '';
+    output.value = '';
+    const selectedid = document.querySelector('.menu-div.selected').id
+    if (selectedid === 'chatBtn') {
+        deleteMessages();
+    }
+    if (selectedid === 'ocrBtn') {
+        imageContainer.innerHTML = '';
+    }
 
-        });
+});
 copyBtn.addEventListener('click', () => {
-          // 如果输出框没有文本内容，弹出提示
-          if (!output.value) {
-            layer.msg('输出框为空，无法复制', {offset: [$(window).height() - 450], icon: 2, time: 1000});
-            return;
-          }
-          // 选中输出框的文本内容
-          output.select();
-          // 执行复制命令
-          document.execCommand('copy');
-          // 弹出成功提示
-          layer.msg('复制成功!', {
-            time: 2000, // 设置显示时间，单位为毫秒
-            skin: 'layui-layer-lan', // 设置样式
-            offset: '100px', // 设置距离顶部的距离
-            icon: 1,
-        });
-        });
-
-
-
-
+    // 如果输出框没有文本内容，弹出提示
+    if (!output.value) {
+        layer.msg('输出框为空，无法复制', {offset: [$(window).height() - 450], icon: 2, time: 1000});
+        return;
+    }
+    // 选中输出框的文本内容
+    output.select();
+    // 执行复制命令
+    document.execCommand('copy');
+    // 弹出成功提示
+    layer.msg('复制成功!', {
+        time: 2000, // 设置显示时间，单位为毫秒
+        skin: 'layui-layer-lan', // 设置样式
+        offset: '100px', // 设置距离顶部的距离
+        icon: 1,
+    });
+});
 
 
 let isTyping = false;
@@ -510,141 +491,132 @@ let retryCount = 0; // 记录重连次数
 let isReconnecting = false; // 标记是否正在重连
 
 function connect() {
-  socket = new WebSocket(url);
+    socket = new WebSocket(url);
 
-  socket.addEventListener('open', (event) => {
-    console.log('WebSocket connected:', event);
-    retryCount = 0; // 连接成功，将重连次数归零
-    isReconnecting = false; // 连接成功，将重连状态重置
-  });
+    socket.addEventListener('open', (event) => {
+        console.log('WebSocket connected:', event);
+        retryCount = 0; // 连接成功，将重连次数归零
+        isReconnecting = false; // 连接成功，将重连状态重置
+    });
 
-  socket.addEventListener('message', (event) => {
-    saveChatContent()
-  const receivedData = JSON.parse(event.data);
-  const replyElement = document.getElementById('temporary-reply').querySelector('.message');
-  const blinkElement = replyElement.querySelector('.placeholder-cursor');
-  const chatContent = document.getElementById('chat-content');
-  const userInput = document.getElementById('messageInput');
+    socket.addEventListener('message', (event) => {
+        saveChatContent()
+        const receivedData = JSON.parse(event.data);
+        const replyElement = document.getElementById('temporary-reply').querySelector('.message');
+        const blinkElement = replyElement.querySelector('.placeholder-cursor');
+        const chatContent = document.getElementById('chat-content');
+        const userInput = document.getElementById('messageInput');
 
-  // 创建一个监听 element 内容更改的 MutationObserver
-  const observer = new MutationObserver(() => {
-    chatContent.scrollTop = chatContent.scrollHeight;
-  });
+        // 创建一个监听 element 内容更改的 MutationObserver
+        const observer = new MutationObserver(() => {
+            chatContent.scrollTop = chatContent.scrollHeight;
+        });
 
-  // 开始监听 element 的子节点变化
-  observer.observe(replyElement, { childList: true });
-  if (receivedData) {
-      isTyping = false;
-      replyElement.style.whiteSpace = 'pre-line';
-      // 添加接收到的文本
-        const textNode = document.createElement('span');
-        textNode.textContent = receivedData.text;
-        replyElement.insertBefore(textNode, blinkElement);
+        // 开始监听 element 的子节点变化
+        observer.observe(replyElement, {childList: true});
+        if (receivedData) {
+            isTyping = false;
+            replyElement.style.whiteSpace = 'pre-line';
+            // 添加接收到的文本
+            const textNode = document.createElement('span');
+            textNode.textContent = receivedData.text;
+            replyElement.insertBefore(textNode, blinkElement);
 
-        // 移除光标
-        blinkElement.remove();
+            // 移除光标
+            blinkElement.remove();
 
-      chatContent.scrollTop = chatContent.scrollHeight;
-      blinkElement.classList.remove('blink'); // 去除闪烁光标
-      userInput.focus();
+            chatContent.scrollTop = chatContent.scrollHeight;
+            blinkElement.classList.remove('blink'); // 去除闪烁光标
+            userInput.focus();
 
-        if (receivedData.id) {
-          saveid(receivedData.id)
+            if (receivedData.id) {
+                saveid(receivedData.id)
+            }
+            // 停止监听 element 的子节点变化
+            observer.disconnect();
+
         }
-      // 停止监听 element 的子节点变化
-      observer.disconnect();
+        saveChatContent(); //
+        // typeReply(replyElement, receivedData.text, chatContent, blinkElement);
+    });
 
-  }
-  saveChatContent(); //
-  // typeReply(replyElement, receivedData.text, chatContent, blinkElement);
-});
+    socket.addEventListener('close', (event) => {
+        console.log('WebSocket closed:', event);
+        if (!isReconnecting) {
+            isReconnecting = true;
+            const retryInterval = Math.min(30, Math.pow(2, retryCount)) * 1000; // 计算重连间隔，不超过 30 秒
 
-  socket.addEventListener('close', (event) => {
-  console.log('WebSocket closed:', event);
-  if (!isReconnecting) {
-    isReconnecting = true;
-    const retryInterval = Math.min(30, Math.pow(2, retryCount)) * 1000; // 计算重连间隔，不超过 30 秒
+            // 显示“异常断开，请重新键入”信息
+            const replyElement = document.getElementById('temporary-reply').querySelector('.message');
+            const blinkElement = replyElement.querySelector('.placeholder-cursor');
+            const chatContent = document.getElementById('chat-content');
+            const userInput = document.getElementById('messageInput');
 
-    // 显示“异常断开，请重新键入”信息
-  const replyElement = document.getElementById('temporary-reply').querySelector('.message');
-  const blinkElement = replyElement.querySelector('.placeholder-cursor');
-  const chatContent = document.getElementById('chat-content');
-  const userInput = document.getElementById('messageInput');
+            replyElement.style.whiteSpace = 'pre-line';
+            // 添加接收到的文本
+            const textNode = document.createElement('span');
+            textNode.textContent = '异常断开，请重新键入';
+            replyElement.insertBefore(textNode, blinkElement);
 
-  replyElement.style.whiteSpace = 'pre-line';
-      // 添加接收到的文本
-        const textNode = document.createElement('span');
-        textNode.textContent = '异常断开，请重新键入';
-        replyElement.insertBefore(textNode, blinkElement);
+            // 移除光标
+            blinkElement.remove();
 
-        // 移除光标
-        blinkElement.remove();
-
-      chatContent.scrollTop = chatContent.scrollHeight;
-      blinkElement.classList.remove('blink'); // 去除闪烁光标
-      userInput.focus();
+            chatContent.scrollTop = chatContent.scrollHeight;
+            blinkElement.classList.remove('blink'); // 去除闪烁光标
+            userInput.focus();
 
 
+            setTimeout(connect, retryInterval); // 定时器中执行重连
+            retryCount++; // 增加重连次数
+        }
+    });
 
 
-    setTimeout(connect, retryInterval); // 定时器中执行重连
-    retryCount++; // 增加重连次数
-  }
-});
-
-
-  socket.addEventListener('error', (event) => {
-    console.error('WebSocket error:', event);
-  });
+    socket.addEventListener('error', (event) => {
+        console.error('WebSocket error:', event);
+    });
 }
 
 // 初始化连接
 connect();
 
 
-
-
 function sendMessage() {
-  const chatContent = document.getElementById('chat-content');
-  const userInput = document.getElementById('messageInput');
-  const message = escapeHtml(userInput.value.trim());
+    const chatContent = document.getElementById('chat-content');
+    const userInput = document.getElementById('messageInput');
+    const message = escapeHtml(userInput.value.trim());
 
-  if (message.length > 0 && !isTyping) {
-    isTyping = true;
+    if (message.length > 0 && !isTyping) {
+        isTyping = true;
 
-    const userAvatar = '/static/img/user.png';
-    const replyAvatar = '/static/img/chat.png';
-    const userMessage = `<div class="chat user"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
-    const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
+        const userAvatar = '/static/img/user.png';
+        const replyAvatar = '/static/img/chat.png';
+        const userMessage = `<div class="chat user"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
+        const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
 
-    // 移除上一个 temporary-reply 的 id
-if (document.getElementById('temporary-reply')) {
-  document.getElementById('temporary-reply').removeAttribute('id');
-}
+        // 移除上一个 temporary-reply 的 id
+        if (document.getElementById('temporary-reply')) {
+            document.getElementById('temporary-reply').removeAttribute('id');
+        }
 
 // 添加新的聊天消息
-chatContent.insertAdjacentHTML('beforeend', userMessage + replyMessage);
+        chatContent.insertAdjacentHTML('beforeend', userMessage + replyMessage);
 
-    chatContent.scrollTop = chatContent.scrollHeight;
+        chatContent.scrollTop = chatContent.scrollHeight;
 
-     if (message && socket.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify({ text: message, id: loadid() }));
-    userInput.value = '';
-  }
+        if (message && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({text: message, id: loadid()}));
+            userInput.value = '';
+        }
 
 
-    // 恢复输入框默认高度
-    adjustTextareaHeight(userInput);
-  }
+        // 恢复输入框默认高度
+        adjustTextareaHeight(userInput);
+    }
 }
 
 
-
-
-
-
-
-        function escapeHtml(unsafe) {
+function escapeHtml(unsafe) {
     return unsafe
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -652,6 +624,7 @@ chatContent.insertAdjacentHTML('beforeend', userMessage + replyMessage);
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
 function handleKeyDown(event) {
     if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault(); // 阻止默认行为（换行）
@@ -660,16 +633,15 @@ function handleKeyDown(event) {
         messageInput.value = '';
     }
 }
+
 document.getElementById('messageInput').addEventListener('keydown', handleKeyDown); // 监听 keydown 事件
-
-
 
 
 function deleteMessages() {
     const chatContent = document.getElementById('chat-content');
     chatContent.innerHTML = '';
     saveChatContent();
-      saveid('')// 保存空的聊天记录以覆盖之前的记录
+    saveid('')// 保存空的聊天记录以覆盖之前的记录
 }
 
 
@@ -698,30 +670,30 @@ function loadid() {
     return "";
 }
 
-window.onload = function() {
+window.onload = function () {
     loadChatContent(); // 加载聊天记录
 }
 
 function adjustTextareaHeight(textarea) {
 // 记录当前滚动条位置
-const scrollTop = textarea.scrollTop;
+    const scrollTop = textarea.scrollTop;
 
 // 重置输入框高度，以便正确计算新的滚动高度
-textarea.style.height = '100%';
+    textarea.style.height = '100%';
 
 // 计算新的输入框高度
-const maxHeight = textarea.parentElement.offsetHeight * 0.8;
-const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+    const maxHeight = textarea.parentElement.offsetHeight * 0.8;
+    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
 
 // 更新输入框高度
-textarea.style.height = `${newHeight}px`;
+    textarea.style.height = `${newHeight}px`;
 
 // 还原滚动条位置
-textarea.scrollTop = scrollTop;
+    textarea.scrollTop = scrollTop;
 }
 
 document.getElementById('messageInput').addEventListener('input', function () {
-adjustTextareaHeight(this);
+    adjustTextareaHeight(this);
 });
 
 
