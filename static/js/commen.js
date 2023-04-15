@@ -462,6 +462,8 @@ clearBtn.addEventListener('click', () => {
 
 });
 copyBtn.addEventListener('click', () => {
+    const selectedid = document.querySelector('.menu-div.selected').id
+    if (selectedid !== 'chatBtn') {
     // 如果输出框没有文本内容，弹出提示
     if (!output.value) {
         layer.msg('输出框为空，无法复制', {offset: [$(window).height() - 450], icon: 2, time: 1000});
@@ -477,7 +479,7 @@ copyBtn.addEventListener('click', () => {
         skin: 'layui-layer-lan', // 设置样式
         offset: '100px', // 设置距离顶部的距离
         icon: 1,
-    });
+    });}
 });
 
 
