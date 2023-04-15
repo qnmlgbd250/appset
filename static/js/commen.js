@@ -31,6 +31,7 @@ for (var i = 0; i < divs.length; i++) {
         this.classList.add("selected");
         input.value = "";
         output.value = "";
+        imageContainer.innerHTML = '';
         showChatBox(false);
         if (this.id !== 'ocrBtn') {
              input.style.display = 'block';
