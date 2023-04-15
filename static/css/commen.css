@@ -226,7 +226,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #cccaca;
+    background-color: rgba(178, 178, 178, 0.4);
 
     border-radius: 15px;
 }
@@ -254,6 +254,25 @@ body {
 }
 
 
+/* Custom scrollbar for Chrome, Safari, and Opera */
+.div5::-webkit-scrollbar {
+  width: 5px;
+}
+
+.div5::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.div5::-webkit-scrollbar-thumb {
+  background-color: rgba(178, 178, 178, 0.4);
+  border-radius: 4px;
+}
+
+/* Custom scrollbar for Firefox */
+.div5 {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.1);
+}
 
 
 
