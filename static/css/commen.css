@@ -178,7 +178,7 @@ body {
 
 .menu-div {
 
-    border: 2px solid #faf6f6;
+    border: 1px solid #c2bfbf;
     border-radius: 6px;
     text-align: left;
     padding: 10px 20px;
@@ -192,6 +192,7 @@ body {
 .menu-div.selected {
     border: 1px solid #4b9e5f;
     color: #4b9e5f;
+
 }
 
 .button-div {
