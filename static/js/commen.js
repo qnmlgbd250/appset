@@ -482,6 +482,13 @@ copyBtn.addEventListener('click', () => {
     });}
 });
 
+// 遍历所有 <pre> 元素，为它们启用语法高亮
+const codeBlocks = document.querySelectorAll('pre');
+codeBlocks.forEach((block) => {
+  Prism.highlightElement(block);
+});
+
+
 
 let isTyping = false;
 const host = window.location.hostname;
@@ -502,40 +509,16 @@ function connect() {
     });
 
     let codeBlock = false;
-let preElement, codeElement, codeHeader;
-let languageFlag = false;
+let preElement, codeElement
 
-// 添加样式
-const style = document.createElement('style');
-style.innerHTML = `
-  .code-header {
-    font-size: 12px;
-    background-color: #f0f0f0;
-    padding: 2px 8px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    border-top-right-radius: 3px;
-    color: #333;
-  }
-  .copy-code {
-    margin-left: 8px;
-    cursor: pointer;
-  }
-  pre {
-    position: relative;
-    border: 1px solid #ccc;
-    padding: 8px;
-    border-radius: 3px;
-    margin-top: 0;
-    overflow-x: auto; /* 添加横向滚动条 */
-  }
-`;
-document.head.appendChild(style);
 function createCopyButton(preElement) {
+  const copyButtonWrapper = document.createElement('div');
+  copyButtonWrapper.classList.add('copy-code-wrapper');
+
   const copyButton = document.createElement('span');
   copyButton.classList.add('copy-code');
   copyButton.textContent = '复制代码';
+
   copyButton.addEventListener('click', () => {
     const codeText = preElement.querySelector('code').textContent;
     const textArea = document.createElement('textarea');
@@ -544,26 +527,24 @@ function createCopyButton(preElement) {
     textArea.select();
     document.execCommand('Copy');
     textArea.remove();
+
     layer.msg('复制成功!', {
-        time: 2000, // 设置显示时间，单位为毫秒
-        skin: 'layui-layer-lan', // 设置样式
-        offset: '100px', // 设置距离顶部的距离
-        icon: 1,
+      time: 2000, // 设置显示时间，单位为毫秒
+      skin: 'layui-layer-lan', // 设置样式
+      offset: '100px', // 设置距离顶部的距离
+      icon: 1,
     });
   });
 
-  return copyButton;
+  const copyButtonContainer = document.createElement('span');
+  copyButtonContainer.appendChild(copyButton);
+  copyButtonWrapper.appendChild(copyButtonContainer);
+
+  return copyButtonWrapper;
 }
-function copyCodeToClipboard() {
-  const codeText = codeElement.textContent;
-  const textArea = document.createElement('textarea');
-  textArea.value = codeText;
-  document.body.appendChild(textArea);
-  textArea.select();
-  document.execCommand('Copy');
-  textArea.remove();
-  alert('代码已复制到剪贴板');
-}
+
+
+
 
 socket.addEventListener('message', (event) => {
     saveChatContent()
@@ -584,12 +565,7 @@ socket.addEventListener('message', (event) => {
         isTyping = false;
         replyElement.style.whiteSpace = 'pre-line';
 
-        if (languageFlag) {
-            codeHeader.textContent = receivedData.text;
-      const copyCode = createCopyButton(preElement);
-      codeHeader.appendChild(copyCode);
-      languageFlag = false;
-        } else if (receivedData.text.startsWith('```')) {
+         if (receivedData.text.trim().startsWith('```')) {
             codeBlock = !codeBlock;
             if (codeBlock) {
                 preElement = document.createElement('pre');
@@ -597,13 +573,12 @@ socket.addEventListener('message', (event) => {
                 preElement.appendChild(codeElement);
                 replyElement.insertBefore(preElement, blinkElement);
 
-                codeHeader = document.createElement('div');
-                codeHeader.classList.add('code-header');
-                preElement.appendChild(codeHeader);
+                const copyCode = createCopyButton(preElement);
+                preElement.appendChild(copyCode);
 
-                languageFlag = true;
             }
-        } else if (codeBlock) {
+        }
+         else if (codeBlock) {
             const textNode = document.createTextNode(receivedData.text);
             codeElement.appendChild(textNode);
 
@@ -618,7 +593,6 @@ socket.addEventListener('message', (event) => {
             textNode.textContent = receivedData.text;
             replyElement.insertBefore(textNode, blinkElement);
         }
-
 
 
         // 移除光标
@@ -637,7 +611,6 @@ socket.addEventListener('message', (event) => {
             observer.disconnect();
 
         }
-        languageFlag = false;
         saveChatContent(); //
         // typeReply(replyElement, receivedData.text, chatContent, blinkElement);
     });

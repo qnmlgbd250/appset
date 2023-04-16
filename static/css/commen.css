@@ -357,11 +357,11 @@ body {
 }
 
 .user .message {
-    background-color: #95ec69;
+    background-color: #d2f9d1;
 }
 
 .reply .message {
-    background-color: #f5eded;
+    background-color: #f4f6f8;
 }
 
 .user .message::after, .reply .message::before {
@@ -378,7 +378,7 @@ body {
     width: 0;
     height: 0;
     border: 5px solid transparent;
-    border-left-color: #95ec69;
+    border-left-color: #d2f9d1;
     border-right: none;
     top: 8px; /* 修改此处 */
     right: -4px; /* 修改此处 */
@@ -405,8 +405,42 @@ body {
     width: 0;
     height: 0;
     border: 5px solid transparent;
-    border-right-color: #f5eded;
+    border-right-color: #f4f6f8;
     border-left: none;
     top: 8px; /* 修改此处 */
     left: -4px;
 }
+
+.copy-code-wrapper {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  margin: 4px;
+    font: 12px 微软雅黑;
+    color: #000900;
+
+}
+
+.copy-code-wrapper:hover {
+    color: #04912e;
+}
+
+.copy-code {
+  cursor: pointer;
+}
+
+pre {
+    position: relative;
+
+    background-color: #fcfcfc;
+    padding: 8px;
+    border-radius: 3px;
+    margin-top: 0;
+    overflow-x: auto; /* 添加横向滚动条 */
+    font-family: 'Fira Code', monospace; /* 修改为您喜欢的字体 */
+  font-size: 14px; /* 修改为您喜欢的字号 */
+  line-height: 1.5; /* 修改为您喜欢的行高 */
+
+  }
+
+
