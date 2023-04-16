@@ -431,16 +431,22 @@ body {
 
 pre {
     position: relative;
-
     background-color: #fcfcfc;
     padding: 8px;
     border-radius: 3px;
     margin-top: 0;
     overflow-x: auto; /* 添加横向滚动条 */
-    font-family: 'Fira Code', monospace; /* 修改为您喜欢的字体 */
+    font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif; /* 修改为您喜欢的字体 */
   font-size: 14px; /* 修改为您喜欢的字号 */
   line-height: 1.5; /* 修改为您喜欢的行高 */
 
   }
 
 
+
+
+code {
+  font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}

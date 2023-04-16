@@ -482,13 +482,6 @@ copyBtn.addEventListener('click', () => {
     });}
 });
 
-// 遍历所有 <pre> 元素，为它们启用语法高亮
-const codeBlocks = document.querySelectorAll('pre');
-codeBlocks.forEach((block) => {
-  Prism.highlightElement(block);
-});
-
-
 
 let isTyping = false;
 const host = window.location.hostname;
@@ -570,6 +563,7 @@ socket.addEventListener('message', (event) => {
             if (codeBlock) {
                 preElement = document.createElement('pre');
                 codeElement = document.createElement('code');
+                // codeElement.classList.add('hljs');
                 preElement.appendChild(codeElement);
                 replyElement.insertBefore(preElement, blinkElement);
 
@@ -581,6 +575,7 @@ socket.addEventListener('message', (event) => {
          else if (codeBlock) {
             const textNode = document.createTextNode(receivedData.text);
             codeElement.appendChild(textNode);
+            // hljs.highlightBlock(codeElement);
 
             // 如果字符是换行符，添加一个换行元素
             if (receivedData.text === '\n') {
@@ -613,6 +608,7 @@ socket.addEventListener('message', (event) => {
         }
         saveChatContent(); //
         // typeReply(replyElement, receivedData.text, chatContent, blinkElement);
+
     });
 
     socket.addEventListener('close', (event) => {
