@@ -366,6 +366,7 @@ async def get_chat(msgdict,token=None):
 @app.websocket("/chat")
 async def chat(websocket: WebSocket):
     await websocket.accept()
+    last_text = ''
     while True:
         data = await websocket.receive_json()
         token = get_token_by_redis()
@@ -374,7 +375,14 @@ async def chat(websocket: WebSocket):
         async for i in get_chat(data,token=token):
             if i['choices'][0].get('delta').get('content'):
                 response_text = i['choices'][0].get('delta').get('content')
+                if response_text == '``':
+                    last_text = response_text
+                    response_text = ''
+                if '`' in response_text and last_text == '``':
+                    response_text = response_text.replace('`', '```')
+                    last_text = ''
                 response_data = {"text": response_text, "id": i.get('id')}
+                logging.info(response_data)
                 await websocket.send_json(response_data)
 
 def get_token_by_redis():
