@@ -291,7 +291,7 @@ body {
 
 
 #messageInput {
-    padding: 10px;
+    padding: 7px;
 
     resize: none;
     height: 120px; /* 修改此行 */
