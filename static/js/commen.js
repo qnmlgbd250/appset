@@ -541,6 +541,10 @@ function createCopyButton(preElement) {
 
 socket.addEventListener('message', (event) => {
     saveChatContent()
+    if (event.data === "ping") {
+        // 忽略心跳消息
+        return;
+    }
     const receivedData = JSON.parse(event.data);
     const replyElement = document.getElementById('temporary-reply').querySelector('.message');
     const blinkElement = replyElement.querySelector('.placeholder-cursor');

@@ -9,6 +9,7 @@ import json
 import requests
 import os
 import redis
+import asyncio
 import threading
 from httpx import AsyncClient
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
@@ -376,6 +377,7 @@ async def get_chat(msgdict,token=None):
 async def chat(websocket: WebSocket):
     await websocket.accept()
     last_text = ''
+    asyncio.create_task(send_ping(websocket))  # 创建一个发送心跳包的任务
     while True:
         try:
             data = await websocket.receive_json()
@@ -399,6 +401,14 @@ async def chat(websocket: WebSocket):
             # 记录其他异常
             now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             logging.error(f"{now} | WebSocket 异常: {repr(e)}")
+            break
+
+async def send_ping(websocket: WebSocket, interval: int = 60):
+    while True:
+        await asyncio.sleep(interval)
+        try:
+            await websocket.send_text("ping")
+        except WebSocketDisconnect:
             break
 
 async def get_token_by_redis():
