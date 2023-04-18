@@ -387,7 +387,6 @@ async def chat(websocket: WebSocket):
                     response_text = response_text.strip().replace('`', '```')
                     last_text = ''
                 response_data = {"text": response_text, "id": i.get('id')}
-                logging.info(response_data)
                 await websocket.send_json(response_data)
 
 def get_token_by_redis():
