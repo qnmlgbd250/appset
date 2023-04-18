@@ -11,7 +11,7 @@ import os
 import redis
 import threading
 from httpx import AsyncClient
-from fastapi import FastAPI, Request, WebSocket
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 import uvicorn
 import urllib.parse
 from fastapi.templating import Jinja2Templates
@@ -20,6 +20,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 from datetime import datetime
 from dotenv import load_dotenv
+import ujson
 
 # 加载 .env 文件
 load_dotenv(".env")
@@ -34,6 +35,9 @@ app.add_middleware(
     allow_methods = ["*"],
     allow_headers = ["*"],
 )
+
+app.json_loads = ujson.loads
+app.json_dumps = ujson.dumps
 
 DATA_FILE = 'used_tokens.json'
 # 创建线程锁
@@ -373,23 +377,31 @@ async def chat(websocket: WebSocket):
     await websocket.accept()
     last_text = ''
     while True:
-        data = await websocket.receive_json()
-        token = get_token_by_redis()
-        logging.info(token)
-        logging.info(data)
-        async for i in get_chat(data,token=token):
-            if i['choices'][0].get('delta').get('content'):
-                response_text = i['choices'][0].get('delta').get('content')
-                if response_text.strip() == '``':
-                    last_text = '``'
-                    response_text = ''
-                if '`' in response_text and last_text == '``':
-                    response_text = response_text.strip().replace('`', '```')
-                    last_text = ''
-                response_data = {"text": response_text, "id": i.get('id')}
-                await websocket.send_json(response_data)
+        try:
+            data = await websocket.receive_json()
+            token = await get_token_by_redis()
+            logging.debug(data)
+            async for i in get_chat(data,token=token):
+                if i['choices'][0].get('delta').get('content'):
+                    response_text = i['choices'][0].get('delta').get('content')
+                    if response_text.strip() == '``':
+                        last_text = '``'
+                        response_text = ''
+                    if '`' in response_text and last_text == '``':
+                        response_text = response_text.strip().replace('`', '```')
+                        last_text = ''
+                    response_data = {"text": response_text, "id": i.get('id')}
+                    await websocket.send_json(response_data)
+        except WebSocketDisconnect as e:
+            # 处理断开连接的情况
+            break
+        except Exception as e:
+            # 记录其他异常
+            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            logging.error(f"{now} | WebSocket 异常: {repr(e)}")
+            break
 
-def get_token_by_redis():
+async def get_token_by_redis():
     tokenindex = redis_pool.get('tokenindex')
     tokenindex = tokenindex.decode('utf-8')
     token = redis_pool.lindex('tokenList', int(tokenindex))
