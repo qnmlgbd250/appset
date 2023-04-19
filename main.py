@@ -385,8 +385,6 @@ async def chat(websocket: WebSocket):
             logging.info(data)
             logging.info(token)
             async for i in get_chat(data,token=token):
-                if i.get('freeTokenToday'):
-                    logging.info('消耗token:{}'.format(i.get('freeTokenToday')))
                 if i['choices'][0].get('delta').get('content'):
                     response_text = i['choices'][0].get('delta').get('content')
                     if response_text.strip() == '``':
