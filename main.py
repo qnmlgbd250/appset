@@ -40,7 +40,6 @@ app.add_middleware(
 app.json_loads = ujson.loads
 app.json_dumps = ujson.dumps
 
-DATA_FILE = 'used_tokens.json'
 # 创建线程锁
 lock = threading.Lock()
 
