@@ -317,7 +317,7 @@ async def get_chat(msgdict,token=None):
         "content-type": "application/json",
         "origin": "https://ai.usesless.com",
         "referer": "https://ai.usesless.com/chat/1681217446562",
-        "Authorization": 'Bearer ' + token,
+        'cookie': f'connect.sid={token}',
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34"
     }
     url = "https://ai.usesless.com/api/chat-process"
@@ -377,13 +377,16 @@ async def get_chat(msgdict,token=None):
 async def chat(websocket: WebSocket):
     await websocket.accept()
     last_text = ''
-    asyncio.create_task(send_ping(websocket))  # 创建一个发送心跳包的任务
+    # asyncio.create_task(send_ping(websocket))  # 创建一个发送心跳包的任务
     while True:
         try:
             data = await websocket.receive_json()
             token = await get_token_by_redis()
-            logging.debug(data)
+            logging.info(data)
+            logging.info(token)
             async for i in get_chat(data,token=token):
+                if i.get('freeTokenToday'):
+                    logging.info('消耗token:{}'.format(i.get('freeTokenToday')))
                 if i['choices'][0].get('delta').get('content'):
                     response_text = i['choices'][0].get('delta').get('content')
                     if response_text.strip() == '``':
@@ -413,7 +416,7 @@ async def send_ping(websocket: WebSocket, interval: int = 60):
 
 async def get_token_by_redis():
     tokenindex = int(redis_pool.get('tokenindex'))
-    token = redis_pool.lindex('tokenList', tokenindex)
+    token = redis_pool.lindex('cookieList', tokenindex)
     list_length = redis_pool.llen('tokenList')
     token = token.decode('utf-8')
     tokenindex_reset = tokenindex + 1
