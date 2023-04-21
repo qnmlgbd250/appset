@@ -72,9 +72,41 @@ document.addEventListener('DOMContentLoaded', () => {
             // 为当前点击的菜单项添加选中状态
             menuDiv.classList.add('selected');
 
-
+            // 将选中的菜单项ID存储到localStorage
+            localStorage.setItem('selectedMenu', menuDiv.id);
         });
     });
+
+    // 检查localStorage中是否有存储的选中项，如果有，就选中该项
+    const lastSelectedMenuId = localStorage.getItem('selectedMenu');
+    if (lastSelectedMenuId) {
+        const lastSelectedMenu = document.getElementById(lastSelectedMenuId);
+        if (lastSelectedMenu) {
+            // 移除所有菜单项的选中状态
+            menuDivs.forEach(m => m.classList.remove('selected'));
+
+            // 为上次选中的菜单项添加选中状态
+            lastSelectedMenu.classList.add('selected');
+        }
+    }
+
+
+
+    // 初始化时隐藏输入输出组件
+    if (lastSelectedMenuId === 'chatBtn') {
+        document.getElementById('div3').style.display = 'none';
+        document.getElementById('div4').style.display = 'none';
+        document.getElementById('input').style.display = 'none';
+        document.getElementById('output').style.display = 'none';
+    }
+
+    // 如果选中的菜单项是chatBtn，显示相关元素（div5、div6）
+    if (lastSelectedMenuId === 'chatBtn') {
+        showChatBox(true);
+    } else {
+        showChatBox(false);
+    }
+
 
     // 为输入框添加输入事件监听器
     input.addEventListener('input', () => {
@@ -771,6 +803,9 @@ document.getElementById('messageInput').addEventListener('input', function () {
 
 
 
+
+
+
 $(document).ready(function () {
     $('.white').click(function () {
         $('body').removeClass('dark-theme').addClass('light-theme');
@@ -778,31 +813,6 @@ $(document).ready(function () {
         inputBox.style.borderColor = 'green';
         outputBox.style.borderColor = 'green';
         imgBox.style.borderColor = 'green';
-    });
-
-    $('.black').click(function () {
-        $('body').removeClass('light-theme').addClass('dark-theme');
-        localStorage.setItem('theme', 'dark-theme');
-        inputBox.style.borderColor = 'green';
-        outputBox.style.borderColor = 'green';
-        imgBox.style.borderColor = 'green';
-    });
-});
-
-
-
-function getLayerSkin() {
-    // Check if the dark mode is currently active
-    if ($('body').hasClass('dark-theme')) {
-        return 'layer-dark';
-    } else {
-        return 'layui-layer-lan';
-    }
-}
-
-$(document).ready(function () {
-    $('.white').click(function () {
-        $('body').removeClass('dark-theme').addClass('light-theme');
         layer.config({
             extend: [],
         });
@@ -810,6 +820,7 @@ $(document).ready(function () {
 
     $('.black').click(function () {
         $('body').removeClass('light-theme').addClass('dark-theme');
+        localStorage.setItem('theme', 'dark-theme');
         inputBox.style.borderColor = 'green';
         outputBox.style.borderColor = 'green';
         imgBox.style.borderColor = 'green';
