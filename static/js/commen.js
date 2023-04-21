@@ -273,7 +273,7 @@ function signTransform(inputText) {
     if (HH < 0 || HH > 24 || MM >= 60) {
         layer.msg('非预期的时间(你这输入的是三体时间吗？)', {
             time: 3000, // 设置显示时间，单位为毫秒
-            skin: 'layui-layer-lan', // 设置样式
+            // skin: getLayerSkin(), // 设置样式
             offset: '100px', // 设置距离顶部的距离
             icon: 2,
         });
@@ -389,7 +389,7 @@ function handlePaste(e) {
         e.preventDefault(); // 在此处添加阻止默认粘贴行为，以禁止粘贴文本
         layer.msg('请粘贴图片，文字输入已被禁止', {
             time: 2000, // 设置显示时间，单位为毫秒
-            skin: 'layui-layer-lan', // 设置样式
+            // skin: getLayerSkin(), // 设置样式
             offset: '100px', // 设置距离顶部的距离
             icon: 2,
         });
@@ -476,7 +476,7 @@ copyBtn.addEventListener('click', () => {
     // 弹出成功提示
     layer.msg('复制成功!', {
         time: 2000, // 设置显示时间，单位为毫秒
-        skin: 'layui-layer-lan', // 设置样式
+        // skin:getLayerSkin(), // 设置样式
         offset: '100px', // 设置距离顶部的距离
         icon: 1,
     });}
@@ -523,7 +523,7 @@ function createCopyButton(preElement) {
 
     layer.msg('复制成功!', {
       time: 2000, // 设置显示时间，单位为毫秒
-      skin: 'layui-layer-lan', // 设置样式
+      // skin: getLayerSkin(), // 设置样式
       offset: '100px', // 设置距离顶部的距离
       icon: 1,
     });
@@ -771,9 +771,58 @@ document.getElementById('messageInput').addEventListener('input', function () {
 
 
 
+$(document).ready(function () {
+    $('.white').click(function () {
+        $('body').removeClass('dark-theme').addClass('light-theme');
+        localStorage.setItem('theme', 'light-theme');
+        inputBox.style.borderColor = 'green';
+        outputBox.style.borderColor = 'green';
+        imgBox.style.borderColor = 'green';
+    });
+
+    $('.black').click(function () {
+        $('body').removeClass('light-theme').addClass('dark-theme');
+        localStorage.setItem('theme', 'dark-theme');
+        inputBox.style.borderColor = 'green';
+        outputBox.style.borderColor = 'green';
+        imgBox.style.borderColor = 'green';
+    });
+});
 
 
 
+function getLayerSkin() {
+    // Check if the dark mode is currently active
+    if ($('body').hasClass('dark-theme')) {
+        return 'layer-dark';
+    } else {
+        return 'layui-layer-lan';
+    }
+}
+
+$(document).ready(function () {
+    $('.white').click(function () {
+        $('body').removeClass('dark-theme').addClass('light-theme');
+        layer.config({
+            extend: [],
+        });
+    });
+
+    $('.black').click(function () {
+        $('body').removeClass('light-theme').addClass('dark-theme');
+        inputBox.style.borderColor = 'green';
+        outputBox.style.borderColor = 'green';
+        imgBox.style.borderColor = 'green';
+
+        layer.config({
+            extend: ['skin/layer-dark.css'],
+        });
+    });
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        $('body').removeClass('light-theme dark-theme').addClass(savedTheme);
+    }
+});
 
 
 
