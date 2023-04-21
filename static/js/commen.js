@@ -90,16 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
-
-    // 初始化时隐藏输入输出组件
-    if (lastSelectedMenuId === 'chatBtn') {
-        document.getElementById('div3').style.display = 'none';
-        document.getElementById('div4').style.display = 'none';
-        document.getElementById('input').style.display = 'none';
-        document.getElementById('output').style.display = 'none';
-    }
-
     // 如果选中的菜单项是chatBtn，显示相关元素（div5、div6）
     if (lastSelectedMenuId === 'chatBtn') {
         showChatBox(true);
@@ -472,10 +462,14 @@ function showChatBox(show) {
     }
 }
 
-chatBtn.addEventListener('click', () => {
-    showChatBox(true);
+function scrollToBottom() {
     const chatBox = document.getElementById("chat-content");
     chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
+}
+
+chatBtn.addEventListener('click', () => {
+    showChatBox(true);
+    scrollToBottom();
 });
 
 // 恢复样式
@@ -760,6 +754,7 @@ function loadChatContent() {
     const savedContent = localStorage.getItem('chatContent');
     if (savedContent) {
         chatContent.innerHTML = savedContent;
+        scrollToBottom();
     }
 }
 
