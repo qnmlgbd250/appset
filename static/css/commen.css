@@ -477,7 +477,7 @@ code {
 .dark-theme .messageInputWrapper textarea,
 .dark-theme .input,
 .dark-theme .output {
-    background-color: #000000;
+    background-color: #444654;
     color: #ffffff;
 }
 
@@ -489,20 +489,20 @@ code {
 }
 
 .dark-theme .reply .message {
-    background-color: #1e1e20;
+    background-color: #414146;
 }
 .dark-theme .reply .message::before{
-    border-right-color: #1e1e20;
+    border-right-color: #414146;
 }
 .dark-theme pre  {
-    background-color: #282c34;
+    background-color: #36363b;
 }
 .dark-theme .copy-code-wrapper {
     color: #d5d5c4
 }
 
 .dark-theme .layui-layer-content {
-    background-color: #1f1f1f !important;
+    background-color: #444654 !important;
     color: #ffffff !important;
 }
 
