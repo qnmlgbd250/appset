@@ -10,8 +10,10 @@ acclist = [] # 用于存放账号
 load_dotenv(".env")
 # 连接Redis数据库
 r = redis.Redis(host=os.getenv('REDIS_HOST'), port=int(os.getenv('REDIS_PORT')), db=int(os.getenv('REDIS_DB')), password=os.getenv('REDIS_PASS'))
-
-for ac in acclist:
+for i in range(438):
+    ac = r.lindex("emailList", i)
+    ac = ac.decode("utf-8")
+    print(f'开始登录第{i}个账号' + ac)
     headers = {
         "Accept": "*/*",
         "Accept-Language": "zh;q=0.9,en;q=0.8",

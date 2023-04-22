@@ -335,6 +335,7 @@ body {
     height: 38px;
     margin-right: 5px;
     border-radius: 6px;
+     margin-top: 20px;
 }
 
 .user {
@@ -344,6 +345,7 @@ body {
 .user img {
     margin-right: 0;
     margin-left: 5px;
+    margin-top: 20px;
     border-radius: 6px;
 }
 
@@ -359,10 +361,12 @@ body {
 
 .user .message {
     background-color: #d2f9d1;
+    margin-top: 20px;
 }
 
 .reply .message {
     background-color: #f4f6f8;
+    margin-top: 20px;
 }
 
 .user .message::after, .reply .message::before {
