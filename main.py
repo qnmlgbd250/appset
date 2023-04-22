@@ -89,14 +89,14 @@ def turn(taskid: str):
         resp = {}
         if taskid.startswith('1'):
 
-            resp = requests.get('https://mtax.kdzwy.com/taxtask/api/task/history', params = param,
+            resp = requests.get(os.getenv('ZWYMOCK'), params = param,
                                 proxies = proxies).json()
             if ((not resp['data'].get('defaultRule')) and (resp['data']['region'] not in old_region_list)) or resp[
                 'data'].get('accName') in accname:
                 resp['data']['defaultRule'] = rule_json_list
 
         elif taskid.startswith('3'):
-            resp = requests.get('https://tax.kdzwy.com/taxtask/api/task/history', params = param,
+            resp = requests.get(os.getenv('ZWYPROD'), params = param,
                                 proxies = proxies).json()
             if (not resp['data'].get('defaultRule')) and (resp['data']['region'] not in old_region_list):
                 resp['data']['defaultRule'] = rule_json_list
@@ -125,8 +125,8 @@ def translate(tstr: str):
             zh = re.findall('[\u4e00-\u9fa5]', tstr)
             if zh:
                 trans_type = 'auto2en'
-            url = "http://api.interpreter.caiyunai.com/v1/translator"
-            token = "msc7eu66huxs0ukm85m2"
+            url = os.getenv('CAIYUNURL')
+            token = os.getenv('CAIYUNTOKEN')
             payload = {
                 "source": tstr,
                 "trans_type": trans_type,
@@ -147,8 +147,6 @@ def translate(tstr: str):
 
 @app.post("/o")
 async def ocr(request: Request):
-    API_KEY = "zaoZ9K2OQIvgNhm9gr8rjjEo"
-    SECRET_KEY = "Ov05o1fmdtACt4OI8thRcPZLIjGHcUph"
     output = {}
     try:
         proxies = {
@@ -161,7 +159,7 @@ async def ocr(request: Request):
             output = {}
         else:
             url = "https://aip.baidubce.com/oauth/2.0/token"
-            params = {"grant_type": "client_credentials", "client_id": API_KEY, "client_secret": SECRET_KEY}
+            params = {"grant_type": "client_credentials", "client_id": os.getenv('OCRAPIKEY'), "client_secret": os.getenv('OCRSECRETKEY')}
             access_token = str(requests.post(url, params = params, proxies = proxies).json().get("access_token"))
             url = f"https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token={access_token}"
 
@@ -226,100 +224,19 @@ async def curl2requests(request: Request):
     return {'output': output}
 
 
-@app.post("/chat")
-async def chatapi(request: Request):
-    output = {}
-    id = ""
-    try:
-        # 3 aidutu网站
-        proxies = {
-            "http": None,
-            "https": None,
-        }
-        data = await request.json()
-        chatword = data.get("chatword", "")
-        if not chatword:
-            output = {}
-        else:
-            logging.info(chatword)
-            headers = {
-                "Accept": "application/json",
-                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-                "Connection": "keep-alive",
-                "Content-Type": "application/json",
-                "Origin": "https://chat.aidutu.cn",
-                "Referer": "https://chat.aidutu.cn/",
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
-                "x-iam": "Dbllwtcm",
-                'Cookie': 'Hm_lvt_8983c75dfe5366171d9541b4c4f70657=1680920048; _UHAO=%7B%22uid%22%3A%2245786%22%2C%22school%22%3A%22%22%2C%22time%22%3A1680920779%2C%22ts%22%3A%222%22%2C%22name%22%3A%22chat_lzhU%22%2C%22head%22%3A%22%5C%2Fres%5C%2Fhead%5C%2Fclassics%5C%2F30.jpg%22%2C%22term%22%3A%22201801%22%2C%22sign%22%3A%22dbe77c771bef1a19702fa421f77bafd5%22%7D; _UIP=1852066cd2ac859e3d8226b941fc8b13; Hm_lpvt_8983c75dfe5366171d9541b4c4f70657=1680936501'
-            }
-
-            url = "https://chat.aidutu.cn/api/cg/chatgpt/user/info"
-            params = {
-                "v": "1.3"
-            }
-            post_data = {
-                "iam": "Dbllwtcm",
-                "q": chatword
-            }
-            post_data = json.dumps(post_data, separators = (',', ':'))
-            response = requests.post(url, headers = headers, params = params, data = post_data)
-
-            token = re.findall(r'"token":"(.*?)","info"', response.text)
-            if token:
-                token = token[0]
-
-            headers = {
-                "Accept": "application/json",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-                "Connection": "keep-alive",
-                "Content-Length": "175",
-                "Content-Type": "application/json",
-                "Host": "chat.aidutu.cn",
-                "Origin": "https://chat.aidutu.cn",
-                "Referer": "https://chat.aidutu.cn/",
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.62",
-                "x-token": token
-            }
-            url = "https://chat.aidutu.cn/api/chat-process"
-            last_id = data.get("lastid", "")
-            options = {}
-            if last_id:
-                options = {"parentMessageId": last_id}
-            post_data = {"prompt": chatword, "options": options,
-                         "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
-
-            response = requests.post(url, headers = headers, json = post_data, proxies = proxies)
-            dicts = re.findall(r'"text":"(.*?)","detail"', response.text)
-            if dicts:
-                output = dicts[-1]
-                ids = re.findall(r'"id":"(.*?)","parentMessageId"', response.text)
-                id = ids[-1]
-            else:
-                logging.error(response.text)
-                output = '连接失败,请稍后再试'
-
-
-
-    except Exception as e:
-        logging.error(e)
-
-    return {'output': output, 'id': id}
-
-
 async def get_chat(msgdict,token=None):
+    web = os.getenv('AISET')
     headers = {
-        "authority": "ai.usesless.com",
+        "authority": web,
         "accept": "application/json, text/plain, */*",
         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
         "content-type": "application/json",
-        "origin": "https://ai.usesless.com",
-        "referer": "https://ai.usesless.com/chat/1681217446562",
+        "origin": f"https://{web}",
+        "referer": f"https://{web}/chat/1681217446562",
         'cookie': f'connect.sid={token}',
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34"
     }
-    url = "https://ai.usesless.com/api/chat-process"
+    url = f"https://{web}/api/chat-process"
     msg = msgdict.get('text')
     lastid = msgdict.get('id')
 
