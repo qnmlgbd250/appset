@@ -385,7 +385,7 @@ body {
     border: 5px solid transparent;
     border-left-color: #d2f9d1;
     border-right: none;
-    top: 8px; /* 修改此处 */
+    top: 12px; /* 修改此处 */
     right: -4px; /* 修改此处 */
 }
 
@@ -412,7 +412,7 @@ body {
     border: 5px solid transparent;
     border-right-color: #f4f6f8;
     border-left: none;
-    top: 8px; /* 修改此处 */
+    top: 12px; /* 修改此处 */
     left: -4px;
 }
 
