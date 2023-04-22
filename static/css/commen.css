@@ -215,7 +215,7 @@ body {
 }
 
 .button-div:hover {
-    background-color: #1d8c65;
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* 添加此行 */
 }
 
 ::-webkit-scrollbar {
@@ -474,7 +474,7 @@ code {
     color: #000000;
 }
 .light-theme .button-div:hover {
-    background-color: #1d8c65;
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* 添加此行 */
 }
 
 .dark-theme,
@@ -494,7 +494,7 @@ code {
     color: #000000;
 }
 .dark-theme .button-div:hover {
-    background-color: #9bc5b6;
+    box-shadow: 0 0 5px rgba(30, 208, 155, 0.5); /* 添加此行 */
 }
 
 .dark-theme .reply .message {
