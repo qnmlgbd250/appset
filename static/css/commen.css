@@ -195,6 +195,11 @@ body {
 
 }
 
+.menu-div:hover {
+  color: #4b9e5f !important;
+}
+
+
 .button-div {
     background-color: #ffffff;
 
