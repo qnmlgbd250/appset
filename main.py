@@ -376,6 +376,7 @@ async def get_chat(msgdict,token=None):
 async def chat(websocket: WebSocket):
     await websocket.accept()
     last_text = ''
+    language = ["python", "java", "c", "cpp", "c#", "javascript", "php", "html", "css", "go", "ruby", "r" "swift", "kotlin", "k"]
     # asyncio.create_task(send_ping(websocket))  # 创建一个发送心跳包的任务
     while True:
         try:
@@ -385,13 +386,21 @@ async def chat(websocket: WebSocket):
             logging.info(token)
             async for i in get_chat(data,token=token):
                 if i['choices'][0].get('delta').get('content'):
+                    # logging.info(i['choices'][0].get('delta'))
                     response_text = i['choices'][0].get('delta').get('content')
                     if response_text.strip() == '``':
                         last_text = '``'
                         response_text = ''
                     if '`' in response_text and last_text == '``':
                         response_text = response_text.strip().replace('`', '```')
-                        last_text = ''
+                        last_text = '```'
+                    if response_text.strip() == '```':
+                        last_text = '```'
+                    if last_text == '```' and any([i in response_text for i in language]):
+                        for j in language:
+                            if j == response_text:
+                                response_text = response_text.replace(j, '')
+                                break
                     response_data = {"text": response_text, "id": i.get('id')}
                     await websocket.send_json(response_data)
         except WebSocketDisconnect as e:

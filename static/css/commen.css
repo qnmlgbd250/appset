@@ -415,8 +415,8 @@ body {
 .copy-code-wrapper {
   position: absolute;
   top: 0;
-  right: 4px;
-  margin: 4px;
+  right: 5px;
+  margin: 5px;
     font: 12px 微软雅黑;
     color: #000900;
 
@@ -433,9 +433,9 @@ body {
 pre {
     position: relative;
     background-color: #fcfcfc;
-    padding: 8px;
-    border-radius: 3px;
-    margin-top: 0;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 10px;
     overflow-x: auto; /* 添加横向滚动条 */
     font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif; /* 修改为您喜欢的字体 */
   font-size: 14px; /* 修改为您喜欢的字号 */
@@ -495,10 +495,13 @@ code {
     border-right-color: #414146;
 }
 .dark-theme pre  {
-    background-color: #36363b;
+    background-color: #393941;
 }
 .dark-theme .copy-code-wrapper {
     color: #d5d5c4
+}
+.dark-theme .copy-code-wrapper:hover {
+    color: #04912e;
 }
 
 .dark-theme .layui-layer-content {
