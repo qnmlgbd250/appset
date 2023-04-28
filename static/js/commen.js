@@ -838,3 +838,6 @@ $(document).ready(function () {
 
 
 
+document.getElementById('toggleButton').addEventListener('click', function () {
+            document.querySelector('.parent').classList.toggle('collapsed');
+        });

@@ -252,11 +252,44 @@ body {
 }
 
 
+/* Add the following to your existing CSS */
+.toggle-button {
+    display: none;
+    position: fixed;
+    left: 45%;
+    top: 32px;
+    z-index: 1000;
+    font-size: 14px;
+    padding: 10px 15px;
+    background-color: #aeb2af;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 1s ease;
+}
+
 @media screen and (max-width: 700px) {
-    .menu, .input, .output {
-        width: 100%;
+    .toggle-button {
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .parent.collapsed .div1,
+    .parent.collapsed .div2 {
+        display: none;
+        transition: transform 0.3s ease;
+    }
+
+    .parent.collapsed .div3,
+    .parent.collapsed .div4,
+    .parent.collapsed .div5,
+    .parent.collapsed .div6{ /* Add this line */
+        grid-column-start: 1;
+        transition: transform 0.3s ease;
     }
 }
+
 
 
 /* Custom scrollbar for Chrome, Safari, and Opera */
