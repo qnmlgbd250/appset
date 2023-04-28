@@ -612,10 +612,10 @@ socket.addEventListener('message', (event) => {
             // hljs.highlightBlock(codeElement);
 
             // 如果字符是换行符，添加一个换行元素
-            if (receivedData.text === '\n') {
-                const br = document.createElement('br');
-                codeElement.appendChild(br);
-            }
+            // if (receivedData.text === '\n') {
+            //     const br = document.createElement('br');
+            //     codeElement.appendChild(br);
+            // }
         } else {
             // 添加接收到的文本
             const textNode = document.createElement('span');
