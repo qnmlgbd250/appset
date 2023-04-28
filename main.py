@@ -310,7 +310,7 @@ async def chat(websocket: WebSocket):
             logging.info(token)
             async for i in get_chat(data,token=token):
                 if i['choices'][0].get('delta').get('content'):
-                    logging.info(i['choices'][0].get('delta'))
+                    # logging.info(i['choices'][0].get('delta'))
                     response_text = i['choices'][0].get('delta').get('content')
                     if response_text.strip() == '``':
                         last_text = '``'
@@ -326,7 +326,6 @@ async def chat(websocket: WebSocket):
                                 response_text = response_text.replace(j, '')
                                 last_text = ''
                                 break
-                    logging.info(last_text)
                     response_data = {"text": response_text, "id": i.get('id')}
                     await websocket.send_json(response_data)
         except WebSocketDisconnect as e:
