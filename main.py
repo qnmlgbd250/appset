@@ -286,7 +286,12 @@ async def get_chat(msgdict,token=None):
                 if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
                         'finish_reason') is not None:
                     return
-                yield data['detail']
+                try:
+                    yield data['detail']
+                except Exception as e:
+                    logging.error(e)
+                    yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                    return
 
 
 @app.websocket("/chat")
