@@ -251,9 +251,13 @@ function transTransform(input) {
 
 //翻译主函数
 function translate(inputText) {
+
     inputText = inputText.trim();
-    const url = '/t/';
-    fetch(url + inputText)
+    const url = '/t';
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({input_str: inputText})
+    })
         .then(response => {
             if (response.ok) {
                 return response.json(); // 将response对象转换为JSON格式

@@ -111,13 +111,15 @@ def turn(taskid: str):
     return {'output': output}
 
 
-@app.get("/t/{tstr}")
-def translate(tstr: str):
+@app.post("/t")
+async def translate(request: Request):
     try:
         proxies = {
             "http": None,
             "https": None,
         }
+        data = await request.json()
+        tstr = data.get("input_str", "")
         if not tstr:
             output = {}
         else:
@@ -356,4 +358,4 @@ async def get_token_by_redis():
 
 
 if __name__ == '__main__':
-    uvicorn.run('main:app', host = "0.0.0.0", port = 20234, reload = True)
+    uvicorn.run('main:app', host = "0.0.0.0", port = 20235, reload = True)
