@@ -280,6 +280,10 @@ body {
         display: none;
         transition: transform 0.3s ease;
     }
+    .user .message::after,.reply .message::before {
+        display: none;
+    }
+
 
     .parent.collapsed .div3,
     .parent.collapsed .div4,
