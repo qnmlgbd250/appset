@@ -838,6 +838,39 @@ $(document).ready(function () {
 
 
 
+
+function checkScreenWidth() {
+  if (window.innerWidth <= 768) {
+    document.querySelector('.parent').classList.add('collapsed');
+  } else {
+    document.querySelector('.parent').classList.remove('collapsed');
+  }
+}
+
+// 初始检查屏幕宽度
+checkScreenWidth();
+
+// 当窗口大小改变时，再次检查屏幕宽度
+window.addEventListener('resize', checkScreenWidth);
+
+// 你之前的 toggleButton 事件监听器
 document.getElementById('toggleButton').addEventListener('click', function () {
-            document.querySelector('.parent').classList.toggle('collapsed');
-        });
+  document.querySelector('.parent').classList.toggle('collapsed');
+});
+
+
+
+document.getElementById('shareButton').addEventListener('click', function () {
+  document.getElementById('modal').style.display = 'block';
+});
+
+document.getElementById('closeModal').addEventListener('click', function () {
+  document.getElementById('modal').style.display = 'none';
+});
+
+// 点击遮罩层时，关闭模态窗口
+window.onclick = function (event) {
+  if (event.target == document.getElementById('modal')) {
+    document.getElementById('modal').style.display = 'none';
+  }
+};
