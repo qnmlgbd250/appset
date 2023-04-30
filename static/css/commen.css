@@ -257,7 +257,6 @@ body {
     display: none;
     position: fixed;
     left: 8%;
-  top: 22px;
     z-index: 1000;
     font-size: 18px;
     padding: 10px 15px;
@@ -281,10 +280,11 @@ body {
     display: none;
     position: fixed;
     right: 8%;
-  top: 22px;
+  /*top: 22px;*/
     z-index: 1000;
     font-size: 18px;
     padding: 10px 15px;
+    outline: none;
 
 
     border: none;
@@ -309,21 +309,23 @@ body {
   font-size: 14px;
   font-weight: bold;
   text-align: center;
+    justify-content: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
+
+
 }
 
 @media screen and (max-width: 700px) {
     .parent{
        height: calc(100vh - 80px);
     }
-     .title-bar,.share-button {
-    display: block;
+     .title-bar,.share-button,.toggle-button  {
+
+         display: flex;
+align-items: center;
   }
-    .toggle-button {
-        display: inline-block;
-        transition: transform 0.3s ease;
-    }
+
 
     .parent.collapsed .div1,
     .parent.collapsed .div2 {
