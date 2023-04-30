@@ -306,7 +306,7 @@ async def chat(websocket: WebSocket):
         try:
             data = await websocket.receive_json()
             token = await get_token_by_redis()
-            logging.info(f'内容:{str(data)},ip:{client_ip}')
+            logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
             async for i in get_chat(data, token=token):
                 if i['choices'][0].get('delta').get('content'):
                     # logging.info(i['choices'][0])
