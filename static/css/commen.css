@@ -325,6 +325,11 @@ body {
          display: flex;
 align-items: center;
   }
+     #messageInput
+    {
+        height: 120px !important; /* 修改移动设备上的高度 */
+
+    }
 
 
     .parent.collapsed .div1,
@@ -399,6 +404,7 @@ align-items: center;
     top: 0;
     border: 1px solid #ccc; /* 添加此行 */
     outline: none; /* 添加此行 */
+
 }
 
 #messageInput:focus {
