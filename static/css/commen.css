@@ -302,7 +302,8 @@ body {
 .title-bar {
   display: none;
   background-color: #ffffff;
-  color: #ffffff;
+  color: #000000;
+    border-bottom: 1px solid #ccc;
   padding: 10px;
   font-size: 14px;
   font-weight: bold;
