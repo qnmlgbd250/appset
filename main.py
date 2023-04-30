@@ -229,7 +229,6 @@ async def curl2requests(request: Request):
 async def get_chat(msgdict,token=None):
     web = os.getenv('AISET')
     headers = {
-        "authority": web,
         "accept": "application/json, text/plain, */*",
         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
         "content-type": "application/json",
@@ -298,6 +297,7 @@ async def get_chat(msgdict,token=None):
 
 @app.websocket("/chat")
 async def chat(websocket: WebSocket):
+    client_ip = websocket.scope["client"][0]
     await websocket.accept()
     last_text = ''
     language = ["python", "java", "c", "cpp", "c#", "javascript", "html", "css", "go", "ruby", "swift", "kotlin"]
@@ -306,9 +306,8 @@ async def chat(websocket: WebSocket):
         try:
             data = await websocket.receive_json()
             token = await get_token_by_redis()
-            logging.info(data)
-            logging.info(token)
-            async for i in get_chat(data,token=token):
+            logging.info(f'内容:{str(data)},ip:{client_ip}')
+            async for i in get_chat(data, token=token):
                 if i['choices'][0].get('delta').get('content'):
                     # logging.info(i['choices'][0])
                     response_text = i['choices'][0].get('delta').get('content')
