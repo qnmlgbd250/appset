@@ -516,7 +516,10 @@ copyBtn.addEventListener('click', () => {
 let isTyping = false;
 const host = window.location.hostname;
 const port = window.location.port;
-const url = `ws://${host}:${port}/chat`;
+let url = `ws://${host}:${port}/chat`;
+if (window.location.hostname === 'xinqiu.xyz') {
+    url = `ws://106.12.127.131:20234//chat`;
+}
 
 let socket = null;
 let retryCount = 0; // 记录重连次数
