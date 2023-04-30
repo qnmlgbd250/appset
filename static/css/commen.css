@@ -280,13 +280,11 @@ body {
     display: none;
     position: fixed;
     right: 8%;
-  /*top: 22px;*/
     z-index: 1000;
     font-size: 18px;
     padding: 10px 15px;
-    outline: none;
-
-
+     background-color: transparent; /* 添加这一行 */
+    color: #333; /* 添加这一行 */
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -303,7 +301,7 @@ body {
 
 .title-bar {
   display: none;
-  background-color: #647768;
+  background-color: #ffffff;
   color: #ffffff;
   padding: 10px;
   font-size: 14px;
