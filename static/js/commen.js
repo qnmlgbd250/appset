@@ -518,8 +518,7 @@ const host = window.location.hostname;
 const port = window.location.port;
 let url = `ws://${host}:${port}/chat`;
 if (window.location.hostname === 'xinqiu.xyz') {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    url = `${protocol}//106.12.127.131:20234/chat`;
+    url = `wss://xinqiu.xyz/chat`;
 
 }
 
