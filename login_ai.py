@@ -28,7 +28,7 @@ def get_accounts():
     for i in range(start_index, end_index + 1):
         account = r.lindex('emailList', i)
         if account is not None:
-            accounts.append(account.decode('utf-8'))
+            accounts.append({i: account.decode('utf-8')})
 
     # 处理账号信息...
     print(f"调用一批账号信息，起始索引: {start_index}，结束索引: {end_index}")
@@ -39,7 +39,7 @@ def get_accounts():
     r.set(last_index_key, end_index)
     return accounts
 
-def _login(ac):
+def _login(index_ac,ac):
     headers = {
         "Accept": "*/*",
         "Accept-Language": "zh;q=0.9,en;q=0.8",
@@ -96,8 +96,10 @@ def _login(ac):
     cookie_re = requests.utils.dict_from_cookiejar(response.cookies)
     print(cookie_re)
     r.lpush("cookieList", cookie_re.get("connect.sid"))
+    r.lset('cookieList', index_ac, cookie_re.get("connect.sid"))
 
 if __name__ == '__main__':
     acclist = get_accounts()
-    for ac in acclist:
-        _login(ac)
+    for ac_dic in acclist:
+        for key in ac_dic:
+            _login(key,ac_dic[key])
