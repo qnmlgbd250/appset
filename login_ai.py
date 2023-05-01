@@ -10,10 +10,36 @@ acclist = [] # 用于存放账号
 load_dotenv(".env")
 # 连接Redis数据库
 r = redis.Redis(host=os.getenv('REDIS_HOST'), port=int(os.getenv('REDIS_PORT')), db=int(os.getenv('REDIS_DB')), password=os.getenv('REDIS_PASS'))
-for i in range(438):
-    ac = r.lindex("emailList", i)
-    ac = ac.decode("utf-8")
-    print(f'开始登录第{i}个账号' + ac)
+def get_accounts():
+    batch_size = 100  # 每个批次的大小
+    last_index_key = 'last_index'  # 存储上一个批次结束的索引的Redis键名
+
+    # 获取上一个批次结束的索引值
+    last_index = int(r.get(last_index_key) or -1)
+    if last_index == 999:
+        last_index = -1
+
+    # 计算这一批次的起始和结束索引
+    start_index = last_index + 1
+    end_index = start_index + batch_size - 1
+
+    # 从Redis中获取对应的账号信息
+    accounts = []
+    for i in range(start_index, end_index + 1):
+        account = r.lindex('emailList', i)
+        if account is not None:
+            accounts.append(account.decode('utf-8'))
+
+    # 处理账号信息...
+    print(f"调用一批账号信息，起始索引: {start_index}，结束索引: {end_index}")
+    print(f"账号信息: {accounts}")
+
+
+    # 将结束索引存回Redis中
+    r.set(last_index_key, end_index)
+    return accounts
+
+def _login(ac):
     headers = {
         "Accept": "*/*",
         "Accept-Language": "zh;q=0.9,en;q=0.8",
@@ -70,3 +96,8 @@ for i in range(438):
     cookie_re = requests.utils.dict_from_cookiejar(response.cookies)
     print(cookie_re)
     r.lpush("cookieList", cookie_re.get("connect.sid"))
+
+if __name__ == '__main__':
+    acclist = get_accounts()
+    for ac in acclist:
+        _login(ac)
