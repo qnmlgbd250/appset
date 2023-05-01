@@ -351,17 +351,20 @@ async def send_ping(websocket: WebSocket, interval: int = 60):
             break
 
 async def get_token_by_redis():
+    list_length = redis_pool.llen('cookieList')
     tokenindex = int(redis_pool.get('tokenindex'))
+    if tokenindex == list_length:
+        tokenindex = 0
     token = redis_pool.lindex('cookieList', tokenindex)
-    list_length = redis_pool.llen('tokenList')
     token = token.decode('utf-8')
-    tokenindex_reset = tokenindex + 1
-    if tokenindex_reset == list_length - 1:
-        tokenindex_reset = 0
+    if tokenindex == 0:
+        tokenindex_reset = tokenindex
+    else:
+        tokenindex_reset = tokenindex + 1
 
     redis_pool.set('tokenindex', str(tokenindex_reset))
     return token
 
 
 if __name__ == '__main__':
-    uvicorn.run('main:app', host = "0.0.0.0", port = 20234, reload = True)
+    uvicorn.run('main:app', host = "0.0.0.0", port = 20235, reload = True)
