@@ -60,8 +60,9 @@ for _ in range(200):
         # 调用dddd识别验证码
         ocr = ddddocr.DdddOcr(show_ad=False)
         image_bytes = base64.b64decode(img)
+        res = requests.post("http://106.12.127.131:9898/ocr/file", files={'image': image_bytes}).text
 
-        res = ocr.classification(image_bytes)
+        # res = ocr.classification(image_bytes)
         print(res)
         if len(res) != 5:
             continue
@@ -100,7 +101,7 @@ for _ in range(200):
 
         if 'you can only send one code in 60s' in str(response.text):
             print('邮箱发送频繁，等待60s')
-            time.sleep(60)
+            time.sleep(30)
             continue
         if '未发送' in str(response.text):
             time.sleep(10)
@@ -188,6 +189,7 @@ for _ in range(200):
         if response.json()['status'] == 'ok':
             print(f'{email}注册成功')
             redis_pool.lpush('emailList', email)
+            time.sleep(60)
     except Exception as e:
         print(e)
         continue
