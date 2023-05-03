@@ -687,6 +687,36 @@ socket.addEventListener('message', (event) => {
 // 初始化连接
 connect();
 
+function formatDate(date, isSameDay) {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+
+    const hourFormat = hours < 10 ? '0' + hours : hours;
+    const minuteFormat = minutes < 10 ? '0' + minutes : minutes;
+    const time = `${hourFormat}:${minuteFormat}`;
+
+    if (isSameDay) {
+        return time;
+    } else {
+        return `${month}月${day}日 ${time}`;
+    }
+}
+
+function timeDifference(date1, date2) {
+    return Math.abs(date1 - date2) / 60000; // 返回分钟
+}
+
+function isSameDay(date1, date2) {
+    if (!date1 || !date2) {
+        return false;
+    }
+    return date1.getDate() === date2.getDate() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getFullYear() === date2.getFullYear();
+}
+
 
 function sendMessage() {
     const chatContent = document.getElementById('chat-content');
@@ -706,8 +736,25 @@ function sendMessage() {
             document.getElementById('temporary-reply').removeAttribute('id');
         }
 
-// 添加新的聊天消息
-        chatContent.insertAdjacentHTML('beforeend', userMessage + replyMessage);
+        // 获取当前时间和上一条用户消息的时间
+        const now = new Date();
+        let lastMessageTime = null;
+        const lastMessageElements = document.querySelectorAll('.time[data-timestamp]');
+
+        if (lastMessageElements.length > 0) {
+            lastMessageTime = new Date(lastMessageElements[lastMessageElements.length - 1].getAttribute('data-timestamp'));
+        }
+
+        // 检查时间间隔是否超过10分钟
+        const shouldShowTime = !lastMessageTime || (timeDifference(now, lastMessageTime) > 10);
+        const formattedTime = formatDate(now, isSameDay(now, lastMessageTime));
+
+        const timeElement = shouldShowTime ? `<div class="time" data-timestamp="${now}">${formattedTime}</div>` : '';
+
+
+    // 添加新的聊天消息
+    chatContent.insertAdjacentHTML('beforeend', timeElement + userMessage + replyMessage);
+
 
         chatContent.scrollTop = chatContent.scrollHeight;
 

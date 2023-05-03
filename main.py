@@ -275,6 +275,9 @@ async def get_chat(msgdict,token=None):
                 if '刷新试试~' in str(data):
                     yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
                     return
+                if 'ChatGPT error' in str(data):
+                    yield {"choices": [{"delta": {"content": "OpenAI错误,请联系管理员"}}]}
+                    return
                 if '今日剩余回答次数为0' in str(data):
                     yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
                     return

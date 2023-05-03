@@ -95,7 +95,7 @@ def _login(index_ac,ac):
 
     cookie_re = requests.utils.dict_from_cookiejar(response.cookies)
     print(cookie_re)
-    r.lpush("cookieList", cookie_re.get("connect.sid"))
+    # r.lpush("cookieList", cookie_re.get("connect.sid"))
     r.lset('cookieList', index_ac, cookie_re.get("connect.sid"))
 
 if __name__ == '__main__':

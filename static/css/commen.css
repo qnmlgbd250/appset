@@ -440,6 +440,22 @@ align-items: center;
      margin-top: 20px;
 }
 
+.time {
+    display: block;
+    position: relative;
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
+    background-color: transparent;
+    /*justify-content: center;*/
+     text-align: center;
+    color: #666;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-top: 10px;
+    margin-bottom: -20px;
+}
+
 .user {
     justify-content: flex-end;
 }
