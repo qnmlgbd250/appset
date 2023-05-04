@@ -517,8 +517,8 @@ let isTyping = false;
 const host = window.location.hostname;
 const port = window.location.port;
 let url = `ws://${host}:${port}/chat`;
-if (window.location.hostname === 'xinqiu.xyz') {
-    url = `wss://xinqiu.xyz/chat`;
+if (host === 'chat250.top') {
+    url = `wss://${host}/chat`;
 
 }
 
