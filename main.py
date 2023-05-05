@@ -354,13 +354,15 @@ async def send_ping(websocket: WebSocket, interval: int = 60):
             break
 
 async def get_token_by_redis():
+    reset = False
     list_length = redis_pool.llen('cookieList')
     tokenindex = int(redis_pool.get('tokenindex'))
     if tokenindex == list_length:
         tokenindex = 0
+        reset = True
     token = redis_pool.lindex('cookieList', tokenindex)
     token = token.decode('utf-8')
-    if tokenindex == 0:
+    if tokenindex == 0 and reset:
         tokenindex_reset = tokenindex
     else:
         tokenindex_reset = tokenindex + 1
