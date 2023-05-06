@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import redis
-import dotenv
-from tokenList import *
 from dotenv import load_dotenv
 
 # 加载 .env 文件
