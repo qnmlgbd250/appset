@@ -308,6 +308,8 @@ async def chat(websocket: WebSocket):
     while True:
         try:
             data = await websocket.receive_json()
+            #测试代码
+            # await websocket.send_json({"text": '你好，有什么可以帮助您的吗?', "id": ''})
             token = await get_token_by_redis()
             logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
             async for i in get_chat(data, token=token):

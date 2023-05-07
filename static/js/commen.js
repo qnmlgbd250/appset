@@ -728,7 +728,8 @@ function sendMessage() {
 
         const userAvatar = '/static/img/user.png';
         const replyAvatar = '/static/img/chat.png';
-        const userMessage = `<div class="chat user"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
+        const userMessageId = `user-message-${Date.now()}`;
+        const userMessage = `<div class="chat user" id="${userMessageId}"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
         const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
 
         // 移除上一个 temporary-reply 的 id
@@ -921,7 +922,93 @@ document.getElementById('closeModal').addEventListener('click', function () {
 
 // 点击遮罩层时，关闭模态窗口
 window.onclick = function (event) {
-  if (event.target == document.getElementById('modal')) {
+  if (event.target === document.getElementById('modal')) {
     document.getElementById('modal').style.display = 'none';
   }
 };
+
+
+const customContextMenu = document.getElementById("customContextMenu");
+const copyOption = document.getElementById("copyOption");
+const chatContent = document.getElementById("chat-content");
+
+// 显示自定义右键菜单
+function showContextMenu(e) {
+  const target = e.target.closest(".chat.user .message, .chat.reply .message");
+
+  // 如果没有点击 .chat.user .message 或 .chat.reply .message 元素，返回并不显示上下文菜单
+  if (!target) {
+    customContextMenu.style.display = "none";
+    return;
+  }
+
+  e.preventDefault();
+  customContextMenu.style.display = "block";
+  customContextMenu.style.left = `${e.clientX}px`;
+
+  // 将上下文菜单显示在鼠标正上方
+  customContextMenu.style.top = `${e.clientY - customContextMenu.offsetHeight}px`;
+  customContextMenu.dataset.target = target.parentElement.id;
+}
+
+
+
+
+
+
+// 复制消息文本
+function copyMessageText() {
+  const targetId = customContextMenu.dataset.target;
+  const targetElement = document.getElementById(targetId);
+  const messageText = targetElement.querySelector(".message").innerText;
+
+  // 创建临时textarea用于复制
+  const tempTextarea = document.createElement("textarea");
+  tempTextarea.style.position = "absolute";
+  tempTextarea.style.left = "-9999px";
+  tempTextarea.value = messageText;
+  document.body.appendChild(tempTextarea);
+  tempTextarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempTextarea);
+
+  // 隐藏自定义右键菜单
+  customContextMenu.style.display = "none";
+}
+
+// 隐藏自定义右键菜单
+function hideContextMenu(e) {
+  customContextMenu.style.display = "none";
+}
+
+// 为聊天内容添加contextmenu事件监听器
+chatContent.addEventListener("contextmenu", showContextMenu);
+
+document.body.addEventListener("click", hideContextMenu);
+copyOption.addEventListener("click", copyMessageText);
+
+function handleTouchStart(e) {
+  const target = e.target.closest(".chat.user .message, .chat.reply .message");
+
+  // 如果点击的是 .chat.user .message 或 .chat.reply .message 元素
+  if (target) {
+    e.preventDefault();
+  }
+
+  touchStartTime = new Date().getTime();
+}
+
+
+function handleTouchEnd(e) {
+  const touchEndTime = new Date().getTime();
+  const longPressDuration = touchEndTime - touchStartTime;
+
+  // 检查长按操作是否超过500毫秒
+  if (longPressDuration >= 500) {
+    // 显示上下文菜单
+    showContextMenu(e.changedTouches[0]);
+  }
+}
+
+document.addEventListener("touchstart", handleTouchStart, false);
+document.addEventListener("touchend", handleTouchEnd, false);
