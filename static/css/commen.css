@@ -741,6 +741,7 @@ color: #333;
 
 .menu-option:hover {
   background-color: #f5f5f5;
+    border-radius: 4px;
 }
 
 /* Light theme */
