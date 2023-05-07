@@ -487,20 +487,6 @@ align-items: center;
     margin-top: 20px;
 }
 
-/*.chat.user .message, .chat.reply .message {*/
-/*  !*-webkit-user-select: none;*!*/
-/*  !*-moz-user-select: none;*!*/
-/*  !*-ms-user-select: none;*!*/
-/*  !*user-select: none;*!*/
-/*}*/
-
-/* 改变选中文本的样式 */
-::selection {
-  background-color: rgba(0, 123, 255, 0.5); /* 透明度为0.5的蓝色背景 */
-  color: white; /* 选中文本的颜色 */
-}
-
-
 .user .message::after, .reply .message::before {
     content: "";
     position: absolute;
@@ -721,57 +707,5 @@ color: #333;
   max-height: 70vh;
   object-fit: contain;
 }
-
-.custom-context-menu {
-  display: none;
-  position: absolute;
-  z-index: 1000;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 8px;
-  border-radius: 6px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.menu-option {
-  cursor: pointer;
-  padding: 4px 8px;
-    font: 12px 微软雅黑;
-}
-
-.menu-option:hover {
-  background-color: #f5f5f5;
-}
-
-/* Light theme */
-.light-theme .custom-context-menu {
-  background-color: #ffffff;
-  color: #333333;
-  border: 1px solid #cccccc;
-}
-
-.light-theme .custom-context-menu:hover {
-  background-color: #f0f0f0;
-}
-
-.light-theme .menu-option:hover {
-  background-color: #e5e5e5;
-}
-
-/* Dark theme */
-.dark-theme .custom-context-menu {
-  background-color: #333333;
-  color: #ffffff;
-  border: 1px solid #555555;
-}
-
-.dark-theme .custom-context-menu:hover {
-  background-color: #444444;
-}
-
-.dark-theme .menu-option:hover {
-  background-color: #555555;
-}
-
 
 

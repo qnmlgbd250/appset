@@ -728,8 +728,7 @@ function sendMessage() {
 
         const userAvatar = '/static/img/user.png';
         const replyAvatar = '/static/img/chat.png';
-        const userMessageId = `user-message-${Date.now()}`;
-        const userMessage = `<div class="chat user" id="${userMessageId}"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
+        const userMessage = `<div class="chat user"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
         const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
 
         // 移除上一个 temporary-reply 的 id
@@ -926,81 +925,3 @@ window.onclick = function (event) {
     document.getElementById('modal').style.display = 'none';
   }
 };
-
-
-const customContextMenu = document.getElementById("customContextMenu");
-const copyOption = document.getElementById("copyOption");
-const chatContent = document.getElementById("chat-content");
-
-// 显示自定义右键菜单并选中消息文本
-function showContextMenu(e) {
-  const target = e.target.closest(".chat.user .message, .chat.reply .message");
-
-  // 如果没有点击 .chat.user .message 或 .chat.reply .message 元素，返回并不显示上下文菜单
-  if (!target) {
-    customContextMenu.style.display = "none";
-    return;
-  }
-
-  e.preventDefault();
-  customContextMenu.style.display = "block";
-  customContextMenu.style.left = `${e.clientX}px`;
-  customContextMenu.style.top = `${e.clientY - customContextMenu.offsetHeight}px`;
-  customContextMenu.dataset.target = target.parentElement.id;
-
-  // 选中消息文本
-  const range = document.createRange();
-  range.selectNodeContents(target);
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-}
-
-// 复制消息文本并隐藏自定义右键菜单
-function copyMessageText() {
-  const targetId = customContextMenu.dataset.target;
-  const targetElement = document.getElementById(targetId);
-  const messageText = targetElement.querySelector(".message").innerText;
-
-  // 创建临时textarea用于复制
-  const tempTextarea = document.createElement("textarea");
-  tempTextarea.style.position = "absolute";
-  tempTextarea.style.left = "-9999px";
-  tempTextarea.value = messageText;
-  document.body.appendChild(tempTextarea);
-  tempTextarea.select();
-  document.execCommand("copy");
-  layer.msg('复制成功!', {
-      time: 2000,
-      offset: '100px',
-      icon: 1,
-    });
-  document.body.removeChild(tempTextarea);
-
-  customContextMenu.style.display = "none";
-}
-
-function handleTouchStart(e) {
-  const target = e.target.closest(".chat.user .message, .chat.reply .message");
-
-  if (target) {
-    e.preventDefault();
-  }
-}
-
-function handleTouchEnd(e) {
-  const touchEndTime = new Date().getTime();
-  const longPressDuration = touchEndTime - touchStartTime;
-
-  if (longPressDuration >= 500) {
-    showContextMenu(e.changedTouches[0]);
-  }
-}
-
-chatContent.addEventListener("contextmenu", showContextMenu);
-document.body.addEventListener("click", () => customContextMenu.style.display = "none");
-copyOption.addEventListener("click", copyMessageText);
-document.addEventListener("touchstart", handleTouchStart, false);
-document.addEventListener("touchend", handleTouchEnd, false);
-
-
