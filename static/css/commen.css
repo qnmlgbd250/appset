@@ -487,12 +487,12 @@ align-items: center;
     margin-top: 20px;
 }
 
-.chat.user .message, .chat.reply .message {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+/*.chat.user .message, .chat.reply .message {*/
+/*  !*-webkit-user-select: none;*!*/
+/*  !*-moz-user-select: none;*!*/
+/*  !*-ms-user-select: none;*!*/
+/*  !*user-select: none;*!*/
+/*}*/
 
 
 .user .message::after, .reply .message::before {
