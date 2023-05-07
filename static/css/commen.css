@@ -494,6 +494,12 @@ align-items: center;
 /*  !*user-select: none;*!*/
 /*}*/
 
+/* 改变选中文本的样式 */
+::selection {
+  background-color: rgba(0, 123, 255, 0.5); /* 透明度为0.5的蓝色背景 */
+  color: white; /* 选中文本的颜色 */
+}
+
 
 .user .message::after, .reply .message::before {
     content: "";

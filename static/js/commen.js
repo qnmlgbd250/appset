@@ -932,7 +932,7 @@ const customContextMenu = document.getElementById("customContextMenu");
 const copyOption = document.getElementById("copyOption");
 const chatContent = document.getElementById("chat-content");
 
-// 显示自定义右键菜单
+// 显示自定义右键菜单并选中消息文本
 function showContextMenu(e) {
   const target = e.target.closest(".chat.user .message, .chat.reply .message");
 
@@ -945,18 +945,18 @@ function showContextMenu(e) {
   e.preventDefault();
   customContextMenu.style.display = "block";
   customContextMenu.style.left = `${e.clientX}px`;
-
-  // 将上下文菜单显示在鼠标正上方
   customContextMenu.style.top = `${e.clientY - customContextMenu.offsetHeight}px`;
   customContextMenu.dataset.target = target.parentElement.id;
+
+  // 选中消息文本
+  const range = document.createRange();
+  range.selectNodeContents(target);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
 }
 
-
-
-
-
-
-// 复制消息文本
+// 复制消息文本并隐藏自定义右键菜单
 function copyMessageText() {
   const targetId = customContextMenu.dataset.target;
   const targetElement = document.getElementById(targetId);
@@ -970,45 +970,37 @@ function copyMessageText() {
   document.body.appendChild(tempTextarea);
   tempTextarea.select();
   document.execCommand("copy");
+  layer.msg('复制成功!', {
+      time: 2000,
+      offset: '100px',
+      icon: 1,
+    });
   document.body.removeChild(tempTextarea);
 
-  // 隐藏自定义右键菜单
   customContextMenu.style.display = "none";
 }
-
-// 隐藏自定义右键菜单
-function hideContextMenu(e) {
-  customContextMenu.style.display = "none";
-}
-
-// 为聊天内容添加contextmenu事件监听器
-chatContent.addEventListener("contextmenu", showContextMenu);
-
-document.body.addEventListener("click", hideContextMenu);
-copyOption.addEventListener("click", copyMessageText);
 
 function handleTouchStart(e) {
   const target = e.target.closest(".chat.user .message, .chat.reply .message");
 
-  // 如果点击的是 .chat.user .message 或 .chat.reply .message 元素
   if (target) {
     e.preventDefault();
   }
-
-  touchStartTime = new Date().getTime();
 }
-
 
 function handleTouchEnd(e) {
   const touchEndTime = new Date().getTime();
   const longPressDuration = touchEndTime - touchStartTime;
 
-  // 检查长按操作是否超过500毫秒
   if (longPressDuration >= 500) {
-    // 显示上下文菜单
     showContextMenu(e.changedTouches[0]);
   }
 }
 
+chatContent.addEventListener("contextmenu", showContextMenu);
+document.body.addEventListener("click", () => customContextMenu.style.display = "none");
+copyOption.addEventListener("click", copyMessageText);
 document.addEventListener("touchstart", handleTouchStart, false);
 document.addEventListener("touchend", handleTouchEnd, false);
+
+
