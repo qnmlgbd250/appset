@@ -278,6 +278,9 @@ async def get_chat(msgdict,token=None):
                 if 'ChatGPT error' in str(data):
                     yield {"choices": [{"delta": {"content": "OpenAI错误,请联系管理员"}}]}
                     return
+                if "Can't create more than max_prepared_stmt_count statements (current value: 99999)" in str(data):
+                    yield {"choices": [{"delta": {"content": "token用尽,请联系管理员"}}]}
+                    return
                 if '今日剩余回答次数为0' in str(data):
                     yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
                     return
