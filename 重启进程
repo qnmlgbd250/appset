@@ -1,0 +1,2 @@
+netstat -ano | findstr :20234
+taskkill /f /pid <PID>
