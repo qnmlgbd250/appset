@@ -72,7 +72,7 @@ def getdate(request: Request):
 def turn(taskid: str):
     try:
         old_region_list = ['shanxi', 'shenzhen', "henan", 'guangdong', 'anhui', 'jiangsu']
-        accname = ['test老地区转苍穹申报表']
+        accname = ['test转苍穹']
         taskid = taskid.strip()
         rule_json = 'static/rule.json'
         with open(rule_json, mode = 'rb') as f:
