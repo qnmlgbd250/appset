@@ -49,7 +49,7 @@ for _ in range(200):
             "email": email
         }
         data = json.dumps(data, separators=(',', ':'))
-        response = requests.post(url, headers=headers, data=data, proxies=proxies)
+        response = session.post(url, headers=headers, data=data, proxies=proxies)
 
         print(response.text)
 
@@ -77,7 +77,7 @@ for _ in range(200):
         }
 
         url = f"https://mail.cx/api/api/v1/mailbox/{email_be}@{email_af_str}"
-        respons = session1.get(url, headers=headers)
+        respons = session1.get(url, headers=headers,proxies=proxies)
         print(respons.text)
 
         # 取邮件中的值
@@ -96,7 +96,7 @@ for _ in range(200):
         }
 
         url = f"https://mail.cx/api/api/v1/mailbox/{email}/{mid}/"
-        response = session1.get(url, headers=headers)
+        response = session1.get(url, headers=headers,proxies=proxies)
 
         print(response.text)
         code = re.findall(r'confirmation=(.*?)<', response.json()['body']['html'])[0]
@@ -110,9 +110,9 @@ for _ in range(200):
               "Upgrade-Insecure-Requests": "1",
               "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36"
             }
-        response = session1.get(jihuo, headers=headers)
+        response = session1.get(jihuo, headers=headers,proxies=proxies)
         if response.status_code == 200:
-            print('激活成功')
+            print(f'{email}：激活成功')
             redis_pool.lpush('emailList', email)
 
 

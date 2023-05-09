@@ -229,14 +229,23 @@ async def curl2requests(request: Request):
 async def get_chat(msgdict,token=None):
     web = os.getenv('AISET')
     headers = {
-        "accept": "application/json, text/plain, */*",
-        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "content-type": "application/json",
-        "origin": f"https://{web}",
-        "referer": f"https://{web}/chat/1681217446562",
-        'cookie': f'connect.sid={token}',
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34"
-    }
+          "Accept": "application/json, text/plain, */*",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Accept-Language": "zh-CN,zh;q=0.9",
+          "Authorization": "Bearer " + token,
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Host": web,
+          "Origin": f"https://{web}",
+          "Referer": f"https://{web}/chat/1683609658988",
+          "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "Sec-Fetch-Dest": "empty",
+          "Sec-Fetch-Mode": "cors",
+          "Sec-Fetch-Site": "same-origin",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36"
+        }
     url = f"https://{web}/api/chat-process"
     msg = msgdict.get('text')
     lastid = msgdict.get('id')
@@ -300,6 +309,35 @@ async def get_chat(msgdict,token=None):
                     yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
                     return
 
+async def get_tmpIntegral(token=None):
+    proxies = {
+        'http': os.getenv('HTTPROXY'),
+    }
+    web = os.getenv('AISET')
+    headers = {
+        "Accept": "*/*",
+        "Accept-Language": "zh-CN,zh;q=0.9",
+        "Authorization": "Bearer " + token,
+        "Connection": "keep-alive",
+        "Referer": f"https://{web}/account",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\""
+    }
+    url = f"https://{web}/api/cms/users/me"
+    try:
+        response = requests.get(url, headers=headers, timeout=30, proxies=proxies)
+
+        tmpIntegral = response.json().get('tmpIntegral')
+        return tmpIntegral
+    except Exception as e:
+        logging.error(e)
+        return 0
+
 
 @app.websocket("/chat")
 async def chat(websocket: WebSocket):
@@ -314,7 +352,8 @@ async def chat(websocket: WebSocket):
             #测试代码
             # await websocket.send_json({"text": '你好，有什么可以帮助您的吗?', "id": ''})
             token = await get_token_by_redis()
-            logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+            tmpIntegral = await get_tmpIntegral(token=token)
+            logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)} | 剩余积分{str(tmpIntegral)}')
             async for i in get_chat(data, token=token):
                 if i['choices'][0].get('delta').get('content'):
                     # logging.info(i['choices'][0])
