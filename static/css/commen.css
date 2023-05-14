@@ -319,12 +319,13 @@ body {
 
     .div3 {
     grid-area: 1 / 2 / 3 / 8;
+       border-right: none !important;
 
 
 }
     .div4 {
     grid-area: 4 / 2 / 6 / 8;
-
+    border-left: none !important;
         position: relative;
     top: -70px;  /* 将 .div4 向上移动10px */
 
