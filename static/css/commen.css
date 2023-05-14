@@ -316,6 +316,31 @@ body {
     .parent{
        height: calc(100vh - 80px);
     }
+
+    .div3 {
+    grid-area: 1 / 2 / 3 / 8;
+
+
+}
+    .div4 {
+    grid-area: 4 / 2 / 6 / 8;
+
+        position: relative;
+    top: -70px;  /* 将 .div4 向上移动10px */
+
+}
+    .input {
+
+    height: calc(50vh - 75px);
+
+
+}
+    .output {
+
+    height: calc(50vh - 75px);
+
+}
+
      .title-bar,.share-button,.toggle-button  {
 
          display: flex;
