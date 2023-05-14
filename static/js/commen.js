@@ -414,7 +414,7 @@ function handlePaste(e) {
     if (!isImagePasted) {
         e.preventDefault(); // 在此处添加阻止默认粘贴行为，以禁止粘贴文本
         layer.msg('请粘贴图片，文字输入已被禁止', {
-            time: 2000, // 设置显示时间，单位为毫秒
+            time: 500, // 设置显示时间，单位为毫秒
             // skin: getLayerSkin(), // 设置样式
             offset: '100px', // 设置距离顶部的距离
             icon: 2,
@@ -505,7 +505,7 @@ copyBtn.addEventListener('click', () => {
     document.execCommand('copy');
     // 弹出成功提示
     layer.msg('复制成功!', {
-        time: 2000, // 设置显示时间，单位为毫秒
+        time: 500, // 设置显示时间，单位为毫秒
         // skin:getLayerSkin(), // 设置样式
         offset: '100px', // 设置距离顶部的距离
         icon: 1,
@@ -538,7 +538,7 @@ function connect() {
     let codeBlock = false;
 let preElement, codeElement
 
-function createCopyButton(preElement) {
+function createCopyButton() {
   const copyButtonWrapper = document.createElement('div');
   copyButtonWrapper.classList.add('copy-code-wrapper');
 
@@ -546,22 +546,7 @@ function createCopyButton(preElement) {
   copyButton.classList.add('copy-code');
   copyButton.textContent = '复制代码';
 
-  copyButton.addEventListener('click', () => {
-    const codeText = preElement.querySelector('code').textContent;
-    const textArea = document.createElement('textarea');
-    textArea.value = codeText;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('Copy');
-    textArea.remove();
 
-    layer.msg('复制成功!', {
-      time: 2000, // 设置显示时间，单位为毫秒
-      // skin: getLayerSkin(), // 设置样式
-      offset: '100px', // 设置距离顶部的距离
-      icon: 1,
-    });
-  });
 
   const copyButtonContainer = document.createElement('span');
   copyButtonContainer.appendChild(copyButton);
@@ -569,6 +554,27 @@ function createCopyButton(preElement) {
 
   return copyButtonWrapper;
 }
+
+document.getElementById('chat-content').addEventListener('click', (event) => {
+    if (event.target.matches('.copy-code')) {
+        const preElement = event.target.closest('pre');
+        const codeElement = preElement.querySelector('code');
+        const codeText = codeElement.textContent;
+        const textArea = document.createElement('textarea');
+        textArea.value = codeText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('Copy');
+        textArea.remove();
+
+        layer.msg('复制成功!', {
+            time: 500, // 设置显示时间，单位为毫秒
+            offset: '100px', // 设置距离顶部的距离
+            icon: 1,
+        });
+    }
+});
+
 
 
 
@@ -605,7 +611,7 @@ socket.addEventListener('message', (event) => {
                 preElement.appendChild(codeElement);
                 replyElement.insertBefore(preElement, blinkElement);
 
-                const copyCode = createCopyButton(preElement);
+                const copyCode = createCopyButton();
                 preElement.appendChild(copyCode);
 
             }
