@@ -727,7 +727,10 @@ function isSameDay(date1, date2) {
 function sendMessage() {
     const chatContent = document.getElementById('chat-content');
     const userInput = document.getElementById('messageInput');
-    const message = escapeHtml(userInput.value.trim());
+    // const message = escapeHtml(userInput.value.trim());
+
+    const message = document.createTextNode(userInput.value.trim()).textContent;
+
 
     if (message.length > 0 && !isTyping) {
         isTyping = true;
