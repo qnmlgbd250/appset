@@ -407,6 +407,11 @@ async def get_tmpIntegral(token=None):
         logging.error(e)
         return 0
 
+async def send_message(websocket, message):
+    # 发送消息之前等待 1 秒钟
+    await asyncio.sleep(0.001)
+    await websocket.send_json(message)
+
 
 @app.websocket("/chat")
 async def chat(websocket: WebSocket):
@@ -456,7 +461,7 @@ async def chat(websocket: WebSocket):
                         response_text = response_text.replace('++', '')
                         last_text = ''
                     response_data = {"text": response_text, "id": i.get('id')}
-                    await websocket.send_json(response_data)
+                    await send_message(websocket, response_data)
         except WebSocketDisconnect as e:
             # 处理断开连接的情况
             break
