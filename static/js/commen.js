@@ -824,7 +824,14 @@ function loadChatContent() {
 }
 
 function saveid(id) {
+  if (!id) {
+    const lastId = localStorage.getItem('lastid');
+    if (lastId) {
+      localStorage.setItem('lastid', lastId);
+    }
+  } else {
     localStorage.setItem('lastid', id);
+  }
 }
 
 function loadid() {
