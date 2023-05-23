@@ -309,6 +309,75 @@ async def get_chat(msgdict,token=None):
                     yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
                     return
 
+async def get_chat2(msgdict,token=None):
+    headers = {
+      "accept": "application/json, text/plain, */*",
+      "accept-encoding": "gzip, deflate, br",
+      "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+      "authorization": "Bearer " + token,
+      "content-type": "application/json",
+      "origin": "https://888gpt.top",
+      "referer": "https://888gpt.top/",
+      "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sec-fetch-dest": "empty",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-site": "same-origin",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
+    }
+    url = "https://888gpt.top/api/chatgpt/chat-process"
+    msg = msgdict.get('text')
+    lastid = msgdict.get('id')
+
+    data = {"prompt": msg,
+            "options": {"temperature": 0.8, "model": 3},
+            "systemMessage":"You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
+    if lastid:
+        data = {"prompt": msg,
+                "options": {"parentMessageId": lastid,
+                            "temperature": 0.8, "model": 3},
+                "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
+
+    async with AsyncClient() as client:
+        async with client.stream('POST', url, headers = headers, json = data, timeout =30) as response:
+            async for line in response.aiter_lines():
+                if line.strip() == "":
+                    continue
+                try:
+                    data = json.loads(line)
+                except Exception as e:
+                    logging.error(e)
+                    yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                    return
+                if '刷新试试~' in str(data):
+                    yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
+                    return
+                if 'ChatGPT error' in str(data):
+                    yield {"choices": [{"delta": {"content": "OpenAI错误,请联系管理员"}}]}
+                    return
+                if "Can't create more than max_prepared_stmt_count statements (current value: 99999)" in str(data):
+                    yield {"choices": [{"delta": {"content": "token用尽,请联系管理员"}}]}
+                    return
+                if '今日剩余回答次数为0' in str(data):
+                    yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
+                    return
+                if '网站今日总共的免费额度已经用完' in str(data):
+                    yield {"choices": [{"delta": {"content": "网站今日回答次数已达上限"}}]}
+                    return
+                if '今日免费额度10000已经用完啦' in str(data):
+                    yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
+                    return
+                if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
+                        'finish_reason') is not None:
+                    return
+                try:
+                    yield data['detail']
+                except Exception as e:
+                    logging.error(e)
+                    yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                    return
+
 async def get_tmpIntegral(token=None):
     proxies = {
         'http': os.getenv('HTTPROXY'),
@@ -351,10 +420,18 @@ async def chat(websocket: WebSocket):
             data = await websocket.receive_json()
             #测试代码
             # await websocket.send_json({"text": '你好，有什么可以帮助您的吗?', "id": ''})
-            token = await get_token_by_redis()
-            tmpIntegral = await get_tmpIntegral(token=token)
-            logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)} | 剩余积分{str(tmpIntegral)}')
-            async for i in get_chat(data, token=token):
+
+            #站点1
+            # token = await get_token_by_redis()
+            # tmpIntegral = await get_tmpIntegral(token=token)
+            # logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)} | 剩余积分{str(tmpIntegral)}')
+            # async for i in get_chat(data, token=token):
+
+            #站点2
+            token = os.getenv('TOKEN')
+            logging.info(
+                f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+            async for i in get_chat2(data, token = token):
                 if i['choices'][0].get('delta').get('content'):
                     # logging.info(i['choices'][0])
                     response_text = i['choices'][0].get('delta').get('content')
