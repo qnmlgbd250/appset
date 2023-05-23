@@ -318,12 +318,6 @@ async def get_chat2(msgdict,token=None):
       "content-type": "application/json",
       "origin": "https://888gpt.top",
       "referer": "https://888gpt.top/",
-      "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua-platform": "\"Windows\"",
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-origin",
       "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
     }
     url = "https://888gpt.top/api/chatgpt/chat-process"
@@ -409,7 +403,7 @@ async def get_tmpIntegral(token=None):
 
 async def send_message(websocket, message):
     # 发送消息之前等待 1 秒钟
-    await asyncio.sleep(0.001)
+    await asyncio.sleep(0.02)
     await websocket.send_json(message)
 
 
