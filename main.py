@@ -367,6 +367,7 @@ async def get_chat2(msgdict,token=None):
                     return
                 try:
                     yield data['detail']
+                    await asyncio.sleep(0.05)
                 except Exception as e:
                     logging.error(e)
                     yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
@@ -403,7 +404,7 @@ async def get_tmpIntegral(token=None):
 
 async def send_message(websocket, message):
     # 发送消息之前等待 1 秒钟
-    await asyncio.sleep(0.02)
+    await asyncio.sleep(0.03)
     await websocket.send_json(message)
 
 
