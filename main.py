@@ -359,15 +359,15 @@ async def get_chat2(msgdict,token=None):
                 if '今日免费额度10000已经用完啦' in str(data):
                     yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
                     return
-                if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
-                        'finish_reason') is not None:
+                if "detail" in data and (data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
+                        'finish_reason') is not None):
                     return
                 try:
                     yield data['detail']
                     await asyncio.sleep(0.05)
                 except Exception as e:
                     logging.error(e)
-                    yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                    yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
                     return
 
 async def get_tmpIntegral(token=None):
