@@ -581,10 +581,6 @@ document.getElementById('chat-content').addEventListener('click', (event) => {
 
 socket.addEventListener('message', (event) => {
     saveChatContent()
-    if (event.data === "ping") {
-        // 忽略心跳消息
-        return;
-    }
     const receivedData = JSON.parse(event.data);
     const replyElement = document.getElementById('temporary-reply').querySelector('.message');
     const blinkElement = replyElement.querySelector('.placeholder-cursor');
@@ -619,13 +615,7 @@ socket.addEventListener('message', (event) => {
          else if (codeBlock) {
             const textNode = document.createTextNode(receivedData.text);
             codeElement.appendChild(textNode);
-            // hljs.highlightBlock(codeElement);
 
-            // 如果字符是换行符，添加一个换行元素
-            // if (receivedData.text === '\n') {
-            //     const br = document.createElement('br');
-            //     codeElement.appendChild(br);
-            // }
         } else {
             // 添加接收到的文本
             const textNode = document.createElement('span');
@@ -638,7 +628,6 @@ socket.addEventListener('message', (event) => {
         blinkElement.remove();
 
         chatContent.scrollTop = chatContent.scrollHeight;
-        blinkElement.classList.remove('blink'); // 去除闪烁光标
         userInput.focus();
 
         if (receivedData.id) {
@@ -650,8 +639,16 @@ socket.addEventListener('message', (event) => {
             observer.disconnect();
 
         }
+    else {
+        // 移除光标
+        blinkElement.remove();
+        chatContent.scrollTop = chatContent.scrollHeight;
+        userInput.focus();
+        // 停止监听 element 的子节点变化
+        observer.disconnect();
+    }
         saveChatContent(); //
-        // typeReply(replyElement, receivedData.text, chatContent, blinkElement);
+
 
     });
 
@@ -777,16 +774,6 @@ function sendMessage() {
         // 恢复输入框默认高度
         adjustTextareaHeight(userInput);
     }
-}
-
-
-function escapeHtml(unsafe) {
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
 }
 
 function handleKeyDown(event) {
