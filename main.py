@@ -71,8 +71,6 @@ def getdate(request: Request):
 @app.get("/d/{taskid}")
 def turn(taskid: str):
     try:
-        old_region_list = ['shanxi', 'shenzhen', "henan", 'guangdong', 'anhui', 'jiangsu']
-        accname = ['test转苍穹']
         taskid = taskid.strip()
         rule_json = 'static/rule.json'
         with open(rule_json, mode = 'rb') as f:
@@ -91,14 +89,13 @@ def turn(taskid: str):
 
             resp = requests.get(os.getenv('ZWYMOCK'), params = param,
                                 proxies = proxies).json()
-            if ((not resp['data'].get('defaultRule')) and (resp['data']['region'] not in old_region_list)) or resp[
-                'data'].get('accName') in accname:
+            if not resp['data'].get('defaultRule'):
                 resp['data']['defaultRule'] = rule_json_list
 
         elif taskid.startswith('3'):
             resp = requests.get(os.getenv('ZWYPROD'), params = param,
                                 proxies = proxies).json()
-            if (not resp['data'].get('defaultRule')) and (resp['data']['region'] not in old_region_list):
+            if not resp['data'].get('defaultRule'):
                 resp['data']['defaultRule'] = rule_json_list
 
         else:
