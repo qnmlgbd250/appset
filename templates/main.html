@@ -63,7 +63,15 @@
         <!-- 输出框内容 -->
     </div>
 
-    <div class="div5" id="chat-content" style="display: none;"></div>
+    <div class="div5" id="chat-content" style="display: none;">
+        <div class="site-selection">
+        <label for="siteSelect"></label>
+        <select id="siteSelect">
+            <option value="1">gpt-3.5-turbo</option>
+            <option value="2">gpt-3.5-turbo-0301</option>
+        </select>
+</div>
+    </div>
     <div class="div6" style="display: none;" id="div6">
   <div class="messageInputWrapper">
     <textarea type="text" id="messageInput" placeholder="说点什么吧...   Shift + Enter 换行"></textarea>

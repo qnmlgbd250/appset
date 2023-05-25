@@ -431,10 +431,24 @@ async def chat(websocket: WebSocket):
             # async for i in get_chat(data, token=token):
 
             #站点2
-            token = os.getenv('TOKEN')
-            logging.info(
-                f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-            async for i in get_chat2(data, token = token):
+            # token = os.getenv('TOKEN')
+            # logging.info(
+            #     f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+            # async for i in get_chat2(data, token = token):
+
+            selected_site = data.get("site", "1")  # 默认为站点1 # 默认值为1
+            if selected_site == "1":
+                token = await get_token_by_redis()
+                tmpIntegral = await get_tmpIntegral(token = token)
+                logging.info(
+                    f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)} | 剩余积分{str(tmpIntegral)}')
+                chat_generator = get_chat(data, token = token)
+            elif selected_site == "2":
+                token = os.getenv('TOKEN')
+                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+                chat_generator = get_chat2(data, token = token)
+
+            async for i in chat_generator:
                 if i['choices'][0].get('delta').get('content'):
                     # logging.info(i['choices'][0])
                     response_text = i['choices'][0].get('delta').get('content')

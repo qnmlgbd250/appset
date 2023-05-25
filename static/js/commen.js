@@ -765,8 +765,11 @@ function sendMessage() {
 
         chatContent.scrollTop = chatContent.scrollHeight;
 
+        const siteSelect = document.getElementById('siteSelect');
+        const selectedSite = siteSelect.value;
+
         if (message && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({text: message, id: loadid()}));
+            socket.send(JSON.stringify({text: message, id: loadid(), site: selectedSite}));
             userInput.value = '';
         }
 
@@ -775,6 +778,10 @@ function sendMessage() {
         adjustTextareaHeight(userInput);
     }
 }
+
+
+
+
 
 function handleKeyDown(event) {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -789,10 +796,20 @@ document.getElementById('messageInput').addEventListener('keydown', handleKeyDow
 
 
 function deleteMessages() {
-    const chatContent = document.getElementById('chat-content');
-    chatContent.innerHTML = '';
-    saveChatContent();
-    saveid('')// 保存空的聊天记录以覆盖之前的记录
+  const chatContent = document.getElementById('chat-content');
+  const siteSelection = document.querySelector('.site-selection');
+
+  // 删除chatContent的所有子元素，除了.site-selection
+  while (chatContent.firstChild) {
+    if (chatContent.firstChild !== siteSelection) {
+      chatContent.removeChild(chatContent.firstChild);
+    } else {
+      chatContent.removeChild(chatContent.firstChild.nextSibling);
+    }
+  }
+
+  saveChatContent();
+  saveid('') // 保存空的聊天记录以覆盖之前的记录
 }
 
 
@@ -808,6 +825,19 @@ function loadChatContent() {
         chatContent.innerHTML = savedContent;
         scrollToBottom();
     }
+    const siteSelect = document.getElementById('siteSelect');
+
+
+    // 从localStorage中获取选项值，并设置为当前选项
+    const savedValue = localStorage.getItem('selectedSite');
+    if (savedValue) {
+        siteSelect.value = savedValue;
+    }
+
+    // 监听下拉框的更改事件，将选中的值存储到localStorage中
+    siteSelect.addEventListener('change', function() {
+        localStorage.setItem('selectedSite', this.value);
+    });
 }
 
 function saveid(id) {
@@ -829,9 +859,12 @@ function loadid() {
     return "";
 }
 
+
+
 window.onload = function () {
     loadChatContent(); // 加载聊天记录
 }
+
 
 function adjustTextareaHeight(textarea) {
 // 记录当前滚动条位置

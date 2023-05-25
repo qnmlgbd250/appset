@@ -398,6 +398,7 @@ align-items: center;
     grid-area: 1 / 2 / 5 / 8;
     overflow-y: scroll;
     border-radius: 6px;
+    position:relative;
 }
 
 .div6 {
@@ -510,12 +511,35 @@ align-items: center;
     margin-top: 20px;
 }
 
-/*.chat.user .message, .chat.reply .message {*/
-/*  !*-webkit-user-select: none;*!*/
-/*  !*-moz-user-select: none;*!*/
-/*  !*-ms-user-select: none;*!*/
-/*  !*user-select: none;*!*/
-/*}*/
+
+
+
+.site-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    position: fixed;
+    left: 50%;
+    z-index: 100;
+}
+
+.site-selection label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.site-selection select {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    font-size: 14px;
+    outline: none;
+
+    background-color: white; /* 背景颜色 */
+}
+
 
 /* 改变选中文本的样式 */
 ::selection {
@@ -639,6 +663,9 @@ code {
     background-color: transparent;
     color: #000000;
 }
+.light-theme .site-selection select{
+    background-color: #ffffff;
+}
 
 .dark-theme,
 .dark-theme .menu,
@@ -697,6 +724,10 @@ code {
 }
 .dark-theme .share-button{
     background-color: transparent;
+    color: #ffffff;
+}
+.dark-theme .site-selection select{
+    background-color:  #444654;
     color: #ffffff;
 }
 
