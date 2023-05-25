@@ -855,9 +855,27 @@ document.getElementById('messageInput').addEventListener('input', function () {
     adjustTextareaHeight(this);
 });
 
+const messageInput = document.getElementById('messageInput');
+messageInput.addEventListener('focus', onFocus);
+messageInput.addEventListener('blur', onBlur);
 
+let resizeHandler;
 
+function onFocus() {
+  resizeHandler = () => {
+    const chatContent = document.getElementById('chat-content');
+    chatContent.scrollTop = chatContent.scrollHeight;
+  };
 
+  window.addEventListener('resize', resizeHandler);
+}
+
+function onBlur() {
+  if (resizeHandler) {
+    window.removeEventListener('resize', resizeHandler);
+    resizeHandler = null;
+  }
+}
 
 
 $(document).ready(function () {
