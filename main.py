@@ -276,8 +276,11 @@ async def get_chat(msgdict,token=None):
                     data = json.loads(line)
                 except Exception as e:
                     logging.error(e)
-                    yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
-                    return
+                    if 'line 1 column' in str(e):
+                        return
+                    else:
+                        yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                        return
                 if '刷新试试~' in str(data):
                     yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
                     return
@@ -339,8 +342,11 @@ async def get_chat2(msgdict,token=None):
                     data = json.loads(line)
                 except Exception as e:
                     logging.error(e)
-                    yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
-                    return
+                    if 'line 1 column' in str(e):
+                        return
+                    else:
+                        yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                        return
                 if '刷新试试~' in str(data):
                     yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
                     return
