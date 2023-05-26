@@ -363,6 +363,10 @@ align-items: center;
         display: none;
     }
 
+    .site-selection {
+        transform: translateX(-50%);!important
+    }
+
 
 
     .parent.collapsed .div3,
