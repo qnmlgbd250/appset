@@ -960,9 +960,38 @@ checkScreenWidth();
 window.addEventListener('resize', checkScreenWidth);
 
 // 你之前的 toggleButton 事件监听器
+function isMobileDevice() {
+  return window.innerWidth <= 768;
+}
+
+function updateSiteSelectionVisibility() {
+  var parentElement = document.querySelector('.parent');
+  var siteSelection = document.querySelector('.site-selection');
+
+  if (isMobileDevice()) {
+    if (parentElement.classList.contains('collapsed')) {
+      siteSelection.style.display = 'block';
+    } else {
+      siteSelection.style.display = 'none';
+    }
+  } else {
+    siteSelection.style.display = 'block';
+  }
+}
+
 document.getElementById('toggleButton').addEventListener('click', function () {
-  document.querySelector('.parent').classList.toggle('collapsed');
+  var parentElement = document.querySelector('.parent');
+
+  if (isMobileDevice()) {
+    parentElement.classList.toggle('collapsed');
+    updateSiteSelectionVisibility();
+  }
 });
+
+window.addEventListener('resize', updateSiteSelectionVisibility);
+
+// 初始化页面时设置.site-selection元素的可见性
+updateSiteSelectionVisibility();
 
 
 

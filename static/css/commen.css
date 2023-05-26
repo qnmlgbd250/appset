@@ -516,7 +516,12 @@ align-items: center;
 }
 
 
-
+@media screen and (min-width: 701px) {
+    .site-selection {
+        transform: translateX(20px);
+        left: calc(50% - 50%);
+    }
+}
 
 .site-selection {
     display: flex;
