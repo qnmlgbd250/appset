@@ -518,7 +518,7 @@ align-items: center;
 
 @media screen and (min-width: 701px) {
     .site-selection {
-        transform: translateX(20px);
+        transform: translateX(15px);
         left: calc(50% - 50%);
     }
 }
@@ -540,8 +540,11 @@ align-items: center;
 }
 
 .site-selection select {
-    border-radius: 4px;
+
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
     border: 1px solid #ccc;
+    border-top: none;
     padding: 5px 10px;
     font-size: 14px;
     outline: none;
