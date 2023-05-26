@@ -224,8 +224,11 @@ async def curl2requests(request: Request):
     return {'output': output}
 
 
-async def get_chat(msgdict,token=None,max_retries=3):
+async def get_chat(msgdict,token=None,max_retries=8):
     web = os.getenv('AISET')
+    proxies = {
+        'http://': os.getenv('HTTPROXY'),
+    }
     headers = {
           "Accept": "application/json, text/plain, */*",
           "Accept-Encoding": "gzip, deflate, br",
@@ -270,8 +273,8 @@ async def get_chat(msgdict,token=None,max_retries=3):
 
     for attempt in range(max_retries):
         try:
-            async with AsyncClient() as client:
-                async with client.stream('POST', url, headers = headers, json = data, timeout =15) as response:
+            async with AsyncClient(proxies = proxies) as client:
+                async with client.stream('POST', url, headers = headers, json = data, timeout =5) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -429,31 +432,18 @@ async def chat(websocket: WebSocket):
     await websocket.accept()
     last_text = ''
     language = ["python", "java", "c", "cpp", "c#", "javascript", "html", "css", "go", "ruby", "swift", "kotlin"]
-    # asyncio.create_task(send_ping(websocket))  # 创建一个发送心跳包的任务
     while True:
         try:
             data = await websocket.receive_json()
             #测试代码
             # await websocket.send_json({"text": '你好，有什么可以帮助您的吗?', "id": ''})
 
-            #站点1
-            # token = await get_token_by_redis()
-            # tmpIntegral = await get_tmpIntegral(token=token)
-            # logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)} | 剩余积分{str(tmpIntegral)}')
-            # async for i in get_chat(data, token=token):
-
-            #站点2
-            # token = os.getenv('TOKEN')
-            # logging.info(
-            #     f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-            # async for i in get_chat2(data, token = token):
-
             selected_site = data.get("site", "1")  # 默认为站点1 # 默认值为1
             if selected_site == "1":
                 token = await get_token_by_redis()
-                tmpIntegral = await get_tmpIntegral(token = token)
+                # tmpIntegral = await get_tmpIntegral(token = token)
                 logging.info(
-                    f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)} | 剩余积分{str(tmpIntegral)}')
+                    f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
                 chat_generator = get_chat(data, token = token)
             elif selected_site == "2":
                 token = os.getenv('TOKEN')
@@ -495,13 +485,6 @@ async def chat(websocket: WebSocket):
             logging.error(f"{now} | WebSocket 异常: {repr(e)}")
             break
 
-async def send_ping(websocket: WebSocket, interval: int = 60):
-    while True:
-        await asyncio.sleep(interval)
-        try:
-            await websocket.send_text("ping")
-        except WebSocketDisconnect:
-            break
 
 async def get_token_by_redis():
     reset = False
