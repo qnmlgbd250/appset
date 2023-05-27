@@ -347,11 +347,7 @@ body {
          display: flex;
 align-items: center;
   }
-     #messageInput
-    {
-        height: 120px !important; /* 修改移动设备上的高度 */
 
-    }
 
 
     .parent.collapsed .div1,
@@ -419,9 +415,8 @@ align-items: center;
 
 #messageInput {
     padding: 7px;
-
     resize: none;
-    height: 120px; /* 修改此行 */
+    /*height: 120px; !* 修改此行 *!*/
     overflow-y: auto;
     width: calc(100% - 25px);
     margin-top: 8px;
@@ -444,7 +439,7 @@ align-items: center;
     display: flex;
     align-items: center;
     flex-grow: 1;
-    width: calc(100% - 5px);
+    width: calc(100%);
 
   justify-content: center;
 

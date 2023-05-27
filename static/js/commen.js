@@ -941,7 +941,19 @@ $(document).ready(function () {
 });
 
 
+function setmessageInputsize() {
+  if (window.innerWidth <= 768) {
+    messageInput.style.height = '40px';
+  } else {
+    messageInput.style.height = '120px';
+  }
+}
 
+// 初始检查屏幕宽度
+setmessageInputsize();
+
+// 当窗口大小改变时，再次检查屏幕宽度
+window.addEventListener('resize', setmessageInputsize);
 
 
 
