@@ -494,22 +494,23 @@ clearBtn.addEventListener('click', () => {
 copyBtn.addEventListener('click', () => {
     const selectedid = document.querySelector('.menu-div.selected').id
     if (selectedid !== 'chatBtn') {
-    // 如果输出框没有文本内容，弹出提示
-    if (!output.value) {
-        layer.msg('输出框为空，无法复制', {offset: [$(window).height() - 450], icon: 2, time: 1000});
-        return;
+        // 如果输出框没有文本内容，弹出提示
+        if (!output.value) {
+            layer.msg('输出框为空，无法复制', {offset: [$(window).height() - 450], icon: 2, time: 1000});
+            return;
+        }
+        // 选中输出框的文本内容
+        output.select();
+        // 执行复制命令
+        document.execCommand('copy');
+        // 弹出成功提示
+        layer.msg('复制成功!', {
+            time: 500, // 设置显示时间，单位为毫秒
+            // skin:getLayerSkin(), // 设置样式
+            offset: '100px', // 设置距离顶部的距离
+            icon: 1,
+        });
     }
-    // 选中输出框的文本内容
-    output.select();
-    // 执行复制命令
-    document.execCommand('copy');
-    // 弹出成功提示
-    layer.msg('复制成功!', {
-        time: 500, // 设置显示时间，单位为毫秒
-        // skin:getLayerSkin(), // 设置样式
-        offset: '100px', // 设置距离顶部的距离
-        icon: 1,
-    });}
 });
 
 
@@ -536,117 +537,111 @@ function connect() {
     });
 
     let codeBlock = false;
-let preElement, codeElement
+    let preElement, codeElement
 
-function createCopyButton() {
-  const copyButtonWrapper = document.createElement('div');
-  copyButtonWrapper.classList.add('copy-code-wrapper');
+    function createCopyButton() {
+        const copyButtonWrapper = document.createElement('div');
+        copyButtonWrapper.classList.add('copy-code-wrapper');
 
-  const copyButton = document.createElement('span');
-  copyButton.classList.add('copy-code');
-  copyButton.textContent = '复制代码';
+        const copyButton = document.createElement('span');
+        copyButton.classList.add('copy-code');
+        copyButton.textContent = '复制代码';
 
 
+        const copyButtonContainer = document.createElement('span');
+        copyButtonContainer.appendChild(copyButton);
+        copyButtonWrapper.appendChild(copyButtonContainer);
 
-  const copyButtonContainer = document.createElement('span');
-  copyButtonContainer.appendChild(copyButton);
-  copyButtonWrapper.appendChild(copyButtonContainer);
-
-  return copyButtonWrapper;
-}
-
-document.getElementById('chat-content').addEventListener('click', (event) => {
-    if (event.target.matches('.copy-code')) {
-        const preElement = event.target.closest('pre');
-        const codeElement = preElement.querySelector('code');
-        const codeText = codeElement.textContent;
-        const textArea = document.createElement('textarea');
-        textArea.value = codeText;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('Copy');
-        textArea.remove();
-
-        layer.msg('复制成功!', {
-            time: 500, // 设置显示时间，单位为毫秒
-            offset: '100px', // 设置距离顶部的距离
-            icon: 1,
-        });
+        return copyButtonWrapper;
     }
-});
 
+    document.getElementById('chat-content').addEventListener('click', (event) => {
+        if (event.target.matches('.copy-code')) {
+            const preElement = event.target.closest('pre');
+            const codeElement = preElement.querySelector('code');
+            const codeText = codeElement.textContent;
+            const textArea = document.createElement('textarea');
+            textArea.value = codeText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('Copy');
+            textArea.remove();
 
-
-
-
-socket.addEventListener('message', (event) => {
-    saveChatContent()
-    const receivedData = JSON.parse(event.data);
-    const replyElement = document.getElementById('temporary-reply').querySelector('.message');
-    const blinkElement = replyElement.querySelector('.placeholder-cursor');
-    const chatContent = document.getElementById('chat-content');
-    const userInput = document.getElementById('messageInput');
-
-    // 创建一个监听 element 内容更改的 MutationObserver
-    const observer = new MutationObserver(() => {
-        chatContent.scrollTop = chatContent.scrollHeight;
+            layer.msg('复制成功!', {
+                time: 500, // 设置显示时间，单位为毫秒
+                offset: '100px', // 设置距离顶部的距离
+                icon: 1,
+            });
+        }
     });
 
-    // 开始监听 element 的子节点变化
-    observer.observe(replyElement, {childList: true, subtree: true});
-    if (receivedData) {
-        isTyping = false;
-        replyElement.style.whiteSpace = 'pre-line';
 
-         if (receivedData.text.trim().startsWith('```')) {
-            codeBlock = !codeBlock;
-            if (codeBlock) {
-                preElement = document.createElement('pre');
-                codeElement = document.createElement('code');
-                // codeElement.classList.add('hljs');
-                preElement.appendChild(codeElement);
-                replyElement.insertBefore(preElement, blinkElement);
+    socket.addEventListener('message', (event) => {
+        saveChatContent()
+        const receivedData = JSON.parse(event.data);
+        const replyElement = document.getElementById('temporary-reply').querySelector('.message');
+        const blinkElement = replyElement.querySelector('.placeholder-cursor');
+        const chatContent = document.getElementById('chat-content');
+        const userInput = document.getElementById('messageInput');
 
-                const copyCode = createCopyButton();
-                preElement.appendChild(copyCode);
+        // 创建一个监听 element 内容更改的 MutationObserver
+        const observer = new MutationObserver(() => {
+            chatContent.scrollTop = chatContent.scrollHeight;
+        });
 
+        // 开始监听 element 的子节点变化
+        observer.observe(replyElement, {childList: true, subtree: true});
+        if (receivedData) {
+            isTyping = false;
+            replyElement.style.whiteSpace = 'pre-line';
+
+            if (receivedData.text.trim().startsWith('```')) {
+                codeBlock = !codeBlock;
+                if (codeBlock) {
+                    preElement = document.createElement('pre');
+                    codeElement = document.createElement('code');
+                    // codeElement.classList.add('hljs');
+                    preElement.appendChild(codeElement);
+                    replyElement.insertBefore(preElement, blinkElement);
+
+                    const copyCode = createCopyButton();
+                    preElement.appendChild(copyCode);
+
+                }
+            } else if (codeBlock) {
+                const textNode = document.createTextNode(receivedData.text);
+                codeElement.appendChild(textNode);
+
+            } else {
+                // 添加接收到的文本
+                const textNode = document.createElement('span');
+                textNode.textContent = receivedData.text;
+                replyElement.insertBefore(textNode, blinkElement);
             }
-        }
-         else if (codeBlock) {
-            const textNode = document.createTextNode(receivedData.text);
-            codeElement.appendChild(textNode);
-
-        } else {
-            // 添加接收到的文本
-            const textNode = document.createElement('span');
-            textNode.textContent = receivedData.text;
-            replyElement.insertBefore(textNode, blinkElement);
-        }
 
 
-        // 移除光标
-        blinkElement.remove();
+            // 移除光标
+            blinkElement.remove();
 
-        chatContent.scrollTop = chatContent.scrollHeight;
-        userInput.focus();
+            chatContent.scrollTop = chatContent.scrollHeight;
+            userInput.focus();
 
-        if (receivedData.id) {
-            saveid(receivedData.id)
-        }
+            if (receivedData.id) {
+                saveid(receivedData.id)
+            }
 
 
             // 停止监听 element 的子节点变化
             observer.disconnect();
 
+        } else {
+            // 移除光标
+            blinkElement.remove();
+            chatContent.scrollTop = chatContent.scrollHeight;
+            userInput.focus();
+            // 停止监听 element 的子节点变化
+            observer.disconnect();
         }
-    else {
-        // 移除光标
-        blinkElement.remove();
-        chatContent.scrollTop = chatContent.scrollHeight;
-        userInput.focus();
-        // 停止监听 element 的子节点变化
-        observer.disconnect();
-    }
         saveChatContent(); //
 
 
@@ -759,8 +754,8 @@ function sendMessage() {
         const timeElement = shouldShowTime ? `<div class="time" data-timestamp="${now}">${formattedTime}</div>` : '';
 
 
-    // 添加新的聊天消息
-    chatContent.insertAdjacentHTML('beforeend', timeElement + userMessage + replyMessage);
+        // 添加新的聊天消息
+        chatContent.insertAdjacentHTML('beforeend', timeElement + userMessage + replyMessage);
 
 
         chatContent.scrollTop = chatContent.scrollHeight;
@@ -780,9 +775,6 @@ function sendMessage() {
 }
 
 
-
-
-
 function handleKeyDown(event) {
     if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault(); // 阻止默认行为（换行）
@@ -796,20 +788,20 @@ document.getElementById('messageInput').addEventListener('keydown', handleKeyDow
 
 
 function deleteMessages() {
-  const chatContent = document.getElementById('chat-content');
-  const siteSelection = document.querySelector('.site-selection');
+    const chatContent = document.getElementById('chat-content');
+    const siteSelection = document.querySelector('.site-selection');
 
-  // 删除chatContent的所有子元素，除了.site-selection
-  while (chatContent.firstChild) {
-    if (chatContent.firstChild !== siteSelection) {
-      chatContent.removeChild(chatContent.firstChild);
-    } else {
-      chatContent.removeChild(chatContent.firstChild.nextSibling);
+    // 删除chatContent的所有子元素，除了.site-selection
+    while (chatContent.firstChild) {
+        if (chatContent.firstChild !== siteSelection) {
+            chatContent.removeChild(chatContent.firstChild);
+        } else {
+            chatContent.removeChild(chatContent.firstChild.nextSibling);
+        }
     }
-  }
 
-  saveChatContent();
-  saveid('') // 保存空的聊天记录以覆盖之前的记录
+    saveChatContent();
+    saveid('') // 保存空的聊天记录以覆盖之前的记录
 }
 
 
@@ -835,20 +827,20 @@ function loadChatContent() {
     }
 
     // 监听下拉框的更改事件，将选中的值存储到localStorage中
-    siteSelect.addEventListener('change', function() {
+    siteSelect.addEventListener('change', function () {
         localStorage.setItem('selectedSite', this.value);
     });
 }
 
 function saveid(id) {
-  if (!id) {
-    const lastId = localStorage.getItem('lastid');
-    if (lastId) {
-      localStorage.setItem('lastid', lastId);
+    if (!id) {
+        const lastId = localStorage.getItem('lastid');
+        if (lastId) {
+            localStorage.setItem('lastid', lastId);
+        }
+    } else {
+        localStorage.setItem('lastid', id);
     }
-  } else {
-    localStorage.setItem('lastid', id);
-  }
 }
 
 function loadid() {
@@ -858,7 +850,6 @@ function loadid() {
     }
     return "";
 }
-
 
 
 window.onload = function () {
@@ -895,19 +886,19 @@ messageInput.addEventListener('blur', onBlur);
 let resizeHandler;
 
 function onFocus() {
-  resizeHandler = () => {
-    const chatContent = document.getElementById('chat-content');
-    chatContent.scrollTop = chatContent.scrollHeight;
-  };
+    resizeHandler = () => {
+        const chatContent = document.getElementById('chat-content');
+        chatContent.scrollTop = chatContent.scrollHeight;
+    };
 
-  window.addEventListener('resize', resizeHandler);
+    window.addEventListener('resize', resizeHandler);
 }
 
 function onBlur() {
-  if (resizeHandler) {
-    window.removeEventListener('resize', resizeHandler);
-    resizeHandler = null;
-  }
+    if (resizeHandler) {
+        window.removeEventListener('resize', resizeHandler);
+        resizeHandler = null;
+    }
 }
 
 
@@ -940,86 +931,81 @@ $(document).ready(function () {
     }
 });
 
+function isMobileDevice() {
+    return window.innerWidth <= 768;
+}
+
+function updateSiteSelectionVisibility() {
+    var parentElement = document.querySelector('.parent');
+    var siteSelection = document.querySelector('.site-selection');
+
+    if (isMobileDevice()) {
+        if (parentElement.classList.contains('collapsed')) {
+            siteSelection.style.display = 'block';
+        } else {
+            siteSelection.style.display = 'none';
+        }
+    } else {
+        siteSelection.style.display = 'block';
+    }
+}
 
 function setmessageInputsize() {
-  if (window.innerWidth <= 768) {
-    messageInput.style.height = '40px';
-  } else {
-    messageInput.style.height = '120px';
-  }
+    const messageInput = document.getElementById("messageInput");
+
+    if (isMobileDevice()) {
+        messageInput.style.height = '40px';
+    } else {
+        messageInput.style.height = '120px';
+    }
+}
+
+function checkScreenWidth() {
+    const parentElement = document.querySelector('.parent');
+
+    if (isMobileDevice()) {
+        parentElement.classList.add('collapsed');
+    } else {
+        parentElement.classList.remove('collapsed');
+    }
+
+    updateSiteSelectionVisibility();
 }
 
 // 初始检查屏幕宽度
 setmessageInputsize();
-
-// 当窗口大小改变时，再次检查屏幕宽度
-window.addEventListener('resize', setmessageInputsize);
-
-
-
-function checkScreenWidth() {
-  if (window.innerWidth <= 768) {
-    document.querySelector('.parent').classList.add('collapsed');
-  } else {
-    document.querySelector('.parent').classList.remove('collapsed');
-  }
-}
-
-// 初始检查屏幕宽度
 checkScreenWidth();
 
 // 当窗口大小改变时，再次检查屏幕宽度
-window.addEventListener('resize', checkScreenWidth);
-
-// 你之前的 toggleButton 事件监听器
-function isMobileDevice() {
-  return window.innerWidth <= 768;
-}
-
-function updateSiteSelectionVisibility() {
-  var parentElement = document.querySelector('.parent');
-  var siteSelection = document.querySelector('.site-selection');
-
-  if (isMobileDevice()) {
-    if (parentElement.classList.contains('collapsed')) {
-      siteSelection.style.display = 'block';
-    } else {
-      siteSelection.style.display = 'none';
-    }
-  } else {
-    siteSelection.style.display = 'block';
-  }
-}
+window.addEventListener('resize', () => {
+  setmessageInputsize();
+  checkScreenWidth();
+});
 
 document.getElementById('toggleButton').addEventListener('click', function () {
-  var parentElement = document.querySelector('.parent');
-
   if (isMobileDevice()) {
-    parentElement.classList.toggle('collapsed');
-    updateSiteSelectionVisibility();
+      const parentElement = document.querySelector('.parent');
+      parentElement.classList.toggle('collapsed');
+      updateSiteSelectionVisibility();
   }
 });
 
-window.addEventListener('resize', updateSiteSelectionVisibility);
-
-// 初始化页面时设置.site-selection元素的可见性
-updateSiteSelectionVisibility();
 
 
 
 document.getElementById('shareButton').addEventListener('click', function () {
-  document.getElementById('modal').style.display = 'block';
+    document.getElementById('modal').style.display = 'block';
 });
 
 document.getElementById('closeModal').addEventListener('click', function () {
-  document.getElementById('modal').style.display = 'none';
+    document.getElementById('modal').style.display = 'none';
 });
 
 // 点击遮罩层时，关闭模态窗口
 window.onclick = function (event) {
-  if (event.target === document.getElementById('modal')) {
-    document.getElementById('modal').style.display = 'none';
-  }
+    if (event.target === document.getElementById('modal')) {
+        document.getElementById('modal').style.display = 'none';
+    }
 };
 
 
@@ -1029,81 +1015,79 @@ const chatContent = document.getElementById("chat-content");
 
 // 显示自定义右键菜单并选中消息文本
 function showContextMenu(e) {
-  let target = e.target.closest(".chat .message");
+    let target = e.target.closest(".chat .message");
 
-  // 如果没有点击 .chat .message 元素，返回并不显示上下文菜单
-  if (!target) {
-    customContextMenu.style.display = "none";
-    return;
-  }
+    // 如果没有点击 .chat .message 元素，返回并不显示上下文菜单
+    if (!target) {
+        customContextMenu.style.display = "none";
+        return;
+    }
 
-  // 向上查找直到找到包含 'chat' 类的元素
-  let chatElement = target;
-  while (!chatElement.classList.contains('chat')) {
-    chatElement = chatElement.parentElement;
-  }
+    // 向上查找直到找到包含 'chat' 类的元素
+    let chatElement = target;
+    while (!chatElement.classList.contains('chat')) {
+        chatElement = chatElement.parentElement;
+    }
 
-  // 如果 chatElement 没有 id，则为其生成一个唯一 id
-  if (!chatElement.id) {
-    chatElement.id = `chat-message-${Date.now()}`;
-  }
+    // 如果 chatElement 没有 id，则为其生成一个唯一 id
+    if (!chatElement.id) {
+        chatElement.id = `chat-message-${Date.now()}`;
+    }
 
-  e.preventDefault();
-  customContextMenu.style.display = "block";
-  customContextMenu.style.left = `${e.clientX}px`;
-  customContextMenu.style.top = `${e.clientY - customContextMenu.offsetHeight}px`;
-  customContextMenu.dataset.target = chatElement.id;
+    e.preventDefault();
+    customContextMenu.style.display = "block";
+    customContextMenu.style.left = `${e.clientX}px`;
+    customContextMenu.style.top = `${e.clientY - customContextMenu.offsetHeight}px`;
+    customContextMenu.dataset.target = chatElement.id;
 
-  // 选中消息文本
-  const range = document.createRange();
-  range.selectNodeContents(target);
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
+    // 选中消息文本
+    const range = document.createRange();
+    range.selectNodeContents(target);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
 }
-
-
 
 
 // 复制消息文本并隐藏自定义右键菜单
 function copyMessageText() {
-  const targetId = customContextMenu.dataset.target;
-  const targetElement = document.getElementById(targetId);
-  const messageText = targetElement.querySelector(".message").innerText;
+    const targetId = customContextMenu.dataset.target;
+    const targetElement = document.getElementById(targetId);
+    const messageText = targetElement.querySelector(".message").innerText;
 
-  // 创建临时textarea用于复制
-  const tempTextarea = document.createElement("textarea");
-  tempTextarea.style.position = "absolute";
-  tempTextarea.style.left = "-9999px";
-  tempTextarea.value = messageText;
-  document.body.appendChild(tempTextarea);
-  tempTextarea.select();
-  document.execCommand("copy");
-  layer.msg('复制成功!', {
-      time: 500,
-      offset: '100px',
-      icon: 1,
+    // 创建临时textarea用于复制
+    const tempTextarea = document.createElement("textarea");
+    tempTextarea.style.position = "absolute";
+    tempTextarea.style.left = "-9999px";
+    tempTextarea.value = messageText;
+    document.body.appendChild(tempTextarea);
+    tempTextarea.select();
+    document.execCommand("copy");
+    layer.msg('复制成功!', {
+        time: 500,
+        offset: '100px',
+        icon: 1,
     });
-  document.body.removeChild(tempTextarea);
+    document.body.removeChild(tempTextarea);
 
-  customContextMenu.style.display = "none";
+    customContextMenu.style.display = "none";
 }
 
 function handleTouchStart(e) {
-  const target = e.target.closest(".chat.user .message, .chat.reply .message");
+    const target = e.target.closest(".chat.user .message, .chat.reply .message");
 
-  if (target) {
-    e.preventDefault();
-  }
+    if (target) {
+        e.preventDefault();
+    }
 }
 
 function handleTouchEnd(e) {
-  const touchEndTime = new Date().getTime();
-  const longPressDuration = touchEndTime - touchStartTime;
+    const touchEndTime = new Date().getTime();
+    const longPressDuration = touchEndTime - touchStartTime;
 
-  if (longPressDuration >= 500) {
-    showContextMenu(e.changedTouches[0]);
-  }
+    if (longPressDuration >= 500) {
+        showContextMenu(e.changedTouches[0]);
+    }
 }
 
 chatContent.addEventListener("contextmenu", showContextMenu);
