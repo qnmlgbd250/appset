@@ -579,6 +579,9 @@ function connect() {
     socket.addEventListener('message', (event) => {
         saveChatContent()
         const receivedData = JSON.parse(event.data);
+        if (receivedData.lastmsg) {
+                savelastmsg(receivedData.lastmsg)
+            }
         const replyElement = document.getElementById('temporary-reply').querySelector('.message');
         const blinkElement = replyElement.querySelector('.placeholder-cursor');
         const chatContent = document.getElementById('chat-content');
@@ -764,7 +767,7 @@ function sendMessage() {
         const selectedSite = siteSelect.value;
 
         if (message && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({text: message, id: loadid(), site: selectedSite}));
+            socket.send(JSON.stringify({text: message, id: loadid(), site: selectedSite, lastmsg: loadmsg()}));
             userInput.value = '';
         }
 
@@ -791,16 +794,19 @@ function deleteMessages() {
     const chatContent = document.getElementById('chat-content');
     const siteSelection = document.querySelector('.site-selection');
 
-    // 删除chatContent的所有子元素，除了.site-selection
-    while (chatContent.firstChild) {
-        if (chatContent.firstChild !== siteSelection) {
-            chatContent.removeChild(chatContent.firstChild);
+     // 删除chatContent的所有子元素，除了.site-selection
+    let childNode = chatContent.firstChild;
+    while (childNode) {
+        if (childNode !== siteSelection) {
+            const nextSibling = childNode.nextSibling;
+            chatContent.removeChild(childNode);
+            childNode = nextSibling;
         } else {
-            chatContent.removeChild(chatContent.firstChild.nextSibling);
+            childNode = childNode.nextSibling;
         }
     }
 
-    saveChatContent();
+    localStorage.setItem('chatContent', 'DELETE'); // 将空字符串存储到localStorage中
     saveid('') // 保存空的聊天记录以覆盖之前的记录
 }
 
@@ -813,7 +819,7 @@ function saveChatContent() {
 function loadChatContent() {
     const chatContent = document.getElementById('chat-content');
     const savedContent = localStorage.getItem('chatContent');
-    if (savedContent) {
+     if (savedContent && savedContent !== 'DELETE') { // 判断读取到的值是否为空字符串
         chatContent.innerHTML = savedContent;
         scrollToBottom();
     }
@@ -843,10 +849,22 @@ function saveid(id) {
     }
 }
 
+function savelastmsg(msg) {
+    localStorage.setItem('lastmsg', msg);
+}
+
 function loadid() {
     const savedid = localStorage.getItem('lastid');
     if (savedid) {
         return savedid;
+    }
+    return "";
+}
+
+function loadmsg() {
+    const savedmsg = localStorage.getItem('lastmsg');
+    if (savedmsg) {
+        return savedmsg;
     }
     return "";
 }

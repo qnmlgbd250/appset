@@ -404,6 +404,60 @@ async def get_chat2(msgdict,token=None,max_retries=8):
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
         break
 
+async def get_chat3(msgdict,max_retries=8):
+    proxies = {
+        'http://': os.getenv('HTTPROXY'),
+    }
+    headers = {
+        "authority": "chat-module.orence.io",
+        "accept": "text/event-stream",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "content-type": "application/json",
+        "origin": "https://chat-module.orence.io",
+        "referer": "https://chat-module.orence.io/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
+    }
+    url = "https://chat-module.orence.io/api/openai/v1/chat/completions"
+    msg = msgdict.get('text')
+    lastmsg = msgdict.get('lastmsg')
+    messages = [
+        {"role": "system", "content": "IMPRTANT: You are a virtual assistant powered by the gpt-3.5-turbo model, now time is 2023/5/27 22:47:30}"}
+        ]
+    currenttext = {"role": "user", "content": msg}
+    if lastmsg:
+        lastmessage = {"role": "assistant", "content": lastmsg}
+        messages.append(lastmessage)
+    messages.append(currenttext)
+    if len(messages) > 10:
+        messages[0:1].extend(messages[-2:])
+    data = {"messages": messages, "stream": True, "model": "gpt-3.5-turbo", "temperature": 0.8, "presence_penalty": 1}
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies = proxies) as client:
+                async with client.stream('POST', url, headers = headers, json = data, timeout =8) as response:
+                    async for line in response.aiter_bytes():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            decoded_chunk = line.decode("utf-8")
+                            yield {"choices": [{"delta": {"content": decoded_chunk}}]}
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+        break
+
 async def get_tmpIntegral(token=None):
     proxies = {
         'http': os.getenv('HTTPROXY'),
@@ -445,6 +499,7 @@ async def chat(websocket: WebSocket):
     await websocket.accept()
     last_text = ''
     language = ["python", "java", "c", "cpp", "c#", "javascript", "html", "css", "go", "ruby", "swift", "kotlin"]
+    lastmsg = ''
     while True:
         try:
             data = await websocket.receive_json()
@@ -462,6 +517,10 @@ async def chat(websocket: WebSocket):
                 token = os.getenv('TOKEN')
                 logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
                 chat_generator = get_chat2(data, token = token)
+
+            elif selected_site == "3":
+                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+                chat_generator = get_chat3(data)
 
             async for i in chat_generator:
                 if i['choices'][0].get('delta').get('content'):
@@ -488,7 +547,13 @@ async def chat(websocket: WebSocket):
                         response_text = response_text.replace('++', '')
                         last_text = ''
                     response_data = {"text": response_text, "id": i.get('id')}
+                    if selected_site == "3":
+                        lastmsg += response_text
                     await send_message(websocket, response_data)
+            if selected_site == "3":
+                logging.info(lastmsg)
+                response_data = {"lastmsg": lastmsg}
+                await send_message(websocket, response_data)
         except WebSocketDisconnect as e:
             # 处理断开连接的情况
             break
