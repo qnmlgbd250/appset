@@ -409,14 +409,22 @@ async def get_chat3(msgdict,max_retries=8):
         'http://': os.getenv('HTTPROXY'),
     }
     headers = {
-        "authority": "chat-module.orence.io",
-        "accept": "text/event-stream",
-        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "content-type": "application/json",
-        "origin": "https://chat-module.orence.io",
-        "referer": "https://chat-module.orence.io/",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
-    }
+          "Host": "chat-module.orence.io",
+          "Connection": "keep-alive",
+          "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "sec-ch-ua-mobile": "?0",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
+          "Content-Type": "application/json",
+          "Accept": "*/*",
+          "Origin": "https://chat-module.orence.io",
+          "Sec-Fetch-Site": "same-origin",
+          "Sec-Fetch-Mode": "cors",
+          "Sec-Fetch-Dest": "empty",
+          "Referer": "https://chat-module.orence.io/",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+        }
     url = "https://chat-module.orence.io/api/openai/v1/chat/completions"
     msg = msgdict.get('text')
     lastmsg = msgdict.get('lastmsg')
@@ -551,7 +559,6 @@ async def chat(websocket: WebSocket):
                         lastmsg += response_text
                     await send_message(websocket, response_data)
             if selected_site == "3":
-                logging.info(lastmsg)
                 response_data = {"lastmsg": lastmsg}
                 await send_message(websocket, response_data)
         except WebSocketDisconnect as e:
