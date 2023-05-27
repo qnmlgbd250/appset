@@ -324,7 +324,10 @@ async def get_chat(msgdict,token=None,max_retries=8):
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
         break
 
-async def get_chat2(msgdict,token=None):
+async def get_chat2(msgdict,token=None,max_retries=8):
+    proxies = {
+        'http://': os.getenv('HTTPROXY'),
+    }
     headers = {
       "accept": "application/json, text/plain, */*",
       "accept-encoding": "gzip, deflate, br",
@@ -347,49 +350,59 @@ async def get_chat2(msgdict,token=None):
                 "options": {"parentMessageId": lastid,
                             "temperature": 0.8, "model": 3},
                 "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies = proxies) as client:
+                async with client.stream('POST', url, headers = headers, json = data, timeout =8) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            data = json.loads(line)
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                return
+                        if '刷新试试~' in str(data):
+                            yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
+                            return
+                        if 'ChatGPT error' in str(data):
+                            yield {"choices": [{"delta": {"content": "OpenAI错误,请联系管理员"}}]}
+                            return
+                        if "Can't create more than max_prepared_stmt_count statements (current value: 99999)" in str(data):
+                            yield {"choices": [{"delta": {"content": "token用尽,请联系管理员"}}]}
+                            return
+                        if '今日剩余回答次数为0' in str(data):
+                            yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
+                            return
+                        if '网站今日总共的免费额度已经用完' in str(data):
+                            yield {"choices": [{"delta": {"content": "网站今日回答次数已达上限"}}]}
+                            return
+                        if '今日免费额度10000已经用完啦' in str(data):
+                            yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
+                            return
+                        if "detail" in data and (data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
+                                'finish_reason') is not None):
+                            return
+                        try:
+                            yield data['detail']
+                            await asyncio.sleep(0.05)
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
+                            return
 
-    async with AsyncClient() as client:
-        async with client.stream('POST', url, headers = headers, json = data, timeout =30) as response:
-            async for line in response.aiter_lines():
-                if line.strip() == "":
-                    continue
-                try:
-                    data = json.loads(line)
-                except Exception as e:
-                    logging.error(e)
-                    if 'line 1 column' in str(e):
-                        return
-                    else:
-                        yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
-                        return
-                if '刷新试试~' in str(data):
-                    yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
-                    return
-                if 'ChatGPT error' in str(data):
-                    yield {"choices": [{"delta": {"content": "OpenAI错误,请联系管理员"}}]}
-                    return
-                if "Can't create more than max_prepared_stmt_count statements (current value: 99999)" in str(data):
-                    yield {"choices": [{"delta": {"content": "token用尽,请联系管理员"}}]}
-                    return
-                if '今日剩余回答次数为0' in str(data):
-                    yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
-                    return
-                if '网站今日总共的免费额度已经用完' in str(data):
-                    yield {"choices": [{"delta": {"content": "网站今日回答次数已达上限"}}]}
-                    return
-                if '今日免费额度10000已经用完啦' in str(data):
-                    yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
-                    return
-                if "detail" in data and (data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
-                        'finish_reason') is not None):
-                    return
-                try:
-                    yield data['detail']
-                    await asyncio.sleep(0.05)
-                except Exception as e:
-                    logging.error(e)
-                    yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
-                    return
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+        break
 
 async def get_tmpIntegral(token=None):
     proxies = {
