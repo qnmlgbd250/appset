@@ -466,6 +466,92 @@ async def get_chat3(msgdict,max_retries=8):
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
         break
 
+async def get_chat4(msgdict,token=None,max_retries=8):
+    proxies = {
+        'http://': os.getenv('HTTPROXY'),
+    }
+    headers = {
+        "authority": "yuge-admin.orence.cn",
+        "accept": "text/event-stream",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "authorization": "Bearer " + token,
+        "content-type": "text/plain;charset=UTF-8",
+        "origin": "https://yuge.orence.cn",
+        "referer": "https://yuge.orence.cn/",
+        "sec-ch-ua": "\"Google Chrome\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+    }
+    url = "https://yuge-admin.orence.cn/api/send_bot"
+    msg = msgdict.get('text')
+    data = {
+        "info": msg,
+        "session_id": 688
+    }
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies = proxies) as client:
+                async with client.stream('POST', url, headers = headers, json = data, timeout =8) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            # 查找 "data:" 的位置
+                            start_index = line.find("data:") + len("data:")
+
+                            # 提取 JSON 字符串
+                            json_str = line[start_index:].strip()
+
+                            # 将 JSON 字符串转换为 Python 字典
+                            data = json.loads(json_str)
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                return
+                        if '刷新试试~' in str(data):
+                            yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
+                            return
+                        if 'ChatGPT error' in str(data):
+                            yield {"choices": [{"delta": {"content": "OpenAI错误,请联系管理员"}}]}
+                            return
+                        if "Can't create more than max_prepared_stmt_count statements (current value: 99999)" in str(data):
+                            yield {"choices": [{"delta": {"content": "token用尽,请联系管理员"}}]}
+                            return
+                        if '今日剩余回答次数为0' in str(data):
+                            yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
+                            return
+                        if '网站今日总共的免费额度已经用完' in str(data):
+                            yield {"choices": [{"delta": {"content": "网站今日回答次数已达上限"}}]}
+                            return
+                        if '今日免费额度10000已经用完啦' in str(data):
+                            yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
+                            return
+                        if data.get('choices') is None or data.get('choices')[0].get(
+                                'finish_reason') is not None:
+                            return
+                        try:
+                            yield {"choices": data.get('choices')}
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+        break
+
 async def get_tmpIntegral(token=None):
     proxies = {
         'http': os.getenv('HTTPROXY'),
@@ -529,6 +615,11 @@ async def chat(websocket: WebSocket):
             elif selected_site == "3":
                 logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
                 chat_generator = get_chat3(data)
+
+            elif selected_site == "4":
+                token = os.getenv('GPT4TOKEN')
+                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+                chat_generator = get_chat4(data, token = token)
 
             async for i in chat_generator:
                 if i['choices'][0].get('delta').get('content'):
