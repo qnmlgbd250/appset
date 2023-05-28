@@ -325,6 +325,7 @@ async def get_chat(msgdict,token=None,max_retries=8):
         break
 
 async def get_chat2(msgdict,token=None,max_retries=8):
+    web = os.getenv('AISET2')
     proxies = {
         'http://': os.getenv('HTTPROXY'),
     }
@@ -334,11 +335,11 @@ async def get_chat2(msgdict,token=None,max_retries=8):
       "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
       "authorization": "Bearer " + token,
       "content-type": "application/json",
-      "origin": "https://888gpt.top",
-      "referer": "https://888gpt.top/",
+      "origin": web,
+      "referer": web,
       "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
     }
-    url = "https://888gpt.top/api/chatgpt/chat-process"
+    url = f"{web}/api/chatgpt/chat-process"
     msg = msgdict.get('text')
     lastid = msgdict.get('id')
 
@@ -405,11 +406,12 @@ async def get_chat2(msgdict,token=None,max_retries=8):
         break
 
 async def get_chat3(msgdict,max_retries=8):
+    web = os.getenv('AISET3')
     proxies = {
         'http://': os.getenv('HTTPROXY'),
     }
     headers = {
-          "Host": "chat-module.orence.io",
+          "Host": web,
           "Connection": "keep-alive",
           "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
           "sec-ch-ua-platform": "\"Windows\"",
@@ -417,15 +419,15 @@ async def get_chat3(msgdict,max_retries=8):
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
           "Content-Type": "application/json",
           "Accept": "*/*",
-          "Origin": "https://chat-module.orence.io",
+          "Origin": f"https://{web}",
           "Sec-Fetch-Site": "same-origin",
           "Sec-Fetch-Mode": "cors",
           "Sec-Fetch-Dest": "empty",
-          "Referer": "https://chat-module.orence.io/",
+          "Referer": f"https://{web}",
           "Accept-Encoding": "gzip, deflate, br",
           "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
         }
-    url = "https://chat-module.orence.io/api/openai/v1/chat/completions"
+    url = f"https://{web}/api/openai/v1/chat/completions"
     msg = msgdict.get('text')
     lastmsg = msgdict.get('lastmsg')
     messages = [
@@ -467,17 +469,19 @@ async def get_chat3(msgdict,max_retries=8):
         break
 
 async def get_chat4(msgdict,token=None,max_retries=8):
+    web = os.getenv('AISET4')
+    home = os.getenv('AISET4HOME')
     proxies = {
         'http://': os.getenv('HTTPROXY'),
     }
     headers = {
-        "authority": "yuge-admin.orence.cn",
+        "authority": web,
         "accept": "text/event-stream",
         "accept-language": "zh-CN,zh;q=0.9",
         "authorization": "Bearer " + token,
         "content-type": "text/plain;charset=UTF-8",
-        "origin": "https://yuge.orence.cn",
-        "referer": "https://yuge.orence.cn/",
+        "origin": home,
+        "referer": home,
         "sec-ch-ua": "\"Google Chrome\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "\"Windows\"",
@@ -486,7 +490,7 @@ async def get_chat4(msgdict,token=None,max_retries=8):
         "sec-fetch-site": "same-site",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
     }
-    url = "https://yuge-admin.orence.cn/api/send_bot"
+    url = f"https://{web}/api/send_bot"
     msg = msgdict.get('text')
     data = {
         "info": msg,
