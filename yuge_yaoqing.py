@@ -9,7 +9,7 @@ proxies = {
   'http': 'http://taxtask:UQwpzAZ+WiQb@proxy.kdzwy.com:9068',
   # 'https': 'https://taxtask:UQwpzAZ+WiQb@proxy.kdzwy.com:9068'
 }
-
+cou = 0
 headers = {
   "Host": "yuge-admin.orence.cn",
   "Connection": "keep-alive",
@@ -28,11 +28,26 @@ headers = {
   "Accept-Encoding": "gzip, deflate, br",
   "Accept-Language": "zh-CN,zh;q=0.9"
 }
+h1 = {
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+  "cache-control": "max-age=0",
+  "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "sec-fetch-dest": "document",
+  "sec-fetch-mode": "navigate",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-user": "?1",
+  "upgrade-insecure-requests": "1",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
+}
 
 session = requests.Session()
 session1 = requests.Session()
 
-email_af = ['nqmo.com', 'qabq.com', 'uuf.me', "yzm.de"]
+email_af = ['nqmo.com', 'qabq.com', 'uuf.me', "yzm.de", "end.tw"]
 for _ in range(200):
     try:
         email_af_str = random.choice(email_af)
@@ -49,7 +64,7 @@ for _ in range(200):
         # 刷新邮件
         time.sleep(5)
 
-        response = session1.get('https://mail.cx/zh/')
+        response = session1.get('https://mail.cx/zh/', headers=h1, proxies=proxies)
 
         # 获取响应中的cookie字典
         cookie_dict = dict_from_cookiejar(response.cookies)
@@ -89,10 +104,15 @@ for _ in range(200):
 
         email_code = re.findall(r'输入此次验证码 (\d+) （3分钟内有效）', response.json()['body']['text'])[0]
 
-        url = f"https://yuge-admin.orence.cn/api/register?name={email_be}&email={email}&password=88888888&email_code={email_code}&invite_code=H3OXZJ"
+        url = f"https://yuge-admin.orence.cn/api/register?name={email_be}&email={email}&password=88888888&email_code={email_code}&invite_code=FALFPW"
 
         res = session.post(url, headers=headers,proxies=proxies)
         print(res.json())
+        if '注册成功' in str(res.text):
+            print('注册成功')
+            cou += 1
+        if cou == 81:
+            break
     except:
         continue
 
