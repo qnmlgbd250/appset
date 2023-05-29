@@ -121,6 +121,7 @@ async def translate(request: Request):
         if not tstr:
             output = {}
         else:
+            logging.info(f"翻译 | {tstr}")
             trans_type = 'auto2zh'
             zh = re.findall('[\u4e00-\u9fa5]', tstr)
             if zh:
