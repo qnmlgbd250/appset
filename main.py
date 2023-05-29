@@ -471,9 +471,6 @@ async def get_chat3(msgdict,max_retries=8):
 async def get_chat4(msgdict,token=None,max_retries=8):
     web = os.getenv('AISET4')
     home = os.getenv('AISET4HOME')
-    proxies = {
-        'http://': os.getenv('HTTPROXY'),
-    }
     headers = {
         "authority": web,
         "accept": "text/event-stream",
@@ -498,7 +495,7 @@ async def get_chat4(msgdict,token=None,max_retries=8):
     }
     for attempt in range(max_retries):
         try:
-            async with AsyncClient(proxies = proxies) as client:
+            async with AsyncClient() as client:
                 async with client.stream('POST', url, headers = headers, json = data, timeout =8) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
