@@ -579,8 +579,11 @@ function connect() {
     socket.addEventListener('message', (event) => {
         saveChatContent()
         const receivedData = JSON.parse(event.data);
-        if (receivedData.lastmsg) {
-                savelastmsg(receivedData.lastmsg)
+        if (receivedData.lastmsg3) {
+                savelastmsg3(receivedData.lastmsg3)
+            }
+        if (receivedData.lastmsg5) {
+                savelastmsg5(receivedData.lastmsg5)
             }
         const replyElement = document.getElementById('temporary-reply').querySelector('.message');
         const blinkElement = replyElement.querySelector('.placeholder-cursor');
@@ -767,7 +770,7 @@ function sendMessage() {
         const selectedSite = siteSelect.value;
 
         if (message && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({text: message, id: loadid(), site: selectedSite, lastmsg: loadmsg()}));
+            socket.send(JSON.stringify({text: message, id: loadid(), site: selectedSite, lastmsg3: loadmsg3(),lastmsg5: loadmsg5()}));
             userInput.value = '';
         }
 
@@ -849,8 +852,11 @@ function saveid(id) {
     }
 }
 
-function savelastmsg(msg) {
-    localStorage.setItem('lastmsg', msg);
+function savelastmsg3(msg) {
+    localStorage.setItem('lastmsg3', msg);
+}
+function savelastmsg5(msg) {
+    localStorage.setItem('lastmsg5', msg);
 }
 
 function loadid() {
@@ -861,8 +867,16 @@ function loadid() {
     return "";
 }
 
-function loadmsg() {
-    const savedmsg = localStorage.getItem('lastmsg');
+function loadmsg3() {
+    const savedmsg = localStorage.getItem('lastmsg3');
+    if (savedmsg) {
+        return savedmsg;
+    }
+    return "";
+}
+
+function loadmsg5() {
+    const savedmsg = localStorage.getItem('lastmsg5');
     if (savedmsg) {
         return savedmsg;
     }
