@@ -126,7 +126,7 @@ for _ in range(100):
             "password": "88888888",
             "code": email_code,
             "code_type": "email",
-            "invitation_code": "ad3374"
+            "invitation_code": "a18498"
         }
         data = json.dumps(data, separators=(',', ':'))
         response = session.post(url, headers=headers, data=data, proxies=proxies)
@@ -179,5 +179,36 @@ for _ in range(100):
 #
 # print(response.text)
 #q1ynpmrf@qabq.com
+
+
+#登录
+# import requests
+# import json
+#
+#
+# headers = {
+#     "authority": "www.chatgptenhanced.com",
+#     "accept": "*/*",
+#     "accept-language": "zh-CN,zh;q=0.9",
+#     "content-type": "application/json",
+#     "origin": "https://www.chatgptenhanced.com",
+#     "referer": "https://www.chatgptenhanced.com/login",
+#     "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+#     "sec-ch-ua-mobile": "?0",
+#     "sec-ch-ua-platform": "\"Windows\"",
+#     "sec-fetch-dest": "empty",
+#     "sec-fetch-mode": "cors",
+#     "sec-fetch-site": "same-origin",
+#     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
+# }
+# url = "https://www.chatgptenhanced.com/api/user/login"
+# data = {
+#     "email": "agkkybt@yzm.de",
+#     "password": "88888888"
+# }
+# data = json.dumps(data, separators=(',', ':'))
+# response = requests.post(url, headers=headers, data=data)
+#
+# print(response.text)
 
 

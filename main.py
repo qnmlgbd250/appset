@@ -688,8 +688,8 @@ async def chat(websocket: WebSocket):
                 chat_generator = get_chat4(data, token = token)
 
             elif selected_site == "5":
-                token = os.getenv('GPT4TOKEN2')
-                # token = await get_hash_by_redis()
+                # token = os.getenv('GPT4TOKEN2')
+                token = await get_gpt4_by_redis()
                 logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
                 chat_generator = get_chat5(data, token = token)
 
@@ -764,6 +764,17 @@ async def get_hash_by_redis():
             if value_dict["count"] > 0:
                 value_dict["count"] -= 1
                 redis_pool.hset("hash_db", key, json.dumps(value_dict))
+                return value_dict['token']
+    return None
+
+async def get_gpt4_by_redis():
+    for key in redis_pool.hkeys("gpt4plus"):
+        value = redis_pool.hget("gpt4plus", key)
+        if value:
+            value_dict = json.loads(value)
+            if value_dict["count"] > 0:
+                value_dict["count"] -= 1
+                redis_pool.hset("gpt4plus", key, json.dumps(value_dict))
                 return value_dict['token']
     return None
 

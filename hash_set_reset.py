@@ -22,5 +22,12 @@ def reset_counts():
             value_dict["count"] = 50
             redis_pool.hset("hash_db", key, json.dumps(value_dict))
 
+    for key in redis_pool.hkeys("gpt4plus"):
+        value = redis_pool.hget("gpt4plus", key)
+        if value:
+            value_dict = json.loads(value)
+            value_dict["count"] = 20
+            redis_pool.hset("gpt4plus", key, json.dumps(value_dict))
+
 if __name__ == '__main__':
     reset_counts()
