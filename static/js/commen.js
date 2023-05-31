@@ -628,6 +628,7 @@ function connect() {
 
             // 移除光标
             blinkElement.remove();
+            codeBlock = false;
 
             chatContent.scrollTop = chatContent.scrollHeight;
             userInput.focus();
@@ -643,12 +644,14 @@ function connect() {
         } else {
             // 移除光标
             blinkElement.remove();
+            codeBlock = false;
             chatContent.scrollTop = chatContent.scrollHeight;
             userInput.focus();
             // 停止监听 element 的子节点变化
             observer.disconnect();
         }
         saveChatContent(); //
+        codeBlock = false;
 
 
     });
