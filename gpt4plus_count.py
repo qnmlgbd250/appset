@@ -190,11 +190,46 @@ def save_redis(data):
             redis_pool.hset(hash_name, k, json.dumps(n_v))
             # 验证数据是否已经存储在 Redis 中
             print(redis_pool.hget(hash_name, k))
+
+def check_plus(token):
+
+    headers = {
+        "authority": "www.chatgptenhanced.com",
+        "accept": "*/*",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "authorization": token,
+        "referer": "https://www.chatgptenhanced.com/profile",
+        "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
+    }
+    url = "https://www.chatgptenhanced.com/api/user/info"
+    response = requests.get(url, headers=headers, proxies=proxies)
+
+    print(response.text)
 if __name__ == '__main__':
+
+    #升级计划
     data = {
-        "jekkcxl@end.tw":
-            {"status": 0,
-             "sessionToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Impla2tjeGxAZW5kLnR3IiwiZXhwIjoxNjg2MDYxMjE3LCJpYXQiOjE2ODU0NTY0MTcsIm5iZiI6MTY4NTQ1NjQxN30.TmCRXDN6QGBzdPimT3RXQB0zND7jyG0Jdk127KlGtOQ",
-             "exp": 1686061217}
+        "qamzcmv@yzm.de":
+            {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFhbXpjbXZAeXptLmRlIiwiZXhwIjoxNjg2MTAzMzk0LCJpYXQiOjE2ODU0OTg1OTQsIm5iZiI6MTY4NTQ5ODU5NH0.Y1weNjr5P5WNFevIOZ0KzVG2C3hsgl6Rm3cAzMgKhts', 'exp': 1686103394}
+
+
     }
     save_redis(data)
+
+    #检查是否升级成功
+    # for key in redis_pool.hkeys("gpt4plus"):
+    #     value = redis_pool.hget("gpt4plus", key)
+    #     if value:
+    #         value_dict = json.loads(value)
+    #         token = value_dict.get('token')
+    #         check_plus(token)
+
+
+
+

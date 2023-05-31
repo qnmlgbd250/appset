@@ -656,7 +656,7 @@ async def chat(websocket: WebSocket):
     client_ip = websocket.scope["client"][0]
     await websocket.accept()
     last_text = ''
-    language = ["python", "java", "c", "cpp", "c#", "javascript", "html", "css", "go", "ruby", "swift", "kotlin"]
+    language = ["python", "java", "c", "cpp", "c#", "javascript", "html", "css", "go", "ruby", "swift", "kotlin", "bash"]
     lastmsg3 = ''
     lastmsg5 = ''
     while True:
