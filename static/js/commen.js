@@ -860,6 +860,11 @@ function savelastmsg3list(msg) {
         list = JSON.parse(localStorage.getItem('lastmsg3list'));
     }
 
+    if (list.length >= 10) {
+        list.shift(); // 删除第一个元素
+        list.shift(); // 再次删除第一个元素（原来的第二个元素）
+    }
+
     list = list.concat(msg);
 
     localStorage.setItem('lastmsg3list', JSON.stringify(list));
@@ -869,6 +874,10 @@ function savelastmsg5list(msg) {
     let list = [];
     if (localStorage.getItem('lastmsg5list')) {
         list = JSON.parse(localStorage.getItem('lastmsg5list'));
+    }
+    if (list.length >= 10) {
+        list.shift(); // 删除第一个元素
+        list.shift(); // 再次删除第一个元素（原来的第二个元素）
     }
 
     list = list.concat(msg);
