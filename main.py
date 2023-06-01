@@ -430,17 +430,18 @@ async def get_chat3(msgdict,max_retries=8):
         }
     url = f"https://{web}/api/openai/v1/chat/completions"
     msg = msgdict.get('text')
-    lastmsg = msgdict.get('lastmsg3')
+    lastmsg3list = msgdict.get('lastmsg3list')
     messages = [
         {"role": "system", "content": "IMPRTANT: You are a virtual assistant powered by the gpt-3.5-turbo model, now time is 2023/5/27 22:47:30}"}
         ]
     currenttext = {"role": "user", "content": msg}
-    if lastmsg:
-        lastmessage = {"role": "assistant", "content": lastmsg}
-        messages.append(lastmessage)
-    messages.append(currenttext)
+    if lastmsg3list:
+        lastmsg3list.append(currenttext)
+        messages += lastmsg3list
+    else:
+        messages.append(currenttext)
     if len(messages) > 10:
-        messages[0:1].extend(messages[-2:])
+        messages = messages[0:1] + messages[-7:]
     data = {"messages": messages, "stream": True, "model": "gpt-3.5-turbo", "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
@@ -577,17 +578,18 @@ async def get_chat5(msgdict,token=None,max_retries=8):
     }
     url = f"https://{web}/api/bots/openai"
     msg = msgdict.get('text')
-    lastmsg = msgdict.get('lastmsg5')
+    lastmsg5list = msgdict.get('lastmsg5list')
     messages = [
         {"role": "assistant", "content": "有什么可以帮你的吗"}
         ]
     currenttext = {"role": "user", "content": msg}
-    if lastmsg:
-        lastmessage = {"role": "assistant", "content": lastmsg}
-        messages.append(lastmessage)
-    messages.append(currenttext)
+    if lastmsg5list:
+        lastmsg5list.append(currenttext)
+        messages += lastmsg5list
+    else:
+        messages.append(currenttext)
     if len(messages) > 10:
-        messages[0:1].extend(messages[-2:])
+        messages = messages[0:1] + messages[-7:]
     data = {"conversation": messages, "stream": True, "model": "gpt-4", "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
@@ -657,11 +659,11 @@ async def chat(websocket: WebSocket):
     await websocket.accept()
     last_text = ''
     language = ["python", "java", "c", "cpp", "c#", "javascript", "html", "css", "go", "ruby", "swift", "kotlin", "bash"]
-    lastmsg3 = ''
-    lastmsg5 = ''
     while True:
         try:
             data = await websocket.receive_json()
+            lastmsg3 = ''
+            lastmsg5 = ''
             #测试代码
             # await websocket.send_json({"text": '你好，有什么可以帮助您的吗?', "id": ''})
 
@@ -724,10 +726,10 @@ async def chat(websocket: WebSocket):
                         lastmsg5 += response_text
                     await send_message(websocket, response_data)
             if selected_site == "3":
-                response_data = {"lastmsg3": lastmsg3}
+                response_data = {"lastmsg3list":[{"role":"user","content":data.get('text')},{"role":"assistant","content":lastmsg3}]}
                 await send_message(websocket, response_data)
             if selected_site == "5":
-                response_data = {"lastmsg5": lastmsg5}
+                response_data = {"lastmsg5list":[{"role":"user","content":data.get('text')},{"role":"assistant","content":lastmsg5}]}
                 await send_message(websocket, response_data)
         except WebSocketDisconnect as e:
             # 处理断开连接的情况

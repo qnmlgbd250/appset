@@ -579,11 +579,11 @@ function connect() {
     socket.addEventListener('message', (event) => {
         saveChatContent()
         const receivedData = JSON.parse(event.data);
-        if (receivedData.lastmsg3) {
-                savelastmsg3(receivedData.lastmsg3)
+        if (receivedData.lastmsg3list) {
+                savelastmsg3list(receivedData.lastmsg3list)
             }
-        if (receivedData.lastmsg5) {
-                savelastmsg5(receivedData.lastmsg5)
+        if (receivedData.lastmsg5list) {
+                savelastmsg5list(receivedData.lastmsg5list)
             }
         const replyElement = document.getElementById('temporary-reply').querySelector('.message');
         const blinkElement = replyElement.querySelector('.placeholder-cursor');
@@ -773,7 +773,7 @@ function sendMessage() {
         const selectedSite = siteSelect.value;
 
         if (message && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({text: message, id: loadid(), site: selectedSite, lastmsg3: loadmsg3(),lastmsg5: loadmsg5()}));
+            socket.send(JSON.stringify({text: message, id: loadid(), site: selectedSite, lastmsg3list: loadmsg3(),lastmsg5list: loadmsg5()}));
             userInput.value = '';
         }
 
@@ -813,8 +813,8 @@ function deleteMessages() {
     }
 
     localStorage.setItem('chatContent', 'DELETE'); // 将空字符串存储到localStorage中
-    localStorage.setItem('lastmsg3', '');
-    localStorage.setItem('lastmsg5', '');
+    localStorage.setItem('lastmsg3list', '');
+    localStorage.setItem('lastmsg5list', '');
     saveid('') // 保存空的聊天记录以覆盖之前的记录
 }
 
@@ -854,11 +854,26 @@ function saveid(id) {
     }
 }
 
-function savelastmsg3(msg) {
-    localStorage.setItem('lastmsg3', msg);
+function savelastmsg3list(msg) {
+    let list = [];
+    if (localStorage.getItem('lastmsg3list')) {
+        list = JSON.parse(localStorage.getItem('lastmsg3list'));
+    }
+
+    list = list.concat(msg);
+
+    localStorage.setItem('lastmsg3list', JSON.stringify(list));
+
 }
-function savelastmsg5(msg) {
-    localStorage.setItem('lastmsg5', msg);
+function savelastmsg5list(msg) {
+    let list = [];
+    if (localStorage.getItem('lastmsg5list')) {
+        list = JSON.parse(localStorage.getItem('lastmsg5list'));
+    }
+
+    list = list.concat(msg);
+
+    localStorage.setItem('lastmsg5list', JSON.stringify(list));
 }
 
 function loadid() {
@@ -870,17 +885,17 @@ function loadid() {
 }
 
 function loadmsg3() {
-    const savedmsg = localStorage.getItem('lastmsg3');
+    const savedmsg = localStorage.getItem('lastmsg3list');
     if (savedmsg) {
-        return savedmsg;
+        return JSON.parse(savedmsg);
     }
     return "";
 }
 
 function loadmsg5() {
-    const savedmsg = localStorage.getItem('lastmsg5');
+    const savedmsg = localStorage.getItem('lastmsg5list');
     if (savedmsg) {
-        return savedmsg;
+        return JSON.parse(savedmsg);
     }
     return "";
 }
