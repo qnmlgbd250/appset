@@ -636,6 +636,9 @@ function connect() {
             if (receivedData.id) {
                 saveid(receivedData.id)
             }
+            if (receivedData.miniid) {
+                saveminiid(receivedData.miniid)
+            }
 
 
             // 停止监听 element 的子节点变化
@@ -773,7 +776,7 @@ function sendMessage() {
         const selectedSite = siteSelect.value;
 
         if (message && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({text: message, id: loadid(), site: selectedSite, lastmsg3list: loadmsg3(),lastmsg5list: loadmsg5()}));
+            socket.send(JSON.stringify({text: message, id: loadid(), miniid:loadminiid(), site: selectedSite, lastmsg3list: loadmsg3(),lastmsg5list: loadmsg5()}));
             userInput.value = '';
         }
 
@@ -853,6 +856,14 @@ function saveid(id) {
         localStorage.setItem('lastid', id);
     }
 }
+function saveminiid(id) {
+    if (!id) {
+        localStorage.setItem('miniid', '');
+    } else {
+        localStorage.setItem('miniid', id);
+    }
+}
+
 
 function savelastmsg3list(msg) {
     let list = [];
@@ -887,6 +898,13 @@ function savelastmsg5list(msg) {
 
 function loadid() {
     const savedid = localStorage.getItem('lastid');
+    if (savedid) {
+        return savedid;
+    }
+    return "";
+}
+function loadminiid() {
+    const savedid = localStorage.getItem('miniid');
     if (savedid) {
         return savedid;
     }

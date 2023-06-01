@@ -342,7 +342,7 @@ async def get_chat2(msgdict,token=None,max_retries=8):
     }
     url = f"{web}/api/chatgpt/chat-process"
     msg = msgdict.get('text')
-    lastid = msgdict.get('id')
+    lastid = msgdict.get('miniid')
 
     data = {"prompt": msg,
             "options": {"temperature": 0.8, "model": 3},
@@ -675,7 +675,7 @@ async def chat(websocket: WebSocket):
                     f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
                 chat_generator = get_chat(data, token = token)
             elif selected_site == "2":
-                token = os.getenv('TOKEN')
+                token = await get_minitoken()
                 logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
                 chat_generator = get_chat2(data, token = token)
 
@@ -719,7 +719,10 @@ async def chat(websocket: WebSocket):
                     if last_text == 'c' and '++' in response_text:
                         response_text = response_text.replace('++', '')
                         last_text = ''
-                    response_data = {"text": response_text, "id": i.get('id')}
+                    if selected_site == "2":
+                        response_data = {"text": response_text, "miniid": i.get('id')}
+                    else:
+                        response_data = {"text": response_text, "id": i.get('id')}
                     if selected_site == "3":
                         lastmsg3 += response_text
                     if selected_site == "5":
@@ -779,6 +782,87 @@ async def get_gpt4_by_redis():
                 redis_pool.hset("gpt4plus", key, json.dumps(value_dict))
                 return value_dict['token']
     return None
+
+async def get_minitoken():
+    miniaccount = os.getenv('MINIACCOUNT')
+    minipassword = os.getenv('MINIPASSWORD')
+    tdict = redis_pool.hget("minigpt", miniaccount)
+    tdict = json.loads(tdict)
+    token = tdict['token']
+    #检测token是否过期
+    islive = await check_token(token)
+    if not islive:
+        token = await login_get_token(miniaccount, minipassword)
+        if token:
+            tdict['token'] = token
+            redis_pool.hset("minigpt", miniaccount, json.dumps(tdict))
+    return token
+
+async def check_token(token):
+    web= os.getenv('AISET2HOME')
+    proxies = {
+        'http://': os.getenv('HTTPROXY'),
+    }
+    headers = {
+        "authority": web,
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "authorization": "Bearer " + token,
+        "if-none-match": "W/\"221-syoJ9BkYqkwZhgUeAacHt6kZqtg\"",
+        "referer": f"https://{web}/",
+        "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
+    }
+    url = f"https://{web}/api/auth/getInfo"
+    try:
+        response = requests.get(url, headers = headers, proxies = proxies)
+        if '请求成功' in response.text:
+            return True
+        else:
+            return False
+    except Exception as e:
+        logging.error(f"检测token异常: {repr(e)}")
+        return False
+
+async def login_get_token(miniaccount, minipassword):
+    web= os.getenv('AISET2HOME')
+    proxies = {
+        'http://': os.getenv('HTTPROXY'),
+    }
+    headers = {
+        "authority": web,
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "content-type": "application/json",
+        "origin": f"https://{web}",
+        "referer": f"https://{web}/",
+        "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
+    }
+    url = f"https://{web}/api/auth/login"
+    data = {
+        "username": miniaccount,
+        "password": minipassword
+    }
+    data = json.dumps(data, separators = (',', ':'))
+    try:
+        response = requests.post(url, headers = headers, data = data, proxies = proxies)
+        token = response.json()['data']
+        return token
+    except Exception as e:
+        logging.error(f"登录获取token异常: {repr(e)}")
+        return None
+
 
 
 if __name__ == '__main__':
