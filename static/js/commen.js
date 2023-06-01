@@ -813,6 +813,8 @@ function deleteMessages() {
     }
 
     localStorage.setItem('chatContent', 'DELETE'); // 将空字符串存储到localStorage中
+    localStorage.setItem('lastmsg3', '');
+    localStorage.setItem('lastmsg5', '');
     saveid('') // 保存空的聊天记录以覆盖之前的记录
 }
 
@@ -846,10 +848,7 @@ function loadChatContent() {
 
 function saveid(id) {
     if (!id) {
-        const lastId = localStorage.getItem('lastid');
-        if (lastId) {
-            localStorage.setItem('lastid', lastId);
-        }
+        localStorage.setItem('lastid', '');
     } else {
         localStorage.setItem('lastid', id);
     }
