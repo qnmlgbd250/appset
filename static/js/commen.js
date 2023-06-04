@@ -512,7 +512,25 @@ copyBtn.addEventListener('click', () => {
         });
     }
 });
+document.getElementById('chat-content').addEventListener('click', (event) => {
+        if (event.target.matches('.copy-code')) {
+            const preElement = event.target.closest('pre');
+            const codeElement = preElement.querySelector('code');
+            const codeText = codeElement.textContent;
+            const textArea = document.createElement('textarea');
+            textArea.value = codeText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('Copy');
+            textArea.remove();
 
+            layer.msg('复制成功!', {
+                time: 500, // 设置显示时间，单位为毫秒
+                offset: '100px', // 设置距离顶部的距离
+                icon: 1,
+            });
+        }
+    });
 
 let isTyping = false;
 const host = window.location.hostname;
@@ -526,6 +544,10 @@ if (host === 'chat250.top') {
 let socket = null;
 let retryCount = 0; // 记录重连次数
 let isReconnecting = false; // 标记是否正在重连
+let accumulatedText = '';
+function resetAccumulatedText() {
+    accumulatedText = '';
+}
 
 function connect() {
     socket = new WebSocket(url);
@@ -555,109 +577,135 @@ function connect() {
         return copyButtonWrapper;
     }
 
-    document.getElementById('chat-content').addEventListener('click', (event) => {
-        if (event.target.matches('.copy-code')) {
-            const preElement = event.target.closest('pre');
-            const codeElement = preElement.querySelector('code');
-            const codeText = codeElement.textContent;
-            const textArea = document.createElement('textarea');
-            textArea.value = codeText;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('Copy');
-            textArea.remove();
 
-            layer.msg('复制成功!', {
-                time: 500, // 设置显示时间，单位为毫秒
-                offset: '100px', // 设置距离顶部的距离
-                icon: 1,
-            });
-        }
+
+ const md = new window.markdownit({
+     html: true,
+  linkify: true,
+  typographer: true,
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (__) {}
+    }
+
+    try {
+      return hljs.highlightAuto(str).value;
+    } catch (__) {}
+
+    return ''; // 使用默认的转义
+  },
+ });
+
+const defaultRender = md.renderer.rules;
+
+// 自定义渲染规则
+md.renderer.rules = {
+  ...defaultRender,
+  // 仅保留 p 标签
+  paragraph_open: (tokens, idx, options, env, self) => {
+    return '<p>';
+  },
+  paragraph_close: (tokens, idx, options, env, self) => {
+    return '</p>';
+  },
+  // 仅保留 pre 标签
+  code_block: (tokens, idx, options, env, self) => {
+    const token = tokens[idx];
+    const code = md.utils.escapeHtml(token.content);
+     return `<pre>
+          <code>${code}</code>
+          <div class="copy-code-wrapper">
+          <span>
+          <span class="copy-code">复制代码</span>
+          </span>
+          </div>
+          </pre>`;
+  },
+
+  // 移除 ol 标签
+  ordered_list_open: () => '',
+  ordered_list_close: () => '',
+  // 移除 li 标签
+  list_item_open: (tokens, idx, options, env, self) => {
+    const order = tokens[idx].markup;
+    return `<p>${order}. `;
+  },
+  list_item_close: () => '</p>',
+// 将 h1-h6 标签替换为 p 标签
+  heading_open: () => '<p>',
+  heading_close: () => '</p>',
+};
+
+
+
+
+
+
+
+
+
+
+socket.addEventListener('message', (event) => {
+    saveChatContent()
+    const receivedData = JSON.parse(event.data);
+    if (receivedData.lastmsg3list) {
+        savelastmsg3list(receivedData.lastmsg3list)
+    }
+    if (receivedData.lastmsg5list) {
+        savelastmsg5list(receivedData.lastmsg5list)
+    }
+    const replyElement = document.getElementById('temporary-reply').querySelector('.message');
+    const blinkElement = replyElement.querySelector('.placeholder-cursor');
+    const chatContent = document.getElementById('chat-content');
+    const userInput = document.getElementById('messageInput');
+
+    // 创建一个监听 element 内容更改的 MutationObserver
+    const observer = new MutationObserver(() => {
+        chatContent.scrollTop = chatContent.scrollHeight;
     });
 
+    // 开始监听 element 的子节点变化
+    observer.observe(replyElement, {childList: true, subtree: true});
+    if (receivedData.text) {
+        isTyping = false;
+        replyElement.style.whiteSpace = 'pre-line';
 
-    socket.addEventListener('message', (event) => {
-        saveChatContent()
-        const receivedData = JSON.parse(event.data);
-        if (receivedData.lastmsg3list) {
-                savelastmsg3list(receivedData.lastmsg3list)
-            }
-        if (receivedData.lastmsg5list) {
-                savelastmsg5list(receivedData.lastmsg5list)
-            }
-        const replyElement = document.getElementById('temporary-reply').querySelector('.message');
-        const blinkElement = replyElement.querySelector('.placeholder-cursor');
-        const chatContent = document.getElementById('chat-content');
-        const userInput = document.getElementById('messageInput');
-
-        // 创建一个监听 element 内容更改的 MutationObserver
-        const observer = new MutationObserver(() => {
-            chatContent.scrollTop = chatContent.scrollHeight;
-        });
-
-        // 开始监听 element 的子节点变化
-        observer.observe(replyElement, {childList: true, subtree: true});
-        if (receivedData) {
-            isTyping = false;
-            replyElement.style.whiteSpace = 'pre-line';
-
-            if (receivedData.text.trim().startsWith('```')) {
-                codeBlock = !codeBlock;
-                if (codeBlock) {
-                    preElement = document.createElement('pre');
-                    codeElement = document.createElement('code');
-                    // codeElement.classList.add('hljs');
-                    preElement.appendChild(codeElement);
-                    replyElement.insertBefore(preElement, blinkElement);
-
-                    const copyCode = createCopyButton();
-                    preElement.appendChild(copyCode);
-
-                }
-            } else if (codeBlock) {
-                const textNode = document.createTextNode(receivedData.text);
-                codeElement.appendChild(textNode);
-
-            } else {
-                // 添加接收到的文本
-                const textNode = document.createElement('span');
-                textNode.textContent = receivedData.text;
-                replyElement.insertBefore(textNode, blinkElement);
-            }
+        // 将新的 receivedData.text 添加到累积的文本中
+        accumulatedText += receivedData.text;
 
 
-            // 移除光标
-            blinkElement.remove();
-            codeBlock = false;
+        const renderedHtml = md.render(accumulatedText);
+        replyElement.innerHTML = addCopyCodeButtons(renderedHtml);
 
-            chatContent.scrollTop = chatContent.scrollHeight;
-            userInput.focus();
+        // 移除光标
+        blinkElement.remove();
 
-            if (receivedData.id) {
-                saveid(receivedData.id)
-            }
-            if (receivedData.miniid) {
-                saveminiid(receivedData.miniid)
-            }
+        chatContent.scrollTop = chatContent.scrollHeight;
+        userInput.focus();
 
-
-            // 停止监听 element 的子节点变化
-            observer.disconnect();
-
-        } else {
-            // 移除光标
-            blinkElement.remove();
-            codeBlock = false;
-            chatContent.scrollTop = chatContent.scrollHeight;
-            userInput.focus();
-            // 停止监听 element 的子节点变化
-            observer.disconnect();
+        if (receivedData.id) {
+            saveid(receivedData.id)
         }
-        saveChatContent(); //
-        codeBlock = false;
+        if (receivedData.miniid) {
+            saveminiid(receivedData.miniid)
+        }
 
+        // 停止监听 element 的子节点变化
+        observer.disconnect();
 
-    });
+    } else {
+        // 移除光标
+        blinkElement.remove();
+        chatContent.scrollTop = chatContent.scrollHeight;
+        userInput.focus();
+        // 停止监听 element 的子节点变化
+        observer.disconnect();
+    }
+    saveChatContent();
+});
+
 
     socket.addEventListener('close', (event) => {
         console.log('WebSocket closed:', event);
@@ -696,6 +744,26 @@ function connect() {
 
 // 初始化连接
 connect();
+function addCopyCodeButtons(htmlString) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const preElements = doc.querySelectorAll('pre');
+
+  preElements.forEach((pre) => {
+    const copyCodeWrapper = document.createElement('div');
+    copyCodeWrapper.className = 'copy-code-wrapper';
+
+    const copyCodeSpan = document.createElement('span');
+    copyCodeSpan.className = 'copy-code';
+    copyCodeSpan.textContent = '复制代码';
+
+    copyCodeWrapper.appendChild(copyCodeSpan);
+    pre.appendChild(copyCodeWrapper);
+  });
+
+  return doc.documentElement.innerHTML;
+}
+
 
 function formatDate(date, isSameDay) {
     const hours = date.getHours();
@@ -778,6 +846,7 @@ function sendMessage() {
         if (message && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({text: message, id: loadid(), miniid:loadminiid(), site: selectedSite, lastmsg3list: loadmsg3(),lastmsg5list: loadmsg5()}));
             userInput.value = '';
+            resetAccumulatedText();
         }
 
 

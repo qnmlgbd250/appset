@@ -10,6 +10,11 @@ body {
     border-radius: 6px;
     border: 1px solid #ccc;
 }
+p {
+    line-height: 1.5 !important;
+    margin-block-end: -0.1em !important;
+    margin-block-start: 0.1em !important;
+}
 
 
 .parent {
@@ -627,19 +632,57 @@ pre {
     border-radius: 10px;
     margin-top: 10px;
     overflow-x: auto; /* 添加横向滚动条 */
-    font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif; /* 修改为您喜欢的字体 */
+    font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif !important; /* 修改为您喜欢的字体 */
   font-size: 14px; /* 修改为您喜欢的字号 */
   line-height: 1.5; /* 修改为您喜欢的行高 */
 
   }
+/* 通用覆盖样式 */
+.hljs strong,
+.hljs b,
+.hljs em,
+.hljs i {
+  font-weight: normal !important;
+}
+
+/* 针对特定语法高亮类的覆盖样式 */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link,
+.hljs-function,
+.hljs-title,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-strong,
+.hljs-emphasis,
+.hljs-type,
+.hljs-attribute,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-meta-keyword,
+.hljs-doctag,
+.hljs-built_in,
+.hljs-formula {
+  font-weight: normal !important;
+}
+
+
+
+
 
 
 
 
 code {
-  font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font-family: 'Segoe UI',Arial,'Microsoft Yahei',sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+     font-weight: normal !important;
 }
 
 .light-theme,
@@ -736,6 +779,15 @@ code {
 .dark-theme .site-selection select{
     background-color:  #444654;
     color: #ffffff;
+}
+.light-theme .hljs-theme-light,
+.dark-theme .hljs-theme-dark {
+  display: block;
+}
+
+.light-theme .hljs-theme-dark,
+.dark-theme .hljs-theme-light {
+  display: none;
 }
 
 

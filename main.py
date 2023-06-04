@@ -345,12 +345,12 @@ async def get_chat2(msgdict,token=None,max_retries=8):
     lastid = msgdict.get('miniid')
 
     data = {"prompt": msg,
-            "options": {"temperature": 0.8, "model": 3},
+            "options": {"temperature": 1, "model": 3},
             "systemMessage":"You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
     if lastid:
         data = {"prompt": msg,
                 "options": {"parentMessageId": lastid,
-                            "temperature": 0.8, "model": 3},
+                            "temperature": 1, "model": 3},
                 "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
     for attempt in range(max_retries):
         try:
@@ -697,28 +697,28 @@ async def chat(websocket: WebSocket):
 
             async for i in chat_generator:
                 if i['choices'][0].get('delta').get('content'):
-                    # logging.info(i['choices'][0])
+                    # logging.info(i['choices'][0].get('delta'))
                     response_text = i['choices'][0].get('delta').get('content')
-                    if response_text.strip() == '``':
-                        last_text = '``'
-                        response_text = ''
-                    if '`' in response_text and last_text == '``':
-                        response_text = response_text.strip().replace('`', '```')
-                        last_text = '```'
-                    if response_text.strip() == '```':
-                        last_text = '```'
-                    if last_text == '```' and any([i in response_text for i in language]):
-                        for j in language:
-                            if j == response_text:
-                                response_text = response_text.replace(j, '')
-                                if j == 'c':
-                                    last_text = 'c'
-                                else:
-                                    last_text = ''
-                                break
-                    if last_text == 'c' and '++' in response_text:
-                        response_text = response_text.replace('++', '')
-                        last_text = ''
+                    # if response_text.strip() == '``':
+                    #     last_text = '``'
+                    #     response_text = ''
+                    # if '`' in response_text and last_text == '``':
+                    #     response_text = response_text.strip().replace('`', '```')
+                    #     last_text = '```'
+                    # if response_text.strip() == '```':
+                    #     last_text = '```'
+                    # if last_text == '```' and any([i in response_text for i in language]):
+                    #     for j in language:
+                    #         if j == response_text:
+                    #             response_text = response_text.replace(j, '')
+                    #             if j == 'c':
+                    #                 last_text = 'c'
+                    #             else:
+                    #                 last_text = ''
+                    #             break
+                    # if last_text == 'c' and '++' in response_text:
+                    #     response_text = response_text.replace('++', '')
+                    #     last_text = ''
                     if selected_site == "2":
                         response_data = {"text": response_text, "miniid": i.get('id')}
                     else:
