@@ -34,6 +34,17 @@ ol {
 ul {
     line-height: 1.5 !important;
 }
+ul {
+      list-style-position: outside; /* 确保列表项符号在外部 */
+      padding-left: 20px; /* 调整左侧缩进以使marker与p标签对齐 */
+}
+li {
+  margin: 0; /* 移除上下边距 */
+}
+p {
+  margin-top: 0;
+  margin-bottom: 1em; /* 调整段落间距 */
+}
 
 
 .parent {
