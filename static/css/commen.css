@@ -21,7 +21,7 @@ p {
 ol {
 
     user-select: all !important;
-    line-height: 0.5 !important;
+    line-height: 1.5 !important;
     display: block;
     list-style-type: decimal;
     margin-block-start: -1em !important;
@@ -32,7 +32,7 @@ ol {
 }
 
 ul {
-    line-height: 0.5 !important;
+    line-height: 1.5 !important;
 }
 
 
