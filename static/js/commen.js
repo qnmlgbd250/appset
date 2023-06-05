@@ -579,8 +579,8 @@ function connect() {
 
 
 
- const md = new window.markdownit({
-     html: true,
+const md = new window.markdownit({
+  html: true,
   linkify: true,
   typographer: true,
   highlight: function (str, lang) {
@@ -596,25 +596,17 @@ function connect() {
 
     return ''; // 使用默认的转义
   },
- });
+});
 
 const defaultRender = md.renderer.rules;
 
 // 自定义渲染规则
 md.renderer.rules = {
   ...defaultRender,
-  // 仅保留 p 标签
-  // paragraph_open: (tokens, idx, options, env, self) => {
-  //   return '<p>';
-  // },
-  // paragraph_close: (tokens, idx, options, env, self) => {
-  //   return '</p>';
-  // },
-  // 仅保留 pre 标签
   code_block: (tokens, idx, options, env, self) => {
     const token = tokens[idx];
     const code = md.utils.escapeHtml(token.content);
-     return `<pre>
+    return `<pre>
           <code>${code}</code>
           <div class="copy-code-wrapper">
           <span>
@@ -623,23 +615,61 @@ md.renderer.rules = {
           </div>
           </pre>`;
   },
-
-  // 移除 ol 标签
-  // ordered_list_open: () => '',
-  // ordered_list_close: () => '',
-  // 移除 li 标签
-  // list_item_open: (tokens, idx, options, env, self) => {
-  //   const order = tokens[idx].markup;
-  //   return `<p>${order}. `;
-  // },
-  // list_item_close: () => '</p>',
-// 将 h1-h6 标签替换为 p 标签
   heading_open: () => '<p>',
   heading_close: () => '</p>',
+
+  // 移除有序列表和无序列表的渲染
+  // ordered_list_open: () => '',
+  // ordered_list_close: () => '',
+  // unordered_list_open: () => '',
+  // unordered_list_close: () => '',
+
+
+};
+md.renderer.rules.ordered_list_open = (tokens, idx) => {
+  return `<ol class="my-ordered-list">`;
+};
+
+md.renderer.rules.ordered_list_close = (tokens, idx) => {
+  return `</ol>`;
+};
+
+md.renderer.rules.list_item_open = (tokens, idx) => {
+  return `<li class="my-list-item">`;
+};
+
+md.renderer.rules.list_item_close = (tokens, idx) => {
+  return `</li>`;
+};
+
+md.renderer.rules.bullet_list_open = (tokens, idx) => {
+  return `<ul class="my-bullet-list">`;
+};
+
+md.renderer.rules.bullet_list_close = (tokens, idx) => {
+  return `</ul>`;
 };
 
 
 
+
+// 获取所有的有序列表
+var orderedLists = document.querySelectorAll('.my-ordered-list');
+
+// 遍历所有的有序列表
+for (var i = 0; i < orderedLists.length; i++) {
+  var listItems = orderedLists[i].querySelectorAll('.my-list-item');
+
+  // 遍历每个有序列表中的所有列表项
+  for (var j = 0; j < listItems.length; j++) {
+    var listItemText = listItems[j].textContent;
+
+    // 如果列表项中包含点号，则替换为 Unicode 编码
+    if (listItemText.indexOf('.') !== -1) {
+      listItems[j].innerHTML = listItemText.replace('.', '&#x2022;');
+    }
+  }
+}
 
 
 
