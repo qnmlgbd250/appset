@@ -604,12 +604,12 @@ const defaultRender = md.renderer.rules;
 md.renderer.rules = {
   ...defaultRender,
   // 仅保留 p 标签
-  paragraph_open: (tokens, idx, options, env, self) => {
-    return '<p>';
-  },
-  paragraph_close: (tokens, idx, options, env, self) => {
-    return '</p>';
-  },
+  // paragraph_open: (tokens, idx, options, env, self) => {
+  //   return '<p>';
+  // },
+  // paragraph_close: (tokens, idx, options, env, self) => {
+  //   return '</p>';
+  // },
   // 仅保留 pre 标签
   code_block: (tokens, idx, options, env, self) => {
     const token = tokens[idx];
@@ -625,14 +625,14 @@ md.renderer.rules = {
   },
 
   // 移除 ol 标签
-  ordered_list_open: () => '',
-  ordered_list_close: () => '',
+  // ordered_list_open: () => '',
+  // ordered_list_close: () => '',
   // 移除 li 标签
-  list_item_open: (tokens, idx, options, env, self) => {
-    const order = tokens[idx].markup;
-    return `<p>${order}. `;
-  },
-  list_item_close: () => '</p>',
+  // list_item_open: (tokens, idx, options, env, self) => {
+  //   const order = tokens[idx].markup;
+  //   return `<p>${order}. `;
+  // },
+  // list_item_close: () => '</p>',
 // 将 h1-h6 标签替换为 p 标签
   heading_open: () => '<p>',
   heading_close: () => '</p>',

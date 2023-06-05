@@ -11,9 +11,28 @@ body {
     border: 1px solid #ccc;
 }
 p {
+    display: inline !important;
     line-height: 1.5 !important;
     margin-block-end: -0.1em !important;
     margin-block-start: 0.1em !important;
+}
+
+
+ol {
+
+    user-select: all !important;
+    line-height: 0.5 !important;
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: -1em !important;
+    margin-block-end: -1em !important;
+    margin-inline-start: 10px !important;
+    margin-inline-end: 20px !important;
+    padding-inline-start: 15px !important;
+}
+
+ul {
+    line-height: 0.5 !important;
 }
 
 
@@ -669,6 +688,7 @@ pre {
 .hljs-built_in,
 .hljs-formula {
   font-weight: normal !important;
+    font-style: normal !important;
 }
 
 
