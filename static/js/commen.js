@@ -1203,26 +1203,51 @@ function showContextMenu(e) {
 
 // 复制消息文本并隐藏自定义右键菜单
 function copyMessageText() {
-    const targetId = customContextMenu.dataset.target;
-    const targetElement = document.getElementById(targetId);
-    const messageText = targetElement.querySelector(".message").innerText;
+  const targetId = customContextMenu.dataset.target;
+  const targetElement = document.getElementById(targetId);
+  const messageElement = targetElement.querySelector(".message");
 
-    // 创建临时textarea用于复制
-    const tempTextarea = document.createElement("textarea");
-    tempTextarea.style.position = "absolute";
-    tempTextarea.style.left = "-9999px";
-    tempTextarea.value = messageText;
-    document.body.appendChild(tempTextarea);
-    tempTextarea.select();
-    document.execCommand("copy");
-    layer.msg('复制成功!', {
-        time: 500,
-        offset: '100px',
-        icon: 1,
-    });
-    document.body.removeChild(tempTextarea);
+  // 复制 messageElement
+  const clonedMessageElement = messageElement.cloneNode(true);
 
-    customContextMenu.style.display = "none";
+  // 获取有序列表和无序列表的序号
+  const listItems = clonedMessageElement.querySelectorAll("li");
+  listItems.forEach((item) => {
+    const parentList = item.parentElement;
+    if (parentList.tagName === "OL") {
+      const index = Array.from(parentList.children).indexOf(item) + 1;
+      item.innerHTML = `${index}. ${item.innerHTML}`;
+    } else if (parentList.tagName === "UL") {
+      item.innerHTML = `• ${item.innerHTML}`;
+    }
+  });
+
+  // 创建一个隐藏的可编辑元素，用于复制带格式的文本
+  const hiddenEditableDiv = document.createElement("div");
+  hiddenEditableDiv.contentEditable = "true";
+  hiddenEditableDiv.style.position = "absolute";
+  hiddenEditableDiv.style.left = "-9999px";
+  hiddenEditableDiv.appendChild(clonedMessageElement);
+  document.body.appendChild(hiddenEditableDiv);
+
+  // 选中并复制带格式的文本
+  const range = document.createRange();
+  range.selectNodeContents(hiddenEditableDiv);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  document.execCommand("copy");
+
+  layer.msg("复制成功!", {
+    time: 500,
+    offset: "100px",
+    icon: 1,
+  });
+
+  // 移除隐藏的可编辑元素
+  document.body.removeChild(hiddenEditableDiv);
+
+  customContextMenu.style.display = "none";
 }
 
 function handleTouchStart(e) {
