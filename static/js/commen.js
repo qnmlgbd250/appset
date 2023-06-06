@@ -894,7 +894,8 @@ function deleteMessages() {
     localStorage.setItem('chatContent', 'DELETE'); // 将空字符串存储到localStorage中
     localStorage.setItem('lastmsg3list', '');
     localStorage.setItem('lastmsg5list', '');
-    saveid('') // 保存空的聊天记录以覆盖之前的记录
+    saveid('');
+    saveminiid('');
 }
 
 
