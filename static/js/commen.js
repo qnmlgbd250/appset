@@ -531,54 +531,6 @@ document.getElementById('chat-content').addEventListener('click', (event) => {
             });
         }
     });
-
-let isTyping = false;
-const host = window.location.hostname;
-const port = window.location.port;
-let url = `ws://${host}:${port}/chat`;
-if (host === 'chat250.top') {
-    url = `wss://${host}/chat`;
-
-}
-
-let socket = null;
-let retryCount = 0; // 记录重连次数
-let isReconnecting = false; // 标记是否正在重连
-let accumulatedText = '';
-function resetAccumulatedText() {
-    accumulatedText = '';
-}
-
-function connect() {
-    socket = new WebSocket(url);
-
-    socket.addEventListener('open', (event) => {
-        console.log('WebSocket connected:', event);
-        retryCount = 0; // 连接成功，将重连次数归零
-        isReconnecting = false; // 连接成功，将重连状态重置
-    });
-
-    let codeBlock = false;
-    let preElement, codeElement
-
-    function createCopyButton() {
-        const copyButtonWrapper = document.createElement('div');
-        copyButtonWrapper.classList.add('copy-code-wrapper');
-
-        const copyButton = document.createElement('span');
-        copyButton.classList.add('copy-code');
-        copyButton.textContent = '复制代码';
-
-
-        const copyButtonContainer = document.createElement('span');
-        copyButtonContainer.appendChild(copyButton);
-        copyButtonWrapper.appendChild(copyButtonContainer);
-
-        return copyButtonWrapper;
-    }
-
-
-
 const md = new window.markdownit({
   html: true,
   linkify: true,
@@ -618,11 +570,6 @@ md.renderer.rules = {
   heading_open: () => '<p>',
   heading_close: () => '</p>',
 
-  // 移除有序列表和无序列表的渲染
-  // ordered_list_open: () => '',
-  // ordered_list_close: () => '',
-  // unordered_list_open: () => '',
-  // unordered_list_close: () => '',
 
 
 };
@@ -649,6 +596,36 @@ md.renderer.rules.bullet_list_open = (tokens, idx) => {
 md.renderer.rules.bullet_list_close = (tokens, idx) => {
   return `</ul>`;
 };
+
+let isTyping = false;
+const host = window.location.hostname;
+const port = window.location.port;
+let url = `ws://${host}:${port}/chat`;
+if (host === 'chat250.top') {
+    url = `wss://${host}/chat`;
+
+}
+
+let socket = null;
+let retryCount = 0; // 记录重连次数
+let isReconnecting = false; // 标记是否正在重连
+let accumulatedText = '';
+function resetAccumulatedText() {
+    accumulatedText = '';
+}
+
+function connect() {
+    socket = new WebSocket(url);
+
+    socket.addEventListener('open', (event) => {
+        console.log('WebSocket connected:', event);
+        retryCount = 0; // 连接成功，将重连次数归零
+        isReconnecting = false; // 连接成功，将重连状态重置
+    });
+
+
+
+
 
 
 
@@ -831,7 +808,7 @@ function sendMessage() {
     const userInput = document.getElementById('messageInput');
     // const message = escapeHtml(userInput.value.trim());
 
-    const message = document.createTextNode(userInput.value.trim()).textContent;
+    const message = md.render(userInput.value.trim());
 
 
     if (message.length > 0 && !isTyping) {
