@@ -3,26 +3,27 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小工具集</title>
+    <title>Gadget</title>
     <link rel="icon" href="../static/img/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" type="text/css" href="../static/css/commen.css">
     <link rel="stylesheet" href="../static/css/highlight/styles/shades-of-purple.min.css" class="hljs-theme-light">
     <link rel="stylesheet" href="../static/css/highlight/styles/vs2015.min.css" class="hljs-theme-dark">
-
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/styles/default.min.css">-->
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/highlight.min.js"></script>
-<!--    &lt;!&ndash; and it's easy to individually load additional languages &ndash;&gt;-->
-<!--    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/languages/go.min.js"></script>-->
+    <script src="../static/js/hightlocal.js"></script>
 
 
 </head>
 <body>
 <div class="title-bar">
 
-    <svg id="toggleButton" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="toggle-button" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M3 4h18v2H3V4Zm0 15h18v2H3v-2Zm0-5h18v2H3v-2Zm0-5h18v2H3V9Z"></path></svg>
-    小工具集
+    <svg id="toggleButton" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="toggle-button" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M3 4h18v2H3V4Zm0 15h18v2H3v-2Zm0-5h18v2H3v-2Zm0-5h18v2H3V9Z"></path>
+    </svg>
+    Gadget
 
-    <svg id="shareButton" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="share-button" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M18 22q-1.25 0-2.125-.875T15 19q0-.175.025-.363t.075-.337l-7.05-4.1q-.425.375-.95.588T6 15q-1.25 0-2.125-.875T3 12q0-1.25.875-2.125T6 9q.575 0 1.1.213t.95.587l7.05-4.1q-.05-.15-.075-.337T15 5q0-1.25.875-2.125T18 2q1.25 0 2.125.875T21 5q0 1.25-.875 2.125T18 8q-.575 0-1.1-.212t-.95-.588L8.9 11.3q.05.15.075.338T9 12q0 .175-.025.363T8.9 12.7l7.05 4.1q.425-.375.95-.587T18 16q1.25 0 2.125.875T21 19q0 1.25-.875 2.125T18 22Z"></path></svg>
+    <svg id="shareButton" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="share-button" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="currentColor"
+              d="M18 22q-1.25 0-2.125-.875T15 19q0-.175.025-.363t.075-.337l-7.05-4.1q-.425.375-.95.588T6 15q-1.25 0-2.125-.875T3 12q0-1.25.875-2.125T6 9q.575 0 1.1.213t.95.587l7.05-4.1q-.05-.15-.075-.337T15 5q0-1.25.875-2.125T18 2q1.25 0 2.125.875T21 5q0 1.25-.875 2.125T18 8q-.575 0-1.1-.212t-.95-.588L8.9 11.3q.05.15.075.338T9 12q0 .175-.025.363T8.9 12.7l7.05 4.1q.425-.375.95-.587T18 16q1.25 0 2.125.875T21 19q0 1.25-.875 2.125T18 22Z"></path>
+    </svg>
 </div>
 <div class="parent">
 
@@ -60,45 +61,42 @@
     <div class="div3" id="div3" style="display: none;">
         <textarea class="input" id="input"></textarea>
         <div class="input" contenteditable="true" id="image-container" style="display: none;"></div>
-        <!-- 输入框内容 -->
     </div>
 
     <div class="div4" id="div4" style="display: none;">
         <textarea class="output" id="output"></textarea>
-        <!-- 输出框内容 -->
     </div>
 
     <div class="div5" id="chat-content" style="display: none;">
         <div class="site-selection">
-        <label for="siteSelect"></label>
-        <select id="siteSelect">
-            <option value="1">gpt-3.5</option>
-            <option value="2">gpt-3.5-mini</option>
-            <option value="3">gpt-3.5-pro</option>
-            <option value="4">gpt-4</option>
-            <option value="5">gpt-4-plus</option>
-        </select>
-</div>
+            <label for="siteSelect"></label>
+            <select id="siteSelect">
+                <option value="1">gpt-3.5</option>
+                <option value="2">gpt-3.5-mini</option>
+                <option value="3">gpt-3.5-pro</option>
+                <option value="4">gpt-4</option>
+                <option value="5">gpt-4-plus</option>
+            </select>
+        </div>
     </div>
     <div class="div6" style="display: none;" id="div6">
-  <div class="messageInputWrapper">
-    <textarea type="text" id="messageInput" placeholder="说点什么吧...   Shift + Enter 换行"></textarea>
-<!--    <button id="sendButton" onclick="sendMessage()">Send</button>-->
-<!--    <button id="deleteButton" onclick="deleteMessages()">Delete</button>-->
-  </div>
-</div>
+        <div class="messageInputWrapper">
+            <textarea type="text" id="messageInput" placeholder="说点什么吧...   Shift + Enter 换行"></textarea>
+
+        </div>
+    </div>
 
 </div>
 <div id="modal" class="modal">
-  <div class="modal-content">
-    <span id="closeModal" class="close">&times;</span>
-<!--    <h2>微信扫描二维码访问</h2>-->
-    <p>微信扫描二维码访问</p>
-    <img src="../static/img/share.png" alt="分享的图片" />
-  </div>
+    <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <!--    <h2>微信扫描二维码访问</h2>-->
+        <p>微信扫描二维码访问</p>
+        <img src="../static/img/share.png" alt="分享的图片"/>
+    </div>
 </div>
 <div id="customContextMenu" class="custom-context-menu">
-  <div class="menu-option" id="copyOption">复 制</div>
+    <div class="menu-option" id="copyOption">复 制</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js" integrity="sha512-SYfDUYPg5xspsG6OOpXU366G8SZsdHOhqk/icdrYJ2E/WKZxPxze7d2HD3AyXpT7U22PZ5y74xRpqZ6A2bJ+kQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.js" integrity="sha512-yucm4wm2T2mZNzxtKGWQLTsMAGI+KNFRLsfFDNO9SqdMn9eauAORCybt1UnXRAAlrxJoFpdLSR9lhfuCKx22kQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
