@@ -365,7 +365,15 @@ async def get_chat2(msgdict, token=None, max_retries=8):
                 "options": {"parentMessageId": lastid,
                             "temperature": 1, "model": 3},
                 "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
+    context_too_long = False
     for attempt in range(max_retries):
+        if context_too_long:
+            data = {
+                "prompt": msg,
+                "options": {"temperature": 1, "model": 3},
+                "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."
+            }
+            context_too_long = False
         try:
             async with AsyncClient(proxies=PROXIES) as client:
                 async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
@@ -386,9 +394,12 @@ async def get_chat2(msgdict, token=None, max_retries=8):
                             return
                         try:
                             yield data['detail']
-                            await asyncio.sleep(0.05)
                         except Exception as e:
                             logging.error(e)
+                            if '[OpenAI] 当前请求上下文过长' in str(data):
+                                context_too_long = True
+                                logging.info('上下文超限')
+                                break
                             yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
                             return
 
@@ -399,7 +410,8 @@ async def get_chat2(msgdict, token=None, max_retries=8):
                 continue
             else:
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
-        break
+        if not context_too_long:
+            break
 
 
 async def get_chat3(msgdict, max_retries=8):
