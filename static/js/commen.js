@@ -802,13 +802,25 @@ function isSameDay(date1, date2) {
         date1.getFullYear() === date2.getFullYear();
 }
 
+function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+
+      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
 
 function sendMessage() {
     const chatContent = document.getElementById('chat-content');
     const userInput = document.getElementById('messageInput');
     // const message = escapeHtml(userInput.value.trim());
 
-    const message = md.render(userInput.value.trim());
+    const message = userInput.value.trim();
 
 
     if (message.length > 0 && !isTyping) {
@@ -817,7 +829,7 @@ function sendMessage() {
         const userAvatar = '/static/img/user.png';
         const replyAvatar = '/static/img/chat.png';
         const userMessageId = `user-message-${Date.now()}`;
-        const userMessage = `<div class="chat user" id="${userMessageId}"><span class="message">${message}</span><img src="${userAvatar}" alt="User"></div>`;
+        const userMessage = `<div class="chat user" id="${userMessageId}"><span class="message">${escapeHtml(message)}</span><img src="${userAvatar}" alt="User"></div>`;
         const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
 
         // 移除上一个 temporary-reply 的 id

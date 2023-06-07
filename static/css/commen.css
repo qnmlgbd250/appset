@@ -524,6 +524,7 @@ align-items: center;
     word-wrap: break-word;
     position: relative; /* 添加此行 */
     font: 14px 微软雅黑;
+    white-space: pre-wrap;
 
 }
 
