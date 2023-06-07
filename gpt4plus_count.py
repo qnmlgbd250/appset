@@ -191,7 +191,7 @@ def save_redis(data):
             # 验证数据是否已经存储在 Redis 中
             print(redis_pool.hget(hash_name, k))
 
-def check_plus(token):
+def check_plus(user,token):
 
     headers = {
         "authority": "www.chatgptenhanced.com",
@@ -211,24 +211,64 @@ def check_plus(token):
     response = requests.get(url, headers=headers, proxies=proxies)
 
     print(response.text)
+    if not response.json():
+        token = login_(user.decode('utf-8'), '88888888')
+        hash_name = 'gpt4plus'
+        n_v = {
+            "token": token,
+            "count": 20
+        }
+        redis_pool.hset(hash_name,user, json.dumps(n_v))
+        # 验证数据是否已经存储在 Redis 中
+        print(redis_pool.hget(hash_name, user))
+
+
+
+def login_(user,pwd):
+    headers = {
+        "authority": "www.chatgptenhanced.com",
+        "accept": "*/*",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "content-type": "application/json",
+        "origin": "https://www.chatgptenhanced.com",
+        "referer": "https://www.chatgptenhanced.com/login",
+        "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.37"
+    }
+    url = "https://www.chatgptenhanced.com/api/user/login"
+    data = {
+        "email": user,
+        "password": pwd
+    }
+    data = json.dumps(data, separators = (',', ':'))
+    response = requests.post(url, headers = headers, data = data)
+
+    sessionToken = response.json().get('sessionToken')
+    return sessionToken
+
 if __name__ == '__main__':
 
     #升级计划
-    data = {
-        "qamzcmv@yzm.de":
-            {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFhbXpjbXZAeXptLmRlIiwiZXhwIjoxNjg2MTAzMzk0LCJpYXQiOjE2ODU0OTg1OTQsIm5iZiI6MTY4NTQ5ODU5NH0.Y1weNjr5P5WNFevIOZ0KzVG2C3hsgl6Rm3cAzMgKhts', 'exp': 1686103394}
-
-
-    }
-    save_redis(data)
+    # data = {
+    #     "peizvqt@end.tw":
+    #         {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlaXp2cXRAZW5kLnR3IiwiZXhwIjoxNjg2NzUwMDE3LCJpYXQiOjE2ODYxNDUyMTcsIm5iZiI6MTY4NjE0NTIxN30.sXnN_iP9Uj9jdAh47fE8-yweoDCU4a4EZDfk1kaq5uQ', 'exp': 1686750017}
+    #
+    #
+    # }
+    # save_redis(data)
 
     #检查是否升级成功
-    # for key in redis_pool.hkeys("gpt4plus"):
-    #     value = redis_pool.hget("gpt4plus", key)
-    #     if value:
-    #         value_dict = json.loads(value)
-    #         token = value_dict.get('token')
-    #         check_plus(token)
+    for key in redis_pool.hkeys("gpt4plus"):
+        value = redis_pool.hget("gpt4plus", key)
+        if value:
+            value_dict = json.loads(value)
+            token = value_dict.get('token')
+            check_plus(key,token)
 
 
 
