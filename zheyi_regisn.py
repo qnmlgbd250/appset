@@ -7,14 +7,14 @@ import random
 import time
 from requests.utils import dict_from_cookiejar
 import re
-proxies = {
-  'http': 'http://taxtask:UQwpzAZ+WiQb@proxy.kdzwy.com:9068',
-  # 'https': 'https://taxtask:UQwpzAZ+WiQb@proxy.kdzwy.com:9068'
-}
+from dotenv import load_dotenv
+load_dotenv(".env")
+import os
+proxies = {'http://': os.getenv('HTTPROXY')}
 session = requests.Session()
 session1 = requests.Session()
 email_af = ['nqmo.com', 'qabq.com', 'uuf.me', "yzm.de"]
-for _ in range(200):
+for _ in range(10):
     try:
         email_af_str = random.choice(email_af)
         letters = string.ascii_lowercase
@@ -42,7 +42,7 @@ for _ in range(200):
             "username": email_be,
             "password": "88888888",
             "email": email,
-            "invitedBy": "QHKTQMLPTO "
+            "invitedBy": "RIMNGURQYJ"
         }
         data = json.dumps(data, separators=(',', ':'))
         response = session.post(url, headers=headers,  data=data, proxies=proxies)
