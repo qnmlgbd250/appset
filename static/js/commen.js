@@ -751,6 +751,16 @@ socket.addEventListener('message', (event) => {
 
 // 初始化连接
 connect();
+// 定时检查WebSocket状态并尝试重连
+const checkAndReconnect = () => {
+  if (!socket || socket.readyState === WebSocket.CLOSED) {
+      connect();
+      loadChatContent();
+  }
+};
+
+// 设置定时器以检查并重连WebSocket（每隔10秒）
+const intervalID = setInterval(checkAndReconnect, 10000);
 function addCopyCodeButtons(htmlString) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');

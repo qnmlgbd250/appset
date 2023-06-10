@@ -7,14 +7,16 @@ import random
 import time
 from requests.utils import dict_from_cookiejar
 import re
+import send_msg
 from dotenv import load_dotenv
 load_dotenv(".env")
 import os
 proxies = {'http://': os.getenv('HTTPROXY')}
+notice = send_msg.send_dingding
 session = requests.Session()
 session1 = requests.Session()
 email_af = ['nqmo.com', 'qabq.com', 'uuf.me', "yzm.de"]
-for _ in range(10):
+for _ in range(20):
     try:
         email_af_str = random.choice(email_af)
         letters = string.ascii_lowercase
@@ -90,25 +92,27 @@ for _ in range(10):
         url = f"https://mail.cx/api/api/v1/mailbox/{email}/{mid}/"
         response = session1.get(url, headers=headers,proxies=proxies)
 
-        print(response.text)
+        # print(response.text)
         jihuo = re.findall(r"点此激活您的账号 \( (.*?) \)", response.json()['body']['text'])[0]
-        headers = {
-          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-          "accept-encoding": "gzip, deflate, br",
-          "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-          "referer": "https://mail.cx/",
-          "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": "\"Windows\"",
-          "sec-fetch-dest": "document",
-          "sec-fetch-mode": "navigate",
-          "sec-fetch-site": "cross-site",
-          "sec-fetch-user": "?1",
-          "upgrade-insecure-requests": "1",
-          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
-        }
-        response = session1.get(jihuo, headers=headers, proxies=proxies)
-        print(response.text)
+        print(jihuo)
+        notice(jihuo)
+        # headers = {
+        #   "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        #   "accept-encoding": "gzip, deflate, br",
+        #   "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        #   "referer": "https://mail.cx/",
+        #   "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
+        #   "sec-ch-ua-mobile": "?0",
+        #   "sec-ch-ua-platform": "\"Windows\"",
+        #   "sec-fetch-dest": "document",
+        #   "sec-fetch-mode": "navigate",
+        #   "sec-fetch-site": "cross-site",
+        #   "sec-fetch-user": "?1",
+        #   "upgrade-insecure-requests": "1",
+        #   "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
+        # }
+        # response = session1.get(jihuo, headers=headers, proxies=proxies)
+        # print(response.text)
     except Exception as e:
         print(e)
         continue
