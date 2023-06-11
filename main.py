@@ -307,6 +307,9 @@ async def get_chat(msgdict, token=None, max_retries=8):
                         if '刷新试试~' in str(data):
                             yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
                             return
+                        if "内容涉及敏感词汇，请遵守相关法律法规~" in str(data):
+                            yield {"choices": [{"delta": {"content": "内容涉及敏感词，如有误判请联系管理员"}}]}
+                            return
                         if 'ChatGPT error' in str(data):
                             yield {"choices": [{"delta": {"content": "OpenAI错误,请联系管理员"}}]}
                             return
