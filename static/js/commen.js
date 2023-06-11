@@ -663,6 +663,9 @@ socket.addEventListener('message', (event) => {
     if (receivedData.lastmsg5list) {
         savelastmsg5list(receivedData.lastmsg5list)
     }
+    if (receivedData.lastmsg6list) {
+        savelastmsg6list(receivedData.lastmsg6list)
+    }
     const replyElement = document.getElementById('temporary-reply').querySelector('.message');
     const blinkElement = replyElement.querySelector('.placeholder-cursor');
     const chatContent = document.getElementById('chat-content');
@@ -873,7 +876,7 @@ function sendMessage() {
         const selectedSite = siteSelect.value;
 
         if (message && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({text: message, id: loadid(), miniid:loadminiid(), site: selectedSite, lastmsg3list: loadmsg3(),lastmsg5list: loadmsg5()}));
+            socket.send(JSON.stringify({text: message, id: loadid(), miniid:loadminiid(), site: selectedSite, lastmsg3list: loadmsg3(),lastmsg5list: loadmsg5(),lastmsg6list: loadmsg6()}));
             userInput.value = '';
             resetAccumulatedText();
         }
@@ -916,6 +919,7 @@ function deleteMessages() {
     localStorage.setItem('chatContent', 'DELETE'); // 将空字符串存储到localStorage中
     localStorage.setItem('lastmsg3list', '');
     localStorage.setItem('lastmsg5list', '');
+    localStorage.setItem('lastmsg6list', '');
     saveid('');
     saveminiid('');
 }
@@ -995,6 +999,21 @@ function savelastmsg5list(msg) {
     localStorage.setItem('lastmsg5list', JSON.stringify(list));
 }
 
+function savelastmsg6list(msg) {
+    let list = [];
+    if (localStorage.getItem('lastmsg6list')) {
+        list = JSON.parse(localStorage.getItem('lastmsg6list'));
+    }
+    if (list.length >= 10) {
+        list.shift(); // 删除第一个元素
+        list.shift(); // 再次删除第一个元素（原来的第二个元素）
+    }
+
+    list = list.concat(msg);
+
+    localStorage.setItem('lastmsg6list', JSON.stringify(list));
+}
+
 function loadid() {
     const savedid = localStorage.getItem('lastid');
     if (savedid) {
@@ -1020,6 +1039,14 @@ function loadmsg3() {
 
 function loadmsg5() {
     const savedmsg = localStorage.getItem('lastmsg5list');
+    if (savedmsg) {
+        return JSON.parse(savedmsg);
+    }
+    return "";
+}
+
+function loadmsg6() {
+    const savedmsg = localStorage.getItem('lastmsg6list');
     if (savedmsg) {
         return JSON.parse(savedmsg);
     }
