@@ -2,6 +2,7 @@
 import re
 import json
 import requests
+from urllib.parse import urlencode
 import os
 import redis
 import asyncio
@@ -44,6 +45,8 @@ AISET5 = os.getenv('AISET5')
 AISET6 = os.getenv('AISET6')
 MINIACCOUNT = os.getenv('MINIACCOUNT')
 MINIPASSWORD = os.getenv('MINIPASSWORD')
+
+IP138TOKEN = os.getenv('IP138TOKEN')
 
 
 PROXIES = {'http://': os.getenv('HTTPROXY')}
@@ -875,37 +878,18 @@ async def login_get_token(miniaccount, minipassword):
         logging.error(f"登录获取token异常: {repr(e)}")
         return None
 
-async def check_ip(ip):
+async def check_ip(theip):
     try:
-        headers = {
-            "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-            "Connection": "keep-alive",
-            "Content-Type": "application/json",
-            "Origin": "https://qifu.baidu.com",
-            "Referer": "https://qifu.baidu.com/",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "cross-site",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
-            "mode": "cors",
-            "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\""
-        }
-        url = "https://qifu-api.baidubce.com/ip/geo/v1/district"
-        params = {
-            "ip": ip
-        }
-        response = requests.get(url, headers=headers, params=params)
-        district = response.json()['data']['prov'] + response.json()['data']['city'] + response.json()['data']['district']
-        if district:
-            return district
-        else:
-            return ip
+        headers = {"token": IP138TOKEN}
+        params = urlencode({'ip': theip, 'datatype': 'jsonp', 'callback': 'find'})
+        url = 'https://api.ip138.com/ip/?' + params
+        response = requests.get(url, headers=headers)
+        result = re.search(r'find\(.+?\[(.+?)\].+?\)', response.text).group(1)
+        result = result.replace('"', '').replace(',', ' ')
+        return result
     except Exception as e:
         logging.error(f"检测ip异常: {repr(e)}")
-        return ip
+        return theip
 
 
 if __name__ == '__main__':
