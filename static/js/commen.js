@@ -755,15 +755,27 @@ socket.addEventListener('message', (event) => {
 // 初始化连接
 connect();
 // 定时检查WebSocket状态并尝试重连
+let reconnectCount = 0; // 记录已尝试的重连次数
+const maxReconnectCount = 10; // 最大重连次数
+
 const checkAndReconnect = () => {
   if (!socket || socket.readyState === WebSocket.CLOSED) {
-      connect();
-      loadChatContent();
+    if (reconnectCount >= maxReconnectCount) {
+      console.log(`WebSocket尝试重连${maxReconnectCount}次仍失败，已停止尝试`);
+      clearInterval(intervalID); // 清除定时器
+      return;
+    }
+    connect();
+    loadChatContent();
+    reconnectCount++;
+  } else {
+    reconnectCount = 0; // 已连接，重置重连次数
   }
 };
 
 // 设置定时器以检查并重连WebSocket（每隔10秒）
 const intervalID = setInterval(checkAndReconnect, 10000);
+
 function addCopyCodeButtons(htmlString) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');

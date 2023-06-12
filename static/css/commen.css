@@ -20,6 +20,7 @@ p {
 .my-ordered-list {
   list-style-type: decimal;
   margin-left: -1em;
+  margin-right: 0.5em;
   margin-bottom: 0.5em;
   margin-top: 0.5em;
   line-height: 1.2;
@@ -28,6 +29,7 @@ p {
 .my-bullet-list {
   list-style-type: disc;
   margin-left: -1em;
+    margin-right: 0.5em;
   margin-bottom: 0.5em;
   margin-top: 0.5em;
     line-height: 1.2;
