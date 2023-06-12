@@ -694,7 +694,6 @@ async def send_message(websocket, message):
 @app.websocket("/chat")
 async def chat(websocket: WebSocket):
     client_ip = websocket.scope["client"][0]
-    client_ip = await check_ip(client_ip)
     await websocket.accept()
     while True:
         try:
@@ -878,18 +877,6 @@ async def login_get_token(miniaccount, minipassword):
         logging.error(f"登录获取token异常: {repr(e)}")
         return None
 
-async def check_ip(theip):
-    try:
-        headers = {"token": IP138TOKEN}
-        params = urlencode({'ip': theip, 'datatype': 'jsonp', 'callback': 'find'})
-        url = 'https://api.ip138.com/ip/?' + params
-        response = requests.get(url, headers=headers)
-        result = re.search(r'find\(.+?\[(.+?)\].+?\)', response.text).group(1)
-        result = result.replace('"', '').replace(',', ' ')
-        return result
-    except Exception as e:
-        logging.error(f"检测ip异常: {repr(e)}")
-        return theip
 
 
 if __name__ == '__main__':
