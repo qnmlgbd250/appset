@@ -574,8 +574,14 @@ md.renderer.rules = {
 
 };
 md.renderer.rules.ordered_list_open = (tokens, idx) => {
-  return `<ol class="my-ordered-list">`;
+  const attrs = tokens[idx].attrs;
+  const start = attrs ? attrs.find(([name]) => name === 'start') : null;
+  const startAttr = start ? ` start="${start[1]}"` : '';
+  const orderType = start ? ` type="${start[1] > 9 ? '1' : 'a'}"` : '';
+  return `<ol class="my-ordered-list"${startAttr}${orderType}>`;
 };
+
+
 
 md.renderer.rules.ordered_list_close = (tokens, idx) => {
   return `</ol>`;
@@ -596,6 +602,8 @@ md.renderer.rules.bullet_list_open = (tokens, idx) => {
 md.renderer.rules.bullet_list_close = (tokens, idx) => {
   return `</ul>`;
 };
+
+
 
 let isTyping = false;
 const host = window.location.hostname;
@@ -630,23 +638,6 @@ function connect() {
 
 
 
-// 获取所有的有序列表
-var orderedLists = document.querySelectorAll('.my-ordered-list');
-
-// 遍历所有的有序列表
-for (var i = 0; i < orderedLists.length; i++) {
-  var listItems = orderedLists[i].querySelectorAll('.my-list-item');
-
-  // 遍历每个有序列表中的所有列表项
-  for (var j = 0; j < listItems.length; j++) {
-    var listItemText = listItems[j].textContent;
-
-    // 如果列表项中包含点号，则替换为 Unicode 编码
-    if (listItemText.indexOf('.') !== -1) {
-      listItems[j].innerHTML = listItemText.replace('.', '&#x2022;');
-    }
-  }
-}
 
 
 
@@ -1277,10 +1268,11 @@ function copyMessageText() {
   listItems.forEach((item) => {
     const parentList = item.parentElement;
     if (parentList.tagName === "OL") {
-      const index = Array.from(parentList.children).indexOf(item) + 1;
+      const startIndex = parentList.hasAttribute("start") ? parseInt(parentList.getAttribute("start")) : 1;
+      const index = Array.from(parentList.children).indexOf(item) + startIndex;
       item.innerHTML = `${index}. ${item.innerHTML}`;
     } else if (parentList.tagName === "UL") {
-      item.innerHTML = `• ${item.innerHTML}`;
+      item.innerHTML = `? ${item.innerHTML}`;
     }
   });
 
