@@ -1186,6 +1186,9 @@ window.addEventListener('resize', () => {
   setmessageInputsize();
   checkScreenWidth();
 });
+document.getElementById("messageInput").addEventListener("input", function() {
+  setmessageInputsize();
+});
 
 document.getElementById('toggleButton').addEventListener('click', function () {
   if (isMobileDevice()) {
