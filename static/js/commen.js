@@ -897,6 +897,7 @@ function handleKeyDown(event) {
         sendMessage();
         const messageInput = document.getElementById('messageInput');
         messageInput.value = '';
+        setmessageInputsize();
     }
 }
 
