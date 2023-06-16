@@ -282,7 +282,7 @@ async def get_chat(msgdict, token=None, max_retries=8):
             "completionParams": {
                 "presence_penalty": 0.8,
                 "temperature": 1,
-                "model": "gpt-3.5-turbo"
+                "model": "gpt-3.5-turbo-16k-0613"
             }
         }
     }
