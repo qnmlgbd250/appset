@@ -612,7 +612,7 @@ async def get_chat6(msgdict, token=None, max_retries=8):
     lastmsg6list = msgdict.get('lastmsg6list')
     messages = [
         {"role": "system",
-         "content": "IMPORTANT: You are a virtual assistant powered by the gpt-4 model, now time is 2023/6/11 21:15:34}"}
+         "content": "IMPORTANT: You are a virtual assistant powered by the gpt-3.5-turbo-16k-0613, now time is 2023/6/11 21:15:34}"}
     ]
     currenttext = {"role": "user", "content": msg}
     if lastmsg6list:
@@ -622,7 +622,7 @@ async def get_chat6(msgdict, token=None, max_retries=8):
         messages.append(currenttext)
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
-    data = {"messages": messages, "stream": True, "model": "gpt-4", "temperature": 0.9, "presence_penalty": 1}
+    data = {"messages": messages, "stream": True, "model": "gpt-3.5-turbo-16k-0613", "temperature": 0.9, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
             async with AsyncClient() as client:
