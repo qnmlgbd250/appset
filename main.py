@@ -290,7 +290,7 @@ async def get_chat(msgdict, token=None, max_retries=8):
         data = {"openaiKey": "", "prompt": msg,
                 "options": {"parentMessageId": lastid,
                             "systemMessage": f"You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: {datetime.today().strftime('%Y-%m-%d')}",
-                            "completionParams": {"presence_penalty": 0.8, "temperature": 1, "model": "gpt-3.5-turbo"}}}
+                            "completionParams": {"presence_penalty": 0.8, "temperature": 1, "model": "gpt-3.5-turbo-16k-0613"}}}
 
     for attempt in range(max_retries):
         try:
@@ -308,35 +308,18 @@ async def get_chat(msgdict, token=None, max_retries=8):
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 return
-                        if '刷新试试~' in str(data):
-                            yield {"choices": [{"delta": {"content": "连接失败,重新键入试试~"}}]}
-                            return
                         if "内容涉及敏感词汇，请遵守相关法律法规~" in str(data):
-                            yield {"choices": [{"delta": {"content": "内容涉及敏感词，如有误判请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "触发敏感词，如有误判请联系管理员"}}]}
                             return
-                        if 'ChatGPT error' in str(data):
-                            yield {"choices": [{"delta": {"content": "OpenAI错误,请联系管理员"}}]}
-                            return
-                        if "Can't create more than max_prepared_stmt_count statements (current value: 99999)" in str(data):
-                            yield {"choices": [{"delta": {"content": "token用尽,请联系管理员"}}]}
-                            return
-                        if '今日剩余回答次数为0' in str(data):
-                            yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
-                            return
-                        if '网站今日总共的免费额度已经用完' in str(data):
-                            yield {"choices": [{"delta": {"content": "网站今日回答次数已达上限"}}]}
-                            return
-                        if '今日免费额度10000已经用完啦' in str(data):
-                            yield {"choices": [{"delta": {"content": "今日回答次数已达上限"}}]}
-                            return
-                        if data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
-                                'finish_reason') is not None:
+                        if "detail" in data and (
+                                data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
+                                'finish_reason') is not None):
                             return
                         try:
                             yield data['detail']
                         except Exception as e:
                             logging.error(e)
-                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
                             return
 
         except httpx.HTTPError as e:
@@ -453,7 +436,7 @@ async def get_chat3(msgdict, max_retries=8):
         messages.append(currenttext)
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
-    data = {"messages": messages, "stream": True, "model": "gpt-3.5-turbo", "temperature": 0.8, "presence_penalty": 1}
+    data = {"messages": messages, "stream": True, "model": "gpt-3.5-turbo-16k-0613", "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
