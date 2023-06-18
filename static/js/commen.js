@@ -1174,7 +1174,7 @@ function checkScreenWidth() {
         document.getElementById("messageInput").placeholder = "说点什么吧...  Enter 发送";
     } else {
         parentElement.classList.remove('collapsed');
-        document.getElementById("messageInput").placeholder = '说点什么吧...     Shift + Enter 换行    输入 "/" 弹出提问模板';
+        document.getElementById("messageInput").placeholder = '说点什么吧...     Shift + Enter 换行    输入 "/" 弹出提问模板   输入 "/ + 关键词" 搜素模板';
     }
 
     updateSiteSelectionVisibility();
@@ -1334,80 +1334,84 @@ document.addEventListener("touchstart", handleTouchStart, false);
 document.addEventListener("touchend", handleTouchEnd, false);
 
 
-//获取JSON数据
-fetch('/static/templates.json').then((response)=>response.json()).then((data)=>{
-    //获取DOM元素
-    const templatePopup = document.getElementById('templatePopup');
-    //创建一个ul元素
-    const ul = document.createElement('ul');
 
-    //遍历JSON数据中的键值对
-    for(const category in data){
-        if(data.hasOwnProperty(category)){
+const templatePopup = document.getElementById('templatePopup');
+
+// 创建一个ul元素
+const ul = document.createElement('ul');
+templatePopup.appendChild(ul);
+
+fetch('/static/templates.json').then((response) => response.json()).then((data) => {
+    // 遍历JSON数据中的键值对并创建li元素
+    for (const category in data) {
+        if (data.hasOwnProperty(category)) {
             const sentences = data[category];
-
-            //遍历该类别下的模板句子数组
-            sentences.forEach((templateSentence)=>{
-                //为每个模板句子创建一个li元素,并设置显示格式为【类别】+模板句子
-
-                // 创建一个 span 元素，用于包裹【类别】部分，并设置字体颜色为绿色
-                const categorySpan = document.createElement('span');
-                categorySpan.textContent = `【${category}】`;
-                categorySpan.style.color = '#5fcba8';
-
-                const li = document.createElement('li');
-
-                // 将 span 元素添加到 li 中，然后追加模板句子文本内容
-                li.appendChild(categorySpan);
-                li.append(templateSentence);
-
-                //添加点击事件监听器
-                li.addEventListener('click', function(){
-                    var messageInput = document.getElementById('messageInput');
-                    //将点击的模板句子插入到输入框中（去除类别部分）
-                    messageInput.value = this.textContent.replace(`【${category}】`, '');
-                    //隐藏弹窗
-                    templatePopup.style.display = 'none';
-                    //聚焦输入框
-                    messageInput.focus();
-                });
-
-                //将li元素添加到ul中
+            sentences.forEach((templateSentence) => {
+                const li = createLiElement(category, templateSentence);
                 ul.appendChild(li);
             });
         }
     }
-
-    //将ul元素添加到具有ID"templatePopup"的div中并隐藏该弹出窗口（初始状态）
-    templatePopup.appendChild(ul);
-    templatePopup.style.display = 'none';
 });
 
-//添加按键事件监听器
-document.getElementById('messageInput').addEventListener('keydown', function(event){
-    var templatePopup = document.getElementById('templatePopup');
-    var messageInput = document.getElementById('messageInput');
+function createLiElement(category, templateSentence) {
+    const categorySpan = document.createElement('span');
+    categorySpan.textContent = `【${category}】`;
+    categorySpan.style.color = '#5fcba8';
 
-    //如果按下了“/”键
-    if(event.key === '/'){
-        //显示弹窗
+    const li = document.createElement('li');
+    li.appendChild(categorySpan);
+    li.append(templateSentence);
+
+    // 添加点击事件监听器
+    li.addEventListener('click', function() {
+        messageInput.value = this.textContent.replace(`【${category}】`, '');
+        templatePopup.style.display = 'none';
+        messageInput.focus();
+    });
+
+    return li;
+}
+
+messageInput.addEventListener('input', function(event) {
+    const firstCharIsSlash = messageInput.value.charAt(0) === '/';
+
+    if (firstCharIsSlash && messageInput.value.length > 1) {
+        // 提取关键词（去除"/"字符）
+        const keyword = messageInput.value.slice(1).toLowerCase();
+
+        // 遍历ul的所有子元素（li标签）
+        for (const li of ul.children) {
+            // 判断li标签中的文本是否包含关键词
+            if (li.textContent.toLowerCase().includes(keyword)) {
+                li.style.display = 'block';
+            } else {
+                li.style.display = 'none';
+            }
+        }
+    } else if (firstCharIsSlash) {
+        // 如果仅输入了"/"，则显示所有模板句子
+        for (const li of ul.children) {
+            li.style.display = 'block';
+        }
+    } else {
+        templatePopup.style.display = 'none';
+    }
+
+    if (firstCharIsSlash) {
+        // 显示弹窗并定位
         templatePopup.style.display = 'block';
-
-        //定位弹窗到输入框上方并设置宽度与输入框相同
-        var inputRect = messageInput.getBoundingClientRect();
+        const inputRect = messageInput.getBoundingClientRect();
         templatePopup.style.left = inputRect.left + 'px';
-        templatePopup.style.width = inputRect.width - 23 + 'px';
-        //设置与输入框相同的宽度
-        templatePopup.style.bottom = window.innerHeight - inputRect.top + 25 + 'px';
-        //距离上方50px
-
-    } else if(event.key === 'Escape' || (event.key === 'Backspace' && messageInput.value.slice(-1) === '/')){
-        //如果按下了“Esc”键或者按下了退格键且输入框中的最后一个字符是“/”
-
-        //隐藏弹窗
+        templatePopup.style.width = inputRect.width - 23 + 'px'; // 设置与输入框相同的宽度
+        templatePopup.style.bottom = window.innerHeight - inputRect.top + 25 + 'px'; // 距离上方50px
+    } else {
         templatePopup.style.display = 'none';
     }
 });
+
+
+
 
 // 添加一个点击事件监听器到文档对象
 document.addEventListener('click', function(event) {
