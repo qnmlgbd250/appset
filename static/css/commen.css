@@ -914,6 +914,36 @@ color: #333;
 .dark-theme .menu-option:hover {
   background-color: #555555;
 }
+.dark-theme .template-popup {
+    background-color: #444654;
+}
 
 
+.template-popup {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 2;
+
+
+}
+
+
+.template-popup ul {
+    list-style-type: none;
+    /*margin: 0;*/
+    padding: 0;
+    margin-top: -5px;
+    margin-bottom: -5px;
+}
+
+.template-popup li {
+    cursor:pointer;
+
+}
 
