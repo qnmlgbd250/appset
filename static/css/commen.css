@@ -917,6 +917,9 @@ color: #333;
 .dark-theme .template-popup {
     background-color: #444654;
 }
+.dark-theme .template-popup li:hover {
+    background-color: #414146;
+}
 
 
 .template-popup {
@@ -945,5 +948,9 @@ color: #333;
 .template-popup li {
     cursor:pointer;
 
+}
+.template-popup li:hover {
+    background-color: #f5f5f5;
+    border-radius: 4px;
 }
 

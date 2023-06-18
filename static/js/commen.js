@@ -1426,6 +1426,21 @@ document.addEventListener('click', function(event) {
 });
 
 
+// 添加一个点击事件监听器到输入框对象
+messageInput.addEventListener('click', function(event) {
+    const firstCharIsSlash = messageInput.value.charAt(0) === '/';
+
+    if (firstCharIsSlash) {
+        // 显示弹窗并定位
+        templatePopup.style.display = 'block';
+        const inputRect = messageInput.getBoundingClientRect();
+        templatePopup.style.left = inputRect.left + 'px';
+        templatePopup.style.width = inputRect.width - 23 + 'px'; // 设置与输入框相同的宽度
+        templatePopup.style.bottom = window.innerHeight - inputRect.top + 25 + 'px'; // 距离上方50px
+    } else {
+        templatePopup.style.display = 'none';
+    }
+});
 
 
 
