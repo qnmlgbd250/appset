@@ -104,7 +104,7 @@ for _ in range(200):
 
         email_code = re.findall(r'输入此次验证码 (\d+) （3分钟内有效）', response.json()['body']['text'])[0]
 
-        url = f"https://yuge-admin.orence.cn/api/register?name={email_be}&email={email}&password=88888888&email_code={email_code}&invite_code=FALFPW"
+        url = f"https://yuge-admin.orence.cn/api/register?name={email_be}&email={email}&password=88888888&email_code={email_code}&invite_code=QXG6PA"
 
         res = session.post(url, headers=headers,proxies=proxies)
         print(res.json())

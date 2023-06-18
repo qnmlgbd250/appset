@@ -309,7 +309,7 @@ async def get_chat(msgdict, token=None, max_retries=8):
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 return
                         if "内容涉及敏感词汇，请遵守相关法律法规~" in str(data):
-                            yield {"choices": [{"delta": {"content": "触发敏感词，如有误判请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": '触发敏感词，尝试把提问语句转成"your question + 请用中文回答"的形式'}}]}
                             return
                         if "detail" in data and (
                                 data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(

@@ -925,7 +925,7 @@ color: #333;
 .template-popup {
   position: absolute;
   background-color: white;
-  border: 1px solid #ccc;
+  border: 1px solid #5fcba8;
   padding: 8px;
   max-height: 200px;
   overflow-y: auto;
