@@ -11,6 +11,7 @@ import send_msg
 from dotenv import load_dotenv
 load_dotenv(".env")
 import os
+AISET2HOME = os.getenv('AISET2HOME')
 proxies = {'http://': os.getenv('HTTPROXY')}
 notice = send_msg.send_dingding
 session = requests.Session()
@@ -24,12 +25,12 @@ for _ in range(20):
         email = f"{email_be}@{email_af_str}"
         print(email)
         headers = {
-            "authority": "888gpt.top",
+            "authority": AISET2HOME,
             "accept": "application/json, text/plain, */*",
             "accept-language": "zh-CN,zh;q=0.9",
             "content-type": "application/json",
-            "origin": "https://888gpt.top",
-            "referer": "https://888gpt.top/",
+            "origin": f"https://{AISET2HOME}",
+            "referer": f"https://{AISET2HOME}/",
             "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
@@ -39,7 +40,7 @@ for _ in range(20):
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
         }
 
-        url = "https://888gpt.top/api/auth/register"
+        url = f"https://{AISET2HOME}/api/auth/register"
         data = {
             "username": email_be,
             "password": "88888888",
@@ -112,7 +113,9 @@ for _ in range(20):
           "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
         }
         response = session1.get(jihuo, headers=headers, proxies=proxies)
-        print(response.text)
+        if '哲弈团队账号激活成功' in response.text:
+            print('哲弈团队账号激活成功')
+
     except Exception as e:
         print(e)
         continue
