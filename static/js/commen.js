@@ -1271,7 +1271,7 @@ function processNestedLists(item) {
       Array.from(parentList.children).indexOf(item) + startIndex;
     item.innerHTML = `${index}.${item.innerHTML}`;
   } else if (parentList.tagName === "UL") {
-    item.innerHTML = `•${item.innerHTML}`;
+    item.innerHTML = `· ${item.innerHTML}`;
   }
 
   // 处理嵌套列表
