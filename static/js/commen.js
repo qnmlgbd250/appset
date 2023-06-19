@@ -1260,7 +1260,24 @@ function showContextMenu(e) {
     selection.removeAllRanges();
     selection.addRange(range);
 }
+function processNestedLists(item) {
+  const parentList = item.parentElement;
 
+  if (parentList.tagName === "OL") {
+    const startIndex = parentList.hasAttribute("start")
+      ? parseInt(parentList.getAttribute("start"))
+      : 1;
+    const index =
+      Array.from(parentList.children).indexOf(item) + startIndex;
+    item.innerHTML = `${index}.${item.innerHTML}`;
+  } else if (parentList.tagName === "UL") {
+    item.innerHTML = `•${item.innerHTML}`;
+  }
+
+  // 处理嵌套列表
+  const nestedItems = item.querySelectorAll("li");
+  nestedItems.forEach((nestedItem) => processNestedLists(nestedItem));
+}
 
 // 复制消息文本并隐藏自定义右键菜单
 function copyMessageText() {
@@ -1273,16 +1290,7 @@ function copyMessageText() {
 
   // 获取有序列表和无序列表的序号
   const listItems = clonedMessageElement.querySelectorAll("li");
-  listItems.forEach((item) => {
-    const parentList = item.parentElement;
-    if (parentList.tagName === "OL") {
-      const startIndex = parentList.hasAttribute("start") ? parseInt(parentList.getAttribute("start")) : 1;
-      const index = Array.from(parentList.children).indexOf(item) + startIndex;
-      item.innerHTML = `${index}. ${item.innerHTML}`;
-    } else if (parentList.tagName === "UL") {
-      item.innerHTML = `? ${item.innerHTML}`;
-    }
-  });
+  listItems.forEach((item) => processNestedLists(item));
 
   // 创建一个隐藏的可编辑元素，用于复制带格式的文本
   const hiddenEditableDiv = document.createElement("div");
