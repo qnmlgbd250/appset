@@ -1188,6 +1188,8 @@ checkScreenWidth();
 window.addEventListener('resize', () => {
   setmessageInputsize();
   checkScreenWidth();
+  updateTemplatePopupPosition(); // 更新弹窗位置
+  previousInnerHeight = window.innerHeight; // 更新 previousInnerHeight 值
 });
 document.getElementById("messageInput").addEventListener("input", function() {
   setmessageInputsize();
@@ -1403,7 +1405,7 @@ messageInput.addEventListener('input', function(event) {
         templatePopup.style.display = 'block';
         const inputRect = messageInput.getBoundingClientRect();
         templatePopup.style.left = inputRect.left + 'px';
-        templatePopup.style.width = inputRect.width - 23 + 'px'; // 设置与输入框相同的宽度
+        templatePopup.style.width = inputRect.width - 20 + 'px'; // 设置与输入框相同的宽度
         templatePopup.style.bottom = window.innerHeight - inputRect.top + 25 + 'px'; // 距离上方50px
     } else {
         templatePopup.style.display = 'none';
@@ -1435,13 +1437,35 @@ messageInput.addEventListener('click', function(event) {
         templatePopup.style.display = 'block';
         const inputRect = messageInput.getBoundingClientRect();
         templatePopup.style.left = inputRect.left + 'px';
-        templatePopup.style.width = inputRect.width - 23 + 'px'; // 设置与输入框相同的宽度
+        templatePopup.style.width = inputRect.width - 20 + 'px'; // 设置与输入框相同的宽度
         templatePopup.style.bottom = window.innerHeight - inputRect.top + 25 + 'px'; // 距离上方50px
     } else {
         templatePopup.style.display = 'none';
     }
 });
 
+
+let previousInnerHeight = window.innerHeight;
+function updateTemplatePopupPosition() {
+  const firstCharIsSlash = messageInput.value.charAt(0) === '/';
+
+  // 检查输入法是否收起
+  if (window.innerHeight > previousInnerHeight) {
+    templatePopup.style.display = 'none';
+    return;
+  }
+
+  if (firstCharIsSlash) {
+    // 显示弹窗并定位
+    templatePopup.style.display = 'block';
+    const inputRect = messageInput.getBoundingClientRect();
+    templatePopup.style.left = inputRect.left + 'px';
+    templatePopup.style.width = inputRect.width - 20 + 'px'; // 设置与输入框相同的宽度
+    templatePopup.style.bottom = window.innerHeight - inputRect.top + 25 + 'px'; // 距离上方50px
+  } else {
+    templatePopup.style.display = 'none';
+  }
+}
 
 
 
