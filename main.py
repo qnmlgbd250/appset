@@ -314,6 +314,7 @@ async def get_chat(msgdict, token=None, max_retries=8):
                         if "detail" in data and (
                                 data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
                                 'finish_reason') is not None):
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
                         try:
                             yield data['detail']
@@ -381,6 +382,7 @@ async def get_chat2(msgdict, token=None, max_retries=8):
                                 return
                         if "detail" in data and (data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
                                 'finish_reason') is not None):
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
                         try:
                             yield data['detail']
@@ -513,6 +515,7 @@ async def get_chat4(msgdict, token=None, max_retries=8):
                                 return
                         if data.get('choices') is None or data.get('choices')[0].get(
                                 'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
                         try:
                             yield {"choices": data.get('choices')}

@@ -650,12 +650,15 @@ socket.addEventListener('message', (event) => {
     const receivedData = JSON.parse(event.data);
     if (receivedData.lastmsg3list) {
         savelastmsg3list(receivedData.lastmsg3list)
+        isTyping = false;
     }
     if (receivedData.lastmsg5list) {
         savelastmsg5list(receivedData.lastmsg5list)
+        isTyping = false;
     }
     if (receivedData.lastmsg6list) {
         savelastmsg6list(receivedData.lastmsg6list)
+        isTyping = false;
     }
     const replyElement = document.getElementById('temporary-reply').querySelector('.message');
     const blinkElement = replyElement.querySelector('.placeholder-cursor');
@@ -669,8 +672,8 @@ socket.addEventListener('message', (event) => {
 
     // 开始监听 element 的子节点变化
     observer.observe(replyElement, {childList: true, subtree: true});
-    if (receivedData.text) {
-        isTyping = false;
+    if (receivedData.text && receivedData.text !== 'THE_END_哈哈哈') {
+        isTyping = true;
         replyElement.style.whiteSpace = 'pre-line';
 
         // 将新的 receivedData.text 添加到累积的文本中
@@ -680,8 +683,7 @@ socket.addEventListener('message', (event) => {
         const renderedHtml = md.render(accumulatedText);
         replyElement.innerHTML = addCopyCodeButtons(renderedHtml);
 
-        // 移除光标
-        blinkElement.remove();
+
 
         chatContent.scrollTop = chatContent.scrollHeight;
         userInput.focus();
@@ -696,9 +698,8 @@ socket.addEventListener('message', (event) => {
         // 停止监听 element 的子节点变化
         observer.disconnect();
 
-    } else {
-        // 移除光标
-        blinkElement.remove();
+    } else if (receivedData.text && receivedData.text === 'THE_END_哈哈哈') {
+        isTyping = false;
         chatContent.scrollTop = chatContent.scrollHeight;
         userInput.focus();
         // 停止监听 element 的子节点变化
