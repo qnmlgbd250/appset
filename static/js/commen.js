@@ -46,16 +46,7 @@ for (var i = 0; i < divs.length; i++) {
 const inputBox = document.getElementById("input");
 const imgBox = document.getElementById("image-container");
 const outputBox = document.getElementById("output");
-const buttons = document.querySelectorAll("button");
 
-buttons.forEach(button => {
-    button.addEventListener("click", () => {
-        inputBox.style.borderColor = button.className;
-        outputBox.style.borderColor = button.className;
-        imgBox.style.borderColor = button.className;
-
-    });
-});
 
 
 //
@@ -1142,20 +1133,20 @@ function isMobileDevice() {
     return window.innerWidth <= 768;
 }
 
-function updateSiteSelectionVisibility() {
-    var parentElement = document.querySelector('.parent');
-    var siteSelection = document.querySelector('.site-selection');
-
-    if (isMobileDevice()) {
-        if (parentElement.classList.contains('collapsed')) {
-            siteSelection.style.display = 'block';
-        } else {
-            siteSelection.style.display = 'none';
-        }
-    } else {
-        siteSelection.style.display = 'block';
-    }
-}
+// function updateSiteSelectionVisibility() {
+//     var parentElement = document.querySelector('.parent');
+//     var siteSelection = document.querySelector('.site-selection');
+//
+//     if (isMobileDevice()) {
+//         if (parentElement.classList.contains('collapsed')) {
+//             siteSelection.style.display = 'block';
+//         } else {
+//             siteSelection.style.display = 'none';
+//         }
+//     } else {
+//         siteSelection.style.display = 'block';
+//     }
+// }
 
 function setmessageInputsize() {
     const messageInput = document.getElementById("messageInput");
@@ -1178,7 +1169,7 @@ function checkScreenWidth() {
         document.getElementById("messageInput").placeholder = '说点什么吧...     Shift + Enter 换行    输入 "/" 弹出提问模板   输入 "/ + 关键词" 搜素模板';
     }
 
-    updateSiteSelectionVisibility();
+    // updateSiteSelectionVisibility();
 }
 
 // 初始检查屏幕宽度
@@ -1200,7 +1191,7 @@ document.getElementById('toggleButton').addEventListener('click', function () {
   if (isMobileDevice()) {
       const parentElement = document.querySelector('.parent');
       parentElement.classList.toggle('collapsed');
-      updateSiteSelectionVisibility();
+      // updateSiteSelectionVisibility();
   }
 });
 
@@ -1476,5 +1467,20 @@ function updateTemplatePopupPosition() {
   }
 }
 
+
+// 获取齿轮图标、颜色选择器弹窗和关闭按钮元素
+const settingsButton = document.getElementById("settingsButton");
+const colorPickerModal = document.getElementById("colorPickerModal");
+const closeColorPickerModal = document.getElementById("closeColorPickerModal");
+
+// 当点击齿轮图标时，显示颜色选择器弹窗
+settingsButton.addEventListener("click", () => {
+  colorPickerModal.style.display = "block";
+});
+
+// 当点击关闭按钮时，隐藏颜色选择器弹窗
+closeColorPickerModal.addEventListener("click", () => {
+  colorPickerModal.style.display = "none";
+});
 
 
