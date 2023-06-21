@@ -757,6 +757,7 @@ code {
 
 .model-label {
   margin-left: 30px; /* 负值表示向左移动 */
+    line-height:3;
 }
 
 
@@ -764,6 +765,7 @@ code {
   background-color: #fefefe;
   margin: 25% auto;
   padding: 20px;
+
   border: 1px solid #888;
 color: #333;
     border-radius:10px;
@@ -942,8 +944,9 @@ hr {
 .color-option {
     margin-right: 20px; /* 添加这行代码来设置右边距 */
     margin-left: 40px;
-    padding: 3px;
-    padding-bottom: 1px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
     border: 1px solid #7c7777;
     border-radius: 4px;
 }
@@ -957,4 +960,58 @@ hr {
    margin-top:10px;
 
 }
+
+.dark-theme .custom-dropdown {
+    background-color: #414146;
+}
+.dark-theme .dropdown-btn {
+    background-color: #414146;
+}
+.dark-theme .dropdown-content {
+    background-color: #414146;
+}
+.light-theme .custom-dropdown{
+     background-color: #fefefe;
+}
+.light-theme .dropdown-btn {
+    background-color: #fefefe;
+}
+.light-theme .dropdown-content {
+    background-color: #fefefe;
+}
+
+
+
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+
+}
+
+
+.dropdown-btn {
+  cursor: pointer;
+border: 1px solid #7c7777;
+  padding: 10px;
+    min-width: 120px;
+  border-radius: 6px;
+}
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+margin-top: 15px;
+    line-height:1.5;
+    border-radius: 6px;
+  min-width: 120px;
+    padding: 10px;
+    border: 1px solid #252626;
+}
+
+
+.dropdown-content > div {
+  cursor: default;
+}
+
 

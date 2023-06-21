@@ -867,8 +867,8 @@ function sendMessage() {
 
         chatContent.scrollTop = chatContent.scrollHeight;
 
-        const siteSelect = document.getElementById('siteSelect');
-        const selectedSite = siteSelect.value;
+
+        const selectedSite = localStorage.getItem('selectedSite');
 
         if (message && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({text: message, id: loadid(), miniid:loadminiid(), site: selectedSite, lastmsg3list: loadmsg3(),lastmsg5list: loadmsg5(),lastmsg6list: loadmsg6()}));
@@ -926,27 +926,54 @@ function saveChatContent() {
     localStorage.setItem('chatContent', chatContent.innerHTML);
 }
 
+// function loadChatContent() {
+//     const chatContent = document.getElementById('chat-content');
+//     const savedContent = localStorage.getItem('chatContent');
+//      if (savedContent && savedContent !== 'DELETE') { // 判断读取到的值是否为空字符串
+//         chatContent.innerHTML = savedContent;
+//         scrollToBottom();
+//     }
+//     const siteSelect = document.getElementById('siteSelect');
+//
+//
+//     // 从localStorage中获取选项值，并设置为当前选项
+//     const savedValue = localStorage.getItem('selectedSite');
+//     if (savedValue) {
+//         siteSelect.value = savedValue;
+//     }
+//
+//     // 监听下拉框的更改事件，将选中的值存储到localStorage中
+//     siteSelect.addEventListener('change', function () {
+//         localStorage.setItem('selectedSite', this.value);
+//     });
+// }
 function loadChatContent() {
-    const chatContent = document.getElementById('chat-content');
-    const savedContent = localStorage.getItem('chatContent');
-     if (savedContent && savedContent !== 'DELETE') { // 判断读取到的值是否为空字符串
-        chatContent.innerHTML = savedContent;
-        scrollToBottom();
+  const chatContent = document.getElementById('chat-content');
+  const savedContent = localStorage.getItem('chatContent');
+
+  if (savedContent && savedContent !== 'DELETE') {
+    chatContent.innerHTML = savedContent;
+    scrollToBottom();
+  }
+
+  const siteSelectDiv = document.getElementById('siteSelectDiv');
+
+  //从localStorage中获取选项值，并设置为当前选项
+  const savedValue = localStorage.getItem('selectedSite');
+
+  if (savedValue) {
+    for (const option of siteSelectDiv.children) {
+      if (option.getAttribute('data-value') === savedValue) {
+        //将匹配的选项设置为已选择,例如通过更改其样式
+        setDropdownBtnText(option.textContent);
+        break;
+      }
     }
-    const siteSelect = document.getElementById('siteSelect');
-
-
-    // 从localStorage中获取选项值，并设置为当前选项
-    const savedValue = localStorage.getItem('selectedSite');
-    if (savedValue) {
-        siteSelect.value = savedValue;
-    }
-
-    // 监听下拉框的更改事件，将选中的值存储到localStorage中
-    siteSelect.addEventListener('change', function () {
-        localStorage.setItem('selectedSite', this.value);
-    });
+  }
 }
+
+
+
 
 function saveid(id) {
     if (!id) {
@@ -1483,4 +1510,48 @@ closeColorPickerModal.addEventListener("click", () => {
   colorPickerModal.style.display = "none";
 });
 
+document.querySelector('.dropdown-btn').addEventListener('click', function () {
+  var dropdownContent = document.querySelector('.dropdown-content');
+  if (dropdownContent.style.display === 'block') {
+    dropdownContent.style.display = 'none';
+  } else {
+    dropdownContent.style.display = 'block';
+  }
+});
+
+// 获取所有的<div>选项元素
+var divItems = document.querySelectorAll('.dropdown-content > div');
+
+// 为每个<div>选项元素添加点击事件监听器，更新原始<select>元素的值
+divItems.forEach(function (divItem) {
+  divItem.addEventListener('click', function () {
+
+    setDropdownBtnText(this.innerText);
+    layer.msg('模型切换成功!', {
+            time: 500, // 设置显示时间，单位为毫秒
+            offset: '100px', // 设置距离顶部的距离
+            icon: 1,
+        });
+    // 隐藏下拉菜单内容
+    document.querySelector('.dropdown-content').style.display = 'none';
+  });
+});
+//当用户点击选项时,将其值存储到localStorage中并更新样式
+function getOptionValue(element) {
+  var dataValue = element.getAttribute('data-value');
+  localStorage.setItem('selectedSite', dataValue);
+
+  // 更新 "请选择" 文字
+  setDropdownBtnText(element.textContent);
+}
+
+// 设置 "请选择" 文字的函数
+// 设置 "请选择" 文字的函数
+function setDropdownBtnText(text) {
+  const dropdownBtn = document.getElementById('dropdownBtn');
+
+  // 更新 "请选择" 文字
+  dropdownBtn.childNodes[0].textContent = text;
+
+}
 
