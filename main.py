@@ -307,9 +307,11 @@ async def get_chat(msgdict, token=None, max_retries=8):
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                         if "内容涉及敏感词汇，请遵守相关法律法规~" in str(data):
                             yield {"choices": [{"delta": {"content": '触发敏感词，尝试把提问语句转成"your question + 请用中文回答"的形式'}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
                         if "detail" in data and (
                                 data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
@@ -321,6 +323,7 @@ async def get_chat(msgdict, token=None, max_retries=8):
                         except Exception as e:
                             logging.error(e)
                             yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
 
         except httpx.HTTPError as e:
@@ -330,6 +333,7 @@ async def get_chat(msgdict, token=None, max_retries=8):
                 continue
             else:
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
 
@@ -379,6 +383,7 @@ async def get_chat2(msgdict, token=None, max_retries=8):
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                         if "detail" in data and (data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
                                 'finish_reason') is not None):
@@ -393,6 +398,7 @@ async def get_chat2(msgdict, token=None, max_retries=8):
                                 logging.info('上下文超限')
                                 break
                             yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
 
         except httpx.HTTPError as e:
@@ -402,6 +408,7 @@ async def get_chat2(msgdict, token=None, max_retries=8):
                 continue
             else:
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         if not context_too_long:
             break
 
@@ -455,6 +462,7 @@ async def get_chat3(msgdict, max_retries=8):
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
 
         except httpx.HTTPError as e:
@@ -464,6 +472,7 @@ async def get_chat3(msgdict, max_retries=8):
                 continue
             else:
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
 
@@ -512,6 +521,7 @@ async def get_chat4(msgdict, token=None, max_retries=8):
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                         if data.get('choices') is None or data.get('choices')[0].get(
                                 'finish_reason') is not None:
@@ -522,6 +532,7 @@ async def get_chat4(msgdict, token=None, max_retries=8):
                         except Exception as e:
                             logging.error(e)
                             yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
 
         except httpx.HTTPError as e:
@@ -531,6 +542,7 @@ async def get_chat4(msgdict, token=None, max_retries=8):
                 continue
             else:
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
 
@@ -582,6 +594,7 @@ async def get_chat5(msgdict, token=None, max_retries=8):
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
 
         except httpx.HTTPError as e:
@@ -591,6 +604,7 @@ async def get_chat5(msgdict, token=None, max_retries=8):
                 continue
             else:
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
 async def get_chat6(msgdict, token=None, max_retries=8):
@@ -648,15 +662,18 @@ async def get_chat6(msgdict, token=None, max_retries=8):
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                         if data.get('choices') is None or data.get('choices')[0].get(
                                 'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
                         try:
                             yield {"choices": data.get('choices')}
                         except Exception as e:
                             logging.error(e)
                             yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
 
         except httpx.HTTPError as e:
@@ -666,6 +683,7 @@ async def get_chat6(msgdict, token=None, max_retries=8):
                 continue
             else:
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
 

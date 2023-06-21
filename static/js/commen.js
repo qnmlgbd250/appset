@@ -1514,3 +1514,15 @@ function setDropdownBtnText(text) {
 
 }
 
+function setDefaultOption() {
+    var defaultOption = document.querySelector('.default-option');
+    var dropdownBtn = document.getElementById('dropdownBtn');
+    dropdownBtn.innerHTML = defaultOption.innerHTML + '<span id="arrowIcon">' + arrowIcon.innerHTML + '</span>';
+    var dataValue = defaultOption.getAttribute('data-value');
+    localStorage.setItem('selectedSite', dataValue);
+}
+document.addEventListener('DOMContentLoaded', function () {
+    var savedOption = localStorage.getItem('selectedSite');
+    if (!savedOption) {
+    setDefaultOption();}
+});
