@@ -1010,8 +1010,13 @@ margin-top: 15px;
 }
 
 
+
 .dropdown-content > div {
   cursor: default;
 }
+.dropdown-content > div:hover {
+  color: #4b9e5f !important;
+}
+
 
 
