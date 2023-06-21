@@ -874,9 +874,10 @@ code {
     background-color: #fff;
 }
 
-.dark-theme .white-icon, .black-icon {
+.dark-theme .white-icon{
     background-color: #414146;
 }
+
 
 .custom-modal {
     display: none;
@@ -998,7 +999,9 @@ hr {
 .light-theme .dropdown-content {
     background-color: #fefefe;
 }
-
+.dropdown-content {
+    background-color: #fefefe;
+}
 
 .custom-dropdown {
     position: relative;
