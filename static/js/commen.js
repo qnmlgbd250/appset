@@ -48,7 +48,6 @@ const imgBox = document.getElementById("image-container");
 const outputBox = document.getElementById("output");
 
 
-
 //
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -504,52 +503,54 @@ copyBtn.addEventListener('click', () => {
     }
 });
 document.getElementById('chat-content').addEventListener('click', (event) => {
-        if (event.target.matches('.copy-code')) {
-            const preElement = event.target.closest('pre');
-            const codeElement = preElement.querySelector('code');
-            const codeText = codeElement.textContent;
-            const textArea = document.createElement('textarea');
-            textArea.value = codeText;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('Copy');
-            textArea.remove();
+    if (event.target.matches('.copy-code')) {
+        const preElement = event.target.closest('pre');
+        const codeElement = preElement.querySelector('code');
+        const codeText = codeElement.textContent;
+        const textArea = document.createElement('textarea');
+        textArea.value = codeText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('Copy');
+        textArea.remove();
 
-            layer.msg('复制成功!', {
-                time: 500, // 设置显示时间，单位为毫秒
-                offset: '100px', // 设置距离顶部的距离
-                icon: 1,
-            });
-        }
-    });
-const md = new window.markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-  highlight: function (str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return hljs.highlight(lang, str).value;
-      } catch (__) {}
+        layer.msg('复制成功!', {
+            time: 500, // 设置显示时间，单位为毫秒
+            offset: '100px', // 设置距离顶部的距离
+            icon: 1,
+        });
     }
+});
+const md = new window.markdownit({
+    html: true,
+    linkify: true,
+    typographer: true,
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(lang, str).value;
+            } catch (__) {
+            }
+        }
 
-    try {
-      return hljs.highlightAuto(str).value;
-    } catch (__) {}
+        try {
+            return hljs.highlightAuto(str).value;
+        } catch (__) {
+        }
 
-    return ''; // 使用默认的转义
-  },
+        return ''; // 使用默认的转义
+    },
 });
 
 const defaultRender = md.renderer.rules;
 
 // 自定义渲染规则
 md.renderer.rules = {
-  ...defaultRender,
-  code_block: (tokens, idx, options, env, self) => {
-    const token = tokens[idx];
-    const code = md.utils.escapeHtml(token.content);
-    return `<pre>
+    ...defaultRender,
+    code_block: (tokens, idx, options, env, self) => {
+        const token = tokens[idx];
+        const code = md.utils.escapeHtml(token.content);
+        return `<pre>
           <code>${code}</code>
           <div class="copy-code-wrapper">
           <span>
@@ -557,43 +558,40 @@ md.renderer.rules = {
           </span>
           </div>
           </pre>`;
-  },
-  heading_open: () => '<p>',
-  heading_close: () => '</p>',
-
+    },
+    heading_open: () => '<p>',
+    heading_close: () => '</p>',
 
 
 };
 md.renderer.rules.ordered_list_open = (tokens, idx) => {
-  const attrs = tokens[idx].attrs;
-  const start = attrs ? attrs.find(([name]) => name === 'start') : null;
-  const startAttr = start ? ` start="${start[1]}"` : '';
-  const orderType = start ? ` type="${start[1] > 9 ? '1' : 'a'}"` : '';
-  return `<ol class="my-ordered-list"${startAttr}${orderType}>`;
+    const attrs = tokens[idx].attrs;
+    const start = attrs ? attrs.find(([name]) => name === 'start') : null;
+    const startAttr = start ? ` start="${start[1]}"` : '';
+    const orderType = start ? ` type="${start[1] > 9 ? '1' : 'a'}"` : '';
+    return `<ol class="my-ordered-list"${startAttr}${orderType}>`;
 };
-
 
 
 md.renderer.rules.ordered_list_close = (tokens, idx) => {
-  return `</ol>`;
+    return `</ol>`;
 };
 
 md.renderer.rules.list_item_open = (tokens, idx) => {
-  return `<li class="my-list-item">`;
+    return `<li class="my-list-item">`;
 };
 
 md.renderer.rules.list_item_close = (tokens, idx) => {
-  return `</li>`;
+    return `</li>`;
 };
 
 md.renderer.rules.bullet_list_open = (tokens, idx) => {
-  return `<ul class="my-bullet-list">`;
+    return `<ul class="my-bullet-list">`;
 };
 
 md.renderer.rules.bullet_list_close = (tokens, idx) => {
-  return `</ul>`;
+    return `</ul>`;
 };
-
 
 
 let isTyping = false;
@@ -609,6 +607,7 @@ let socket = null;
 let retryCount = 0; // 记录重连次数
 let isReconnecting = false; // 标记是否正在重连
 let accumulatedText = '';
+
 function resetAccumulatedText() {
     accumulatedText = '';
 }
@@ -623,81 +622,67 @@ function connect() {
     });
 
 
+    socket.addEventListener('message', (event) => {
+        saveChatContent()
+        const receivedData = JSON.parse(event.data);
+        if (receivedData.lastmsg3list) {
+            savelastmsg3list(receivedData.lastmsg3list)
+            isTyping = false;
+        }
+        if (receivedData.lastmsg5list) {
+            savelastmsg5list(receivedData.lastmsg5list)
+            isTyping = false;
+        }
+        if (receivedData.lastmsg6list) {
+            savelastmsg6list(receivedData.lastmsg6list)
+            isTyping = false;
+        }
+        const replyElement = document.getElementById('temporary-reply').querySelector('.message');
+        const blinkElement = replyElement.querySelector('.placeholder-cursor');
+        const chatContent = document.getElementById('chat-content');
+        const userInput = document.getElementById('messageInput');
+
+        // 创建一个监听 element 内容更改的 MutationObserver
+        const observer = new MutationObserver(() => {
+            chatContent.scrollTop = chatContent.scrollHeight;
+        });
+
+        // 开始监听 element 的子节点变化
+        observer.observe(replyElement, {childList: true, subtree: true});
+        if (receivedData.text && receivedData.text !== 'THE_END_哈哈哈') {
+            isTyping = true;
+            replyElement.style.whiteSpace = 'pre-line';
+
+            // 将新的 receivedData.text 添加到累积的文本中
+            accumulatedText += receivedData.text;
 
 
+            const renderedHtml = md.render(accumulatedText);
+            replyElement.innerHTML = addCopyCodeButtons(renderedHtml);
 
 
+            chatContent.scrollTop = chatContent.scrollHeight;
+            userInput.focus();
 
+            if (receivedData.id) {
+                saveid(receivedData.id)
+            }
+            if (receivedData.miniid) {
+                saveminiid(receivedData.miniid)
+            }
 
+            // 停止监听 element 的子节点变化
+            observer.disconnect();
 
-
-
-
-
-
-
-socket.addEventListener('message', (event) => {
-    saveChatContent()
-    const receivedData = JSON.parse(event.data);
-    if (receivedData.lastmsg3list) {
-        savelastmsg3list(receivedData.lastmsg3list)
-        isTyping = false;
-    }
-    if (receivedData.lastmsg5list) {
-        savelastmsg5list(receivedData.lastmsg5list)
-        isTyping = false;
-    }
-    if (receivedData.lastmsg6list) {
-        savelastmsg6list(receivedData.lastmsg6list)
-        isTyping = false;
-    }
-    const replyElement = document.getElementById('temporary-reply').querySelector('.message');
-    const blinkElement = replyElement.querySelector('.placeholder-cursor');
-    const chatContent = document.getElementById('chat-content');
-    const userInput = document.getElementById('messageInput');
-
-    // 创建一个监听 element 内容更改的 MutationObserver
-    const observer = new MutationObserver(() => {
-        chatContent.scrollTop = chatContent.scrollHeight;
+        } else if (receivedData.text && receivedData.text === 'THE_END_哈哈哈') {
+            isTyping = false;
+            chatContent.scrollTop = chatContent.scrollHeight;
+            userInput.focus();
+            // 停止监听 element 的子节点变化
+            observer.disconnect();
+        }
+        saveChatContent();
     });
-
-    // 开始监听 element 的子节点变化
-    observer.observe(replyElement, {childList: true, subtree: true});
-    if (receivedData.text && receivedData.text !== 'THE_END_哈哈哈') {
-        isTyping = true;
-        replyElement.style.whiteSpace = 'pre-line';
-
-        // 将新的 receivedData.text 添加到累积的文本中
-        accumulatedText += receivedData.text;
-
-
-        const renderedHtml = md.render(accumulatedText);
-        replyElement.innerHTML = addCopyCodeButtons(renderedHtml);
-
-
-
-        chatContent.scrollTop = chatContent.scrollHeight;
-        userInput.focus();
-
-        if (receivedData.id) {
-            saveid(receivedData.id)
-        }
-        if (receivedData.miniid) {
-            saveminiid(receivedData.miniid)
-        }
-
-        // 停止监听 element 的子节点变化
-        observer.disconnect();
-
-    } else if (receivedData.text && receivedData.text === 'THE_END_哈哈哈') {
-        isTyping = false;
-        chatContent.scrollTop = chatContent.scrollHeight;
-        userInput.focus();
-        // 停止监听 element 的子节点变化
-        observer.disconnect();
-    }
-    saveChatContent();
-});
 
 
     socket.addEventListener('close', (event) => {
@@ -742,41 +727,41 @@ let reconnectCount = 0; // 记录已尝试的重连次数
 const maxReconnectCount = 10; // 最大重连次数
 
 const checkAndReconnect = () => {
-  if (!socket || socket.readyState === WebSocket.CLOSED) {
-    if (reconnectCount >= maxReconnectCount) {
-      console.log(`WebSocket尝试重连${maxReconnectCount}次仍失败，已停止尝试`);
-      clearInterval(intervalID); // 清除定时器
-      return;
+    if (!socket || socket.readyState === WebSocket.CLOSED) {
+        if (reconnectCount >= maxReconnectCount) {
+            console.log(`WebSocket尝试重连${maxReconnectCount}次仍失败，已停止尝试`);
+            clearInterval(intervalID); // 清除定时器
+            return;
+        }
+        connect();
+        loadChatContent();
+        reconnectCount++;
+    } else {
+        reconnectCount = 0; // 已连接，重置重连次数
     }
-    connect();
-    loadChatContent();
-    reconnectCount++;
-  } else {
-    reconnectCount = 0; // 已连接，重置重连次数
-  }
 };
 
 // 设置定时器以检查并重连WebSocket（每隔10秒）
 const intervalID = setInterval(checkAndReconnect, 10000);
 
 function addCopyCodeButtons(htmlString) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
-  const preElements = doc.querySelectorAll('pre');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    const preElements = doc.querySelectorAll('pre');
 
-  preElements.forEach((pre) => {
-    const copyCodeWrapper = document.createElement('div');
-    copyCodeWrapper.className = 'copy-code-wrapper';
+    preElements.forEach((pre) => {
+        const copyCodeWrapper = document.createElement('div');
+        copyCodeWrapper.className = 'copy-code-wrapper';
 
-    const copyCodeSpan = document.createElement('span');
-    copyCodeSpan.className = 'copy-code';
-    copyCodeSpan.textContent = '复制代码';
+        const copyCodeSpan = document.createElement('span');
+        copyCodeSpan.className = 'copy-code';
+        copyCodeSpan.textContent = '复制代码';
 
-    copyCodeWrapper.appendChild(copyCodeSpan);
-    pre.appendChild(copyCodeWrapper);
-  });
+        copyCodeWrapper.appendChild(copyCodeSpan);
+        pre.appendChild(copyCodeWrapper);
+    });
 
-  return doc.documentElement.innerHTML;
+    return doc.documentElement.innerHTML;
 }
 
 
@@ -811,16 +796,18 @@ function isSameDay(date1, date2) {
 }
 
 function escapeHtml(text) {
-      const map = {
+    const map = {
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
         "'": '&#039;'
-      };
+    };
 
-      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-    }
+    return text.replace(/[&<>"']/g, function (m) {
+        return map[m];
+    });
+}
 
 
 function sendMessage() {
@@ -871,7 +858,15 @@ function sendMessage() {
         const selectedSite = localStorage.getItem('selectedSite');
 
         if (message && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({text: message, id: loadid(), miniid:loadminiid(), site: selectedSite, lastmsg3list: loadmsg3(),lastmsg5list: loadmsg5(),lastmsg6list: loadmsg6()}));
+            socket.send(JSON.stringify({
+                text: message,
+                id: loadid(),
+                miniid: loadminiid(),
+                site: selectedSite,
+                lastmsg3list: loadmsg3(),
+                lastmsg5list: loadmsg5(),
+                lastmsg6list: loadmsg6()
+            }));
             userInput.value = '';
             resetAccumulatedText();
         }
@@ -900,7 +895,7 @@ function deleteMessages() {
     const chatContent = document.getElementById('chat-content');
     const siteSelection = document.querySelector('.site-selection');
 
-     // 删除chatContent的所有子元素，除了.site-selection
+    // 删除chatContent的所有子元素，除了.site-selection
     let childNode = chatContent.firstChild;
     while (childNode) {
         if (childNode !== siteSelection) {
@@ -926,53 +921,31 @@ function saveChatContent() {
     localStorage.setItem('chatContent', chatContent.innerHTML);
 }
 
-// function loadChatContent() {
-//     const chatContent = document.getElementById('chat-content');
-//     const savedContent = localStorage.getItem('chatContent');
-//      if (savedContent && savedContent !== 'DELETE') { // 判断读取到的值是否为空字符串
-//         chatContent.innerHTML = savedContent;
-//         scrollToBottom();
-//     }
-//     const siteSelect = document.getElementById('siteSelect');
-//
-//
-//     // 从localStorage中获取选项值，并设置为当前选项
-//     const savedValue = localStorage.getItem('selectedSite');
-//     if (savedValue) {
-//         siteSelect.value = savedValue;
-//     }
-//
-//     // 监听下拉框的更改事件，将选中的值存储到localStorage中
-//     siteSelect.addEventListener('change', function () {
-//         localStorage.setItem('selectedSite', this.value);
-//     });
-// }
+
 function loadChatContent() {
-  const chatContent = document.getElementById('chat-content');
-  const savedContent = localStorage.getItem('chatContent');
+    const chatContent = document.getElementById('chat-content');
+    const savedContent = localStorage.getItem('chatContent');
 
-  if (savedContent && savedContent !== 'DELETE') {
-    chatContent.innerHTML = savedContent;
-    scrollToBottom();
-  }
-
-  const siteSelectDiv = document.getElementById('siteSelectDiv');
-
-  //从localStorage中获取选项值，并设置为当前选项
-  const savedValue = localStorage.getItem('selectedSite');
-
-  if (savedValue) {
-    for (const option of siteSelectDiv.children) {
-      if (option.getAttribute('data-value') === savedValue) {
-        //将匹配的选项设置为已选择,例如通过更改其样式
-        setDropdownBtnText(option.textContent);
-        break;
-      }
+    if (savedContent && savedContent !== 'DELETE') {
+        chatContent.innerHTML = savedContent;
+        scrollToBottom();
     }
-  }
+
+    const siteSelectDiv = document.getElementById('siteSelectDiv');
+
+    //从localStorage中获取选项值，并设置为当前选项
+    const savedValue = localStorage.getItem('selectedSite');
+
+    if (savedValue) {
+        for (const option of siteSelectDiv.children) {
+            if (option.getAttribute('data-value') === savedValue) {
+                //将匹配的选项设置为已选择,例如通过更改其样式
+                setDropdownBtnText(option.textContent);
+                break;
+            }
+        }
+    }
 }
-
-
 
 
 function saveid(id) {
@@ -982,6 +955,7 @@ function saveid(id) {
         localStorage.setItem('lastid', id);
     }
 }
+
 function saveminiid(id) {
     if (!id) {
         localStorage.setItem('miniid', '');
@@ -1007,6 +981,7 @@ function savelastmsg3list(msg) {
     localStorage.setItem('lastmsg3list', JSON.stringify(list));
 
 }
+
 function savelastmsg5list(msg) {
     let list = [];
     if (localStorage.getItem('lastmsg5list')) {
@@ -1044,6 +1019,7 @@ function loadid() {
     }
     return "";
 }
+
 function loadminiid() {
     const savedid = localStorage.getItem('miniid');
     if (savedid) {
@@ -1160,20 +1136,6 @@ function isMobileDevice() {
     return window.innerWidth <= 768;
 }
 
-// function updateSiteSelectionVisibility() {
-//     var parentElement = document.querySelector('.parent');
-//     var siteSelection = document.querySelector('.site-selection');
-//
-//     if (isMobileDevice()) {
-//         if (parentElement.classList.contains('collapsed')) {
-//             siteSelection.style.display = 'block';
-//         } else {
-//             siteSelection.style.display = 'none';
-//         }
-//     } else {
-//         siteSelection.style.display = 'block';
-//     }
-// }
 
 function setmessageInputsize() {
     const messageInput = document.getElementById("messageInput");
@@ -1196,7 +1158,7 @@ function checkScreenWidth() {
         document.getElementById("messageInput").placeholder = '说点什么吧...     Shift + Enter 换行    输入 "/" 弹出提问模板   输入 "/ + 关键词" 搜素模板';
     }
 
-    // updateSiteSelectionVisibility();
+
 }
 
 // 初始检查屏幕宽度
@@ -1205,24 +1167,22 @@ checkScreenWidth();
 
 // 当窗口大小改变时，再次检查屏幕宽度
 window.addEventListener('resize', () => {
-  setmessageInputsize();
-  checkScreenWidth();
-  updateTemplatePopupPosition(); // 更新弹窗位置
-  previousInnerHeight = window.innerHeight; // 更新 previousInnerHeight 值
+    setmessageInputsize();
+    checkScreenWidth();
+    updateTemplatePopupPosition(); // 更新弹窗位置
+    previousInnerHeight = window.innerHeight; // 更新 previousInnerHeight 值
 });
-document.getElementById("messageInput").addEventListener("input", function() {
-  setmessageInputsize();
+document.getElementById("messageInput").addEventListener("input", function () {
+    setmessageInputsize();
 });
 
 document.getElementById('toggleButton').addEventListener('click', function () {
-  if (isMobileDevice()) {
-      const parentElement = document.querySelector('.parent');
-      parentElement.classList.toggle('collapsed');
-      // updateSiteSelectionVisibility();
-  }
+    if (isMobileDevice()) {
+        const parentElement = document.querySelector('.parent');
+        parentElement.classList.toggle('collapsed');
+
+    }
 });
-
-
 
 
 document.getElementById('shareButton').addEventListener('click', function () {
@@ -1279,64 +1239,65 @@ function showContextMenu(e) {
     selection.removeAllRanges();
     selection.addRange(range);
 }
+
 function processNestedLists(item) {
-  const parentList = item.parentElement;
+    const parentList = item.parentElement;
 
-  if (parentList.tagName === "OL") {
-    const startIndex = parentList.hasAttribute("start")
-      ? parseInt(parentList.getAttribute("start"))
-      : 1;
-    const index =
-      Array.from(parentList.children).indexOf(item) + startIndex;
-    item.innerHTML = `${index}.${item.innerHTML}`;
-  } else if (parentList.tagName === "UL") {
-    item.innerHTML = `· ${item.innerHTML}`;
-  }
+    if (parentList.tagName === "OL") {
+        const startIndex = parentList.hasAttribute("start")
+            ? parseInt(parentList.getAttribute("start"))
+            : 1;
+        const index =
+            Array.from(parentList.children).indexOf(item) + startIndex;
+        item.innerHTML = `${index}.${item.innerHTML}`;
+    } else if (parentList.tagName === "UL") {
+        item.innerHTML = `· ${item.innerHTML}`;
+    }
 
-  // 处理嵌套列表
-  const nestedItems = item.querySelectorAll("li");
-  nestedItems.forEach((nestedItem) => processNestedLists(nestedItem));
+    // 处理嵌套列表
+    const nestedItems = item.querySelectorAll("li");
+    nestedItems.forEach((nestedItem) => processNestedLists(nestedItem));
 }
 
 // 复制消息文本并隐藏自定义右键菜单
 function copyMessageText() {
-  const targetId = customContextMenu.dataset.target;
-  const targetElement = document.getElementById(targetId);
-  const messageElement = targetElement.querySelector(".message");
+    const targetId = customContextMenu.dataset.target;
+    const targetElement = document.getElementById(targetId);
+    const messageElement = targetElement.querySelector(".message");
 
-  // 复制 messageElement
-  const clonedMessageElement = messageElement.cloneNode(true);
+    // 复制 messageElement
+    const clonedMessageElement = messageElement.cloneNode(true);
 
-  // 获取有序列表和无序列表的序号
-  const listItems = clonedMessageElement.querySelectorAll("li");
-  listItems.forEach((item) => processNestedLists(item));
+    // 获取有序列表和无序列表的序号
+    const listItems = clonedMessageElement.querySelectorAll("li");
+    listItems.forEach((item) => processNestedLists(item));
 
-  // 创建一个隐藏的可编辑元素，用于复制带格式的文本
-  const hiddenEditableDiv = document.createElement("div");
-  hiddenEditableDiv.contentEditable = "true";
-  hiddenEditableDiv.style.position = "absolute";
-  hiddenEditableDiv.style.left = "-9999px";
-  hiddenEditableDiv.appendChild(clonedMessageElement);
-  document.body.appendChild(hiddenEditableDiv);
+    // 创建一个隐藏的可编辑元素，用于复制带格式的文本
+    const hiddenEditableDiv = document.createElement("div");
+    hiddenEditableDiv.contentEditable = "true";
+    hiddenEditableDiv.style.position = "absolute";
+    hiddenEditableDiv.style.left = "-9999px";
+    hiddenEditableDiv.appendChild(clonedMessageElement);
+    document.body.appendChild(hiddenEditableDiv);
 
-  // 选中并复制带格式的文本
-  const range = document.createRange();
-  range.selectNodeContents(hiddenEditableDiv);
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  document.execCommand("copy");
+    // 选中并复制带格式的文本
+    const range = document.createRange();
+    range.selectNodeContents(hiddenEditableDiv);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("copy");
 
-  layer.msg("复制成功!", {
-    time: 500,
-    offset: "100px",
-    icon: 1,
-  });
+    layer.msg("复制成功!", {
+        time: 500,
+        offset: "100px",
+        icon: 1,
+    });
 
-  // 移除隐藏的可编辑元素
-  document.body.removeChild(hiddenEditableDiv);
+    // 移除隐藏的可编辑元素
+    document.body.removeChild(hiddenEditableDiv);
 
-  customContextMenu.style.display = "none";
+    customContextMenu.style.display = "none";
 }
 
 function handleTouchStart(e) {
@@ -1361,7 +1322,6 @@ document.body.addEventListener("click", () => customContextMenu.style.display = 
 copyOption.addEventListener("click", copyMessageText);
 document.addEventListener("touchstart", handleTouchStart, false);
 document.addEventListener("touchend", handleTouchEnd, false);
-
 
 
 const templatePopup = document.getElementById('templatePopup');
@@ -1393,7 +1353,7 @@ function createLiElement(category, templateSentence) {
     li.append(templateSentence);
 
     // 添加点击事件监听器
-    li.addEventListener('click', function() {
+    li.addEventListener('click', function () {
         messageInput.value = this.textContent.replace(`【${category}】`, '');
         templatePopup.style.display = 'none';
         messageInput.focus();
@@ -1402,7 +1362,7 @@ function createLiElement(category, templateSentence) {
     return li;
 }
 
-messageInput.addEventListener('input', function(event) {
+messageInput.addEventListener('input', function (event) {
     const firstCharIsSlash = messageInput.value.charAt(0) === '/';
 
     if (firstCharIsSlash && messageInput.value.length > 1) {
@@ -1440,10 +1400,8 @@ messageInput.addEventListener('input', function(event) {
 });
 
 
-
-
 // 添加一个点击事件监听器到文档对象
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     var templatePopup = document.getElementById('templatePopup');
     var messageInput = document.getElementById('messageInput');
 
@@ -1456,7 +1414,7 @@ document.addEventListener('click', function(event) {
 
 
 // 添加一个点击事件监听器到输入框对象
-messageInput.addEventListener('click', function(event) {
+messageInput.addEventListener('click', function (event) {
     const firstCharIsSlash = messageInput.value.charAt(0) === '/';
 
     if (firstCharIsSlash) {
@@ -1473,25 +1431,26 @@ messageInput.addEventListener('click', function(event) {
 
 
 let previousInnerHeight = window.innerHeight;
+
 function updateTemplatePopupPosition() {
-  const firstCharIsSlash = messageInput.value.charAt(0) === '/';
+    const firstCharIsSlash = messageInput.value.charAt(0) === '/';
 
-  // 检查输入法是否收起
-  if (window.innerHeight > previousInnerHeight) {
-    templatePopup.style.display = 'none';
-    return;
-  }
+    // 检查输入法是否收起
+    if (window.innerHeight > previousInnerHeight) {
+        templatePopup.style.display = 'none';
+        return;
+    }
 
-  if (firstCharIsSlash) {
-    // 显示弹窗并定位
-    templatePopup.style.display = 'block';
-    const inputRect = messageInput.getBoundingClientRect();
-    templatePopup.style.left = inputRect.left + 'px';
-    templatePopup.style.width = inputRect.width - 20 + 'px'; // 设置与输入框相同的宽度
-    templatePopup.style.bottom = window.innerHeight - inputRect.top + 25 + 'px'; // 距离上方50px
-  } else {
-    templatePopup.style.display = 'none';
-  }
+    if (firstCharIsSlash) {
+        // 显示弹窗并定位
+        templatePopup.style.display = 'block';
+        const inputRect = messageInput.getBoundingClientRect();
+        templatePopup.style.left = inputRect.left + 'px';
+        templatePopup.style.width = inputRect.width - 20 + 'px'; // 设置与输入框相同的宽度
+        templatePopup.style.bottom = window.innerHeight - inputRect.top + 25 + 'px'; // 距离上方50px
+    } else {
+        templatePopup.style.display = 'none';
+    }
 }
 
 
@@ -1502,21 +1461,21 @@ const closeColorPickerModal = document.getElementById("closeColorPickerModal");
 
 // 当点击齿轮图标时，显示颜色选择器弹窗
 settingsButton.addEventListener("click", () => {
-  colorPickerModal.style.display = "block";
+    colorPickerModal.style.display = "block";
 });
 
 // 当点击关闭按钮时，隐藏颜色选择器弹窗
 closeColorPickerModal.addEventListener("click", () => {
-  colorPickerModal.style.display = "none";
+    colorPickerModal.style.display = "none";
 });
 
 document.querySelector('.dropdown-btn').addEventListener('click', function () {
-  var dropdownContent = document.querySelector('.dropdown-content');
-  if (dropdownContent.style.display === 'block') {
-    dropdownContent.style.display = 'none';
-  } else {
-    dropdownContent.style.display = 'block';
-  }
+    var dropdownContent = document.querySelector('.dropdown-content');
+    if (dropdownContent.style.display === 'block') {
+        dropdownContent.style.display = 'none';
+    } else {
+        dropdownContent.style.display = 'block';
+    }
 });
 
 // 获取所有的<div>选项元素
@@ -1524,34 +1483,34 @@ var divItems = document.querySelectorAll('.dropdown-content > div');
 
 // 为每个<div>选项元素添加点击事件监听器，更新原始<select>元素的值
 divItems.forEach(function (divItem) {
-  divItem.addEventListener('click', function () {
+    divItem.addEventListener('click', function () {
 
-    setDropdownBtnText(this.innerText);
-    layer.msg('模型切换成功!', {
+        setDropdownBtnText(this.innerText);
+        layer.msg('模型切换成功!', {
             time: 500, // 设置显示时间，单位为毫秒
             offset: '100px', // 设置距离顶部的距离
             icon: 1,
         });
-    // 隐藏下拉菜单内容
-    document.querySelector('.dropdown-content').style.display = 'none';
-  });
+        // 隐藏下拉菜单内容
+        document.querySelector('.dropdown-content').style.display = 'none';
+    });
 });
+
 //当用户点击选项时,将其值存储到localStorage中并更新样式
 function getOptionValue(element) {
-  var dataValue = element.getAttribute('data-value');
-  localStorage.setItem('selectedSite', dataValue);
+    var dataValue = element.getAttribute('data-value');
+    localStorage.setItem('selectedSite', dataValue);
 
-  // 更新 "请选择" 文字
-  setDropdownBtnText(element.textContent);
+    // 更新 "请选择" 文字
+    setDropdownBtnText(element.textContent);
 }
 
 // 设置 "请选择" 文字的函数
-// 设置 "请选择" 文字的函数
 function setDropdownBtnText(text) {
-  const dropdownBtn = document.getElementById('dropdownBtn');
+    const dropdownBtn = document.getElementById('dropdownBtn');
 
-  // 更新 "请选择" 文字
-  dropdownBtn.childNodes[0].textContent = text;
+    // 更新 "请选择" 文字
+    dropdownBtn.childNodes[0].textContent = text;
 
 }
 

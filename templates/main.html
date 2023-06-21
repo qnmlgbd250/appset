@@ -110,16 +110,8 @@
   <div class="option">
       <label class="model-label">模型</label>
     <div class="site-selection">
-            <label for="siteSelect"></label>
-            <select id="siteSelect" style="display:none;">
-                <option value="1">gpt-3.5-se</option>
-                <option value="2" selected>gpt-3.5-mini</option>
-                <option value="3">gpt-3.5-pro</option>
-                <option value="6">gpt-3.5-plus</option>
-                <option value="4">gpt-4</option>
-                <option value="5">gpt-4-plus</option>
 
-            </select>
+
         <div class="custom-dropdown">
          <span class="dropdown-btn" id="dropdownBtn">请选择<span id="arrowIcon">
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="text-2xl iconify iconify--ri" width="1em" height="1em" viewBox="0 0 20 20">
@@ -127,12 +119,12 @@
     </svg>
   </span></span>
           <div class="dropdown-content" id="siteSelectDiv">
-            <div data-value="1" onclick="getOptionValue(this)">gpt-3.5-se</div>
-            <div data-value="2" onclick="getOptionValue(this)">gpt-3.5-mini</div>
-            <div data-value="3" onclick="getOptionValue(this)">gpt-3.5-pro</div>
-            <div data-value="6" onclick="getOptionValue(this)">gpt-3.5-plus</div>
-            <div data-value="4" onclick="getOptionValue(this)">gpt-4</div>
-            <div data-value="5" onclick="getOptionValue(this)">gpt-4-plus</div>
+            <div data-value="1" onclick="getOptionValue(this)" title="【备用】 速度快 但是有敏感词检测 不稳定">gpt-3.5-se</div>
+            <div data-value="2" onclick="getOptionValue(this)" title="【推荐】 速度快 但是打字效果不美观">gpt-3.5-mini</div>
+            <div data-value="3" onclick="getOptionValue(this)" title="【推荐】 速度快 相对稳定">gpt-3.5-pro</div>
+            <div data-value="6" onclick="getOptionValue(this)" title="【备用】 速度快 相对稳定">gpt-3.5-plus</div>
+            <div data-value="4" onclick="getOptionValue(this)" title="【推荐】 更智能 相对稳定 但是价格贵 每天限制200条提问">gpt-4</div>
+            <div data-value="5" onclick="getOptionValue(this)" title="【推荐】 更智能 相对稳定 但是价格贵 每天限制300条提问">gpt-4-plus</div>
           </div>
         </div>
 
