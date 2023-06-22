@@ -826,13 +826,13 @@ async def chat(websocket: WebSocket):
                         response_data = {"text": response_text, "miniid": i.get('id')}
                     else:
                         response_data = {"text": response_text, "id": i.get('id')}
-                    if selected_site == "3":
+                    if selected_site == "3" and 'THE_END_哈哈哈' not in response_text:
                         lastmsg3 += response_text
-                    if selected_site == "5":
+                    elif selected_site == "5" and 'THE_END_哈哈哈' not in response_text:
                         lastmsg5 += response_text
-                    if selected_site == "6":
+                    elif selected_site == "6" and 'THE_END_哈哈哈' not in response_text:
                         lastmsg6 += response_text
-                    if selected_site == "7":
+                    elif selected_site == "7" and 'THE_END_哈哈哈' not in response_text:
                         lastmsg7 += response_text
                     await send_message(websocket, response_data)
             if selected_site == "3":
