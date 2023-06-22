@@ -1527,6 +1527,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function closeModal() {
       document.getElementById('colorPickerModal').style.display = 'none';
+      var dropdownContent = document.getElementById("siteSelectDiv");
+        dropdownContent.style.display = "none";
 }
 
 function handleClickOutside(event) {
