@@ -1131,33 +1131,44 @@ function onBlur() {
 
 
 $(document).ready(function () {
+
+
+    function setSelectedColorOption(option) {
+        $(".color-option").removeClass("selected");
+        $(option).addClass("selected");
+    }
+
     $('.white').click(function () {
         $('body').removeClass('dark-theme').addClass('light-theme');
         localStorage.setItem('theme', 'light-theme');
-        inputBox.style.borderColor = 'green';
-        outputBox.style.borderColor = 'green';
-        imgBox.style.borderColor = 'green';
+
         layer.config({
             extend: [],
         });
+
+        setSelectedColorOption(this);
     });
 
     $('.black').click(function () {
         $('body').removeClass('light-theme').addClass('dark-theme');
         localStorage.setItem('theme', 'dark-theme');
-        inputBox.style.borderColor = 'green';
-        outputBox.style.borderColor = 'green';
-        imgBox.style.borderColor = 'green';
 
         layer.config({
             extend: ['skin/layer-dark.css'],
         });
+
+        setSelectedColorOption(this);
     });
+
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         $('body').removeClass('light-theme dark-theme').addClass(savedTheme);
+
+        const selectedColorOption = savedTheme === "light-theme" ? ".white" : ".black";
+        setSelectedColorOption($(selectedColorOption));
     }
 });
+
 
 function isMobileDevice() {
     return window.innerWidth <= 768;

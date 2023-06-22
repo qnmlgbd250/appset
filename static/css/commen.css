@@ -1003,6 +1003,9 @@ hr {
 .color-option:last-child {
     margin-left: 20px; /* 移除最后一个选项的右边距 */
 }
+.color-option.selected {
+    border: 1.5px solid #4b9e5f;
+}
 
 
 .option + .option {
