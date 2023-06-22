@@ -701,8 +701,6 @@ function connect() {
 
             replyElement.innerHTML = '连接异常，请刷新重试或联系管理员';
 
-            // 移除光标
-            blinkElement.remove();
 
             chatContent.scrollTop = chatContent.scrollHeight;
             blinkElement.classList.remove('blink'); // 去除闪烁光标
@@ -1526,3 +1524,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!savedOption) {
     setDefaultOption();}
 });
+
+function closeModal() {
+      document.getElementById('colorPickerModal').style.display = 'none';
+}
+
+function handleClickOutside(event) {
+  var modal = document.getElementById('colorPickerModal');
+  if (event.target == modal) {
+    closeModal();
+  }
+}

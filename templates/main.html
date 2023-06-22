@@ -91,15 +91,23 @@
 </div>
 
 
-<div id="colorPickerModal" class="custom-modal">
+<div id="colorPickerModal" class="custom-modal" onclick="handleClickOutside(event)">
 
     <div class="modal-content">
-        <span id="closeColorPickerModal" class="close">&times;</span>
+        <span id="closeColorPickerModal" class="close" onclick="event.stopPropagation(); closeModal();">
+            <svg viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g stroke="none" stroke-width="1" fill-rule="evenodd">
+                  <g fill-rule="nonzero">
+                      <path d="M2.08859116,2.2156945 L2.14644661,2.14644661 C2.32001296,1.97288026 2.58943736,1.95359511 2.7843055,2.08859116 L2.85355339,2.14644661 L6,5.293 L9.14644661,2.14644661 C9.34170876,1.95118446 9.65829124,1.95118446 9.85355339,2.14644661 C10.0488155,2.34170876 10.0488155,2.65829124 9.85355339,2.85355339 L6.707,6 L9.85355339,9.14644661 C10.0271197,9.32001296 10.0464049,9.58943736 9.91140884,9.7843055 L9.85355339,9.85355339 C9.67998704,10.0271197 9.41056264,10.0464049 9.2156945,9.91140884 L9.14644661,9.85355339 L6,6.707 L2.85355339,9.85355339 C2.65829124,10.0488155 2.34170876,10.0488155 2.14644661,9.85355339 C1.95118446,9.65829124 1.95118446,9.34170876 2.14644661,9.14644661 L5.293,6 L2.14644661,2.85355339 C1.97288026,2.67998704 1.95359511,2.41056264 2.08859116,2.2156945 L2.14644661,2.14644661 L2.08859116,2.2156945 Z"></path>
+                  </g>
+              </g>
+          </svg>
+        </span>
 
-  <h4 class="model-label">设置</h4>
+  <h5 class="model-label model-label-custom">设 置</h5>
   <hr />
   <div class="option">
-    <label class="model-label">主题</label>
+    <label class="model-label">主 题</label>
     <div class="color-option black">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ri black-icon" width="1em" height="1em" viewBox="0 0 20 20"><path fill="currentColor" d="M16 20.335v-2.2a7.523 7.523 0 0 0 3.623-4.281a9 9 0 0 1-10.622-8.99A7.518 7.518 0 0 0 5.151 10H3.117a9.505 9.505 0 0 1 8.538-7.963a7 7 0 0 0 10.316 8.728A9.503 9.503 0 0 1 16 20.335ZM7 20h7v2H7v-2Zm-3-8h6v2H4v-2Zm-2 4h10v2H2v-2Z"></path></svg>
     </div>
@@ -108,7 +116,7 @@
     </div>
   </div>
   <div class="option">
-      <label class="model-label">模型</label>
+      <label class="model-label">模 型</label>
     <div class="site-selection">
 
 

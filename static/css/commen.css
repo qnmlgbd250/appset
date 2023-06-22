@@ -763,6 +763,13 @@ code {
 .model-label {
     margin-left: 30px; /* 负值表示向左移动 */
     line-height: 3;
+    font-size: 15px;
+}
+.model-label-custom {
+            margin-bottom: 3px;
+        }
+h5 {
+    font-weight: normal;
 }
 
 
@@ -1039,5 +1046,11 @@ hr {
     color: #4b9e5f !important;
 }
 
-
+.close {
+          float:right;cursor:pointer
+        }
+.close svg{
+  width:18px;height:auto;fill:#aaa;
+    z-index: 2000;
+}
 
