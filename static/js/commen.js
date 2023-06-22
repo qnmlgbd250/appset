@@ -703,7 +703,7 @@ function connect() {
 
             replyElement.style.whiteSpace = 'pre-line';
 
-            replyElement.innerHTML = '连接异常，请刷新重试或联系管理员';
+            replyElement.innerHTML = '连接异常，请尝试更换通道或者联系管理员试试吧！';
 
 
             chatContent.scrollTop = chatContent.scrollHeight;
@@ -714,6 +714,7 @@ function connect() {
             setTimeout(connect, retryInterval); // 定时器中执行重连
             retryCount++; // 增加重连次数
         }
+        isTyping = false;
     });
 
 
