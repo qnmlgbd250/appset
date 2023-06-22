@@ -581,6 +581,19 @@ pre {
     /*line-height: 1.5; !* 修改为您喜欢的行高 *!*/
 
 }
+pre::-webkit-scrollbar {
+    height: 5px!important;
+}
+
+pre::-webkit-scrollbar-track {
+    background-color: transparent!important;
+    border-radius: 15px!important;
+}
+
+pre::-webkit-scrollbar-thumb {
+    background-color: rgba(178, 178, 178, 0.4)!important;
+    border-radius: 4px!important;
+}
 
 /* 通用覆盖样式 */
 .hljs strong,
