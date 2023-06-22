@@ -363,20 +363,20 @@ p {
 
 
 #messageInput {
-    padding: 7px;
-    resize: none;
-    /*height: 120px; !* 修改此行 *!*/
-    overflow-y: auto;
-    width: calc(100% - 25px);
-    margin-top: 8px;
-    font: 14px 微软雅黑;
-    border-radius: 6px;
-    bottom: 0;
-    top: 0;
-    border: 1px solid #ccc; /* 添加此行 */
-    outline: none; /* 添加此行 */
+  padding: 7px;
+  resize: none;
+  overflow-y: auto;
+  width: calc(100% - 50px);
+  margin-top: 8px;
 
+  font: 14px 微软雅黑;
+  border-radius: 6px;
+  bottom: 200px; /* 设置输入框与浏览器窗口底边的距离 */
+  border: 1px solid #ccc;
+  outline: none;
+  position: fixed; /* 添加此行，将 messageInput 设置为固定定位 */
 }
+
 
 #messageInput:focus {
     border-color: green;

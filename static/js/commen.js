@@ -1578,3 +1578,36 @@ function handleClickOutside(event) {
     closeModal();
   }
 }
+
+
+  const messageInputWrapper = document.getElementById('messageInputWrapper');
+
+  function updateMessageInputPosition() {
+    const windowHeight = window.innerHeight;
+    const wrapperRect = messageInputWrapper.getBoundingClientRect();
+
+    if (wrapperRect.bottom > windowHeight) {
+      messageInput.style.position = 'fixed';
+      if (isMobileDevice()) {
+          messageInput.style.bottom = '10px';
+          messageInput.style.width = "calc(100% - 35px)"
+          messageInputWrapper.style.height = "50%"
+          messageInputWrapper.style.bottom = '10px';
+      } else {
+            messageInput.style.bottom = '20px';
+      }
+    } else {
+      messageInput.style.position = 'absolute';
+      if (isMobileDevice()) {
+          messageInput.style.bottom = '10px';
+          messageInput.style.width = "calc(100% - 35px)"
+          messageInputWrapper.style.height = "50%"
+          messageInputWrapper.style.bottom = '10px';
+      } else {
+      messageInput.style.bottom = '20px';}
+    }
+  }
+
+  window.addEventListener('resize', updateMessageInputPosition);
+  updateMessageInputPosition();
+
