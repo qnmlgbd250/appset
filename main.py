@@ -5,6 +5,7 @@ import requests
 from urllib.parse import urlencode
 import os
 import redis
+import random
 import asyncio
 import threading
 from httpx import AsyncClient
@@ -44,6 +45,7 @@ AISET4HOME = os.getenv('AISET4HOME')
 AISET5 = os.getenv('AISET5')
 AISET6 = os.getenv('AISET6')
 AISET7 = os.getenv('AISET7')
+AISET8 = os.getenv('AISET8')
 MINIACCOUNT = os.getenv('MINIACCOUNT')
 MINIPASSWORD = os.getenv('MINIPASSWORD')
 
@@ -767,6 +769,55 @@ async def get_chat7(msgdict, max_retries=8):
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def generate_random_number():
+    first_digit = 8
+    remaining_digits = [random.randint(1, 9) for _ in range(7)]
+    return int(str(first_digit) + ''.join(map(str, remaining_digits)))
+async def get_chat8(msgdict, max_retries=8):
+    headers = {
+        "Accept": "*/*",
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "Origin": AISET8,
+        "Referer": f"{AISET8}/chatgpt/",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51",
+        "X-Requested-With": "XMLHttpRequest"
+    }
+    url = f"{AISET8}/chatgpt/gpt4.php"
+    msg = msgdict.get('text')
+    data = {
+        "msg": msg,
+        "id": await generate_random_number(),
+        "type": "true"
+    }
+    custom_timeout = httpx.Timeout(read=30, write=30, connect=15, pool=None)
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies=PROXIES) as client:
+                async with client.stream('POST', url, headers=headers, data=data,timeout=custom_timeout) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            yield {"choices": [{"delta": {"content": line}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
 
 async def send_message(websocket, message):
     # await asyncio.sleep(0.03)
@@ -817,6 +868,10 @@ async def chat(websocket: WebSocket):
             elif selected_site == "7":
                 logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
                 chat_generator = get_chat7(data)
+
+            elif selected_site == "8":
+                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+                chat_generator = get_chat8(data)
 
             async for i in chat_generator:
                 if i['choices'][0].get('delta').get('content'):
