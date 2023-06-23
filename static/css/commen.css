@@ -302,6 +302,14 @@ p {
         align-items: center;
     }
 
+    .toggle-button {
+
+        margin-left: -20px;
+    }
+    .share-button {
+        margin-right: -20px;
+    }
+
 
     .parent.collapsed .div1,
     .parent.collapsed .div2 {
