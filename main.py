@@ -796,17 +796,22 @@ async def get_chat8(msgdict, max_retries=8):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
                 async with client.stream('POST', url, headers=headers, data=data,timeout=custom_timeout) as response:
-                    async for line in response.aiter_lines():
-                        if line.strip() == "":
-                            continue
-                        try:
-                            yield {"choices": [{"delta": {"content": line}}]}
-                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
-                        except Exception as e:
-                            logging.error(e)
-                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
-                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
-                            return
+                    if response.status_code != 200:
+                        yield {"choices": [{"delta": {"content": "服务器连接失败"}}]}
+                        yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                        return
+                    else:
+                        async for line in response.aiter_lines():
+                            if line.strip() == "":
+                                continue
+                            try:
+                                yield {"choices": [{"delta": {"content": line}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            except Exception as e:
+                                logging.error(e)
+                                yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
 
         except httpx.HTTPError as e:
             logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
