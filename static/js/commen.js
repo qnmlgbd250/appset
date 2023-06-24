@@ -1590,21 +1590,25 @@ function handleClickOutside(event) {
       messageInput.style.position = 'fixed';
       if (isMobileDevice()) {
           messageInput.style.bottom = '10px';
+          messageInput.style.marginBottom = "30px"
           messageInput.style.width = "calc(100% - 35px)"
-          messageInputWrapper.style.height = "50%"
+          messageInputWrapper.style.height = "0"
           messageInputWrapper.style.bottom = '10px';
       } else {
             messageInput.style.bottom = '20px';
+            messageInput.style.marginBottom = "0"
       }
     } else {
       messageInput.style.position = 'absolute';
       if (isMobileDevice()) {
           messageInput.style.bottom = '10px';
+          messageInput.style.marginBottom = "30px"
           messageInput.style.width = "calc(100% - 35px)"
-          messageInputWrapper.style.height = "50%"
+          messageInputWrapper.style.height = "0"
           messageInputWrapper.style.bottom = '10px';
       } else {
-      messageInput.style.bottom = '20px';}
+      messageInput.style.bottom = '20px';
+      messageInput.style.marginBottom = "0"}
     }
   }
 

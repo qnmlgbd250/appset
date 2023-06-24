@@ -266,6 +266,8 @@ p {
 @media screen and (max-width: 700px) {
     .parent {
         height: calc(100vh - 80px);
+        grid-template-columns: repeat(4,1fr); /* 修改列数和列宽度 */
+      grid-template-rows:auto auto repeat(2,1fr); /* 修改行高度 */
     }
 
     .div3 {
@@ -293,6 +295,7 @@ p {
     .output {
 
         height: calc(50vh - 75px);
+        margin-top: -80px;
 
     }
 
@@ -331,6 +334,14 @@ p {
         grid-column-start: 1;
         transition: transform 0.3s ease;
     }
+    .div5 {
+        margin-bottom: 50px;
+    }
+    .div6 {
+       grid-row-start: unset!important; /* 移除默认的行起始位置设置，这将允许我们自由控制元素的位置和大小 */
+       top:50%;                /* 将元素向下移动，使其顶部与父容器高度的一半对齐 */
+       height:50% !important;             /* 设置元素高度为父容器的50% */
+   }
 }
 
 
