@@ -46,6 +46,7 @@ AISET5 = os.getenv('AISET5')
 AISET6 = os.getenv('AISET6')
 AISET7 = os.getenv('AISET7')
 AISET8 = os.getenv('AISET8')
+AISET9 = os.getenv('AISET9')
 MINIACCOUNT = os.getenv('MINIACCOUNT')
 MINIPASSWORD = os.getenv('MINIPASSWORD')
 
@@ -823,6 +824,84 @@ async def get_chat8(msgdict, max_retries=8):
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def get_chat9(msgdict, token=None, max_retries=8):
+    headers = {
+        "authority": AISET9,
+        "accept": "text/event-stream",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "content-type": "application/json",
+        "origin": f"https://{AISET9}",
+        "referer": f"https://{AISET9}/",
+        "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51",
+        "x-requested-with": "XMLHttpRequest"
+    }
+    url = f"https://{AISET9}/api/openai/v1/chat/completions"
+    msg = msgdict.get('text')
+    lastmsg9list = msgdict.get('lastmsg9list')
+    messages = [
+        {"role": "system", "content": "IMPORTANT: You are a virtual assistant powered by the gpt-4-0613 model, now time is 2023/6/24 22:32:45}"}
+    ]
+    currenttext = {"role": "user", "content": msg}
+    if lastmsg9list:
+        lastmsg9list.append(currenttext)
+        messages += lastmsg9list
+    else:
+        messages.append(currenttext)
+    if len(messages) > 10:
+        messages = messages[0:1] + messages[-7:]
+    data = {"messages": messages, "stream": True, "model": "gpt-4-0613", "temperature": 0.8, "presence_penalty": 1}
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies=PROXIES) as client:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            # 查找 "data:" 的位置
+                            start_index = line.find("data:") + len("data:")
+
+                            # 提取 JSON 字符串
+                            json_str = line[start_index:].strip()
+
+                            # 将 JSON 字符串转换为 Python 字典
+                            data = json.loads(json_str)
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        if data.get('choices') is None or data.get('choices')[0].get(
+                                'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        try:
+                            yield {"choices": data.get('choices')}
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
 
 async def send_message(websocket, message):
     # await asyncio.sleep(0.03)
@@ -840,6 +919,7 @@ async def chat(websocket: WebSocket):
             lastmsg5 = ''
             lastmsg6 = ''
             lastmsg7 = ''
+            lastmsg9 = ''
 
             selected_site = data.get("site", "1")
             if selected_site == "1":
@@ -878,6 +958,10 @@ async def chat(websocket: WebSocket):
                 logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
                 chat_generator = get_chat8(data)
 
+            elif selected_site == "9":
+                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+                chat_generator = get_chat9(data)
+
             async for i in chat_generator:
                 if i['choices'][0].get('delta').get('content'):
                     # logging.info(i['choices'][0].get('delta'))
@@ -894,18 +978,23 @@ async def chat(websocket: WebSocket):
                         lastmsg6 += response_text
                     elif selected_site == "7" and 'THE_END_哈哈哈' not in response_text:
                         lastmsg7 += response_text
+                    elif selected_site == "9" and 'THE_END_哈哈哈' not in response_text:
+                        lastmsg9 += response_text
                     await send_message(websocket, response_data)
             if selected_site == "3":
                 response_data = {"lastmsg3list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg3}]}
                 await send_message(websocket, response_data)
-            if selected_site == "5":
+            elif selected_site == "5":
                 response_data = {"lastmsg5list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg5}]}
                 await send_message(websocket, response_data)
-            if selected_site == "6":
+            elif selected_site == "6":
                 response_data = {"lastmsg6list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg6}]}
                 await send_message(websocket, response_data)
-            if selected_site == "7":
+            elif selected_site == "7":
                 response_data = {"lastmsg7list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg7}]}
+                await send_message(websocket, response_data)
+            elif selected_site == "9":
+                response_data = {"lastmsg9list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg9}]}
                 await send_message(websocket, response_data)
         except WebSocketDisconnect as e:
             break

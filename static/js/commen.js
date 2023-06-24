@@ -641,6 +641,10 @@ function connect() {
             savelastmsg7list(receivedData.lastmsg7list)
             isTyping = false;
         }
+        if (receivedData.lastmsg9list) {
+            savelastmsg9list(receivedData.lastmsg9list)
+            isTyping = false;
+        }
         const replyElement = document.getElementById('temporary-reply').querySelector('.message');
         const blinkElement = replyElement.querySelector('.placeholder-cursor');
         const chatContent = document.getElementById('chat-content');
@@ -869,7 +873,8 @@ function sendMessage() {
                 lastmsg3list: loadmsg3(),
                 lastmsg5list: loadmsg5(),
                 lastmsg6list: loadmsg6(),
-                lastmsg7list: loadmsg7()
+                lastmsg7list: loadmsg7(),
+                lastmsg9list: loadmsg9(),
             }));
             userInput.value = '';
             resetAccumulatedText();
@@ -916,6 +921,7 @@ function deleteMessages() {
     localStorage.setItem('lastmsg5list', '');
     localStorage.setItem('lastmsg6list', '');
     localStorage.setItem('lastmsg7list', '');
+    localStorage.setItem('lastmsg9list', '');
     saveid('');
     saveminiid('');
 }
@@ -1032,6 +1038,21 @@ function savelastmsg7list(msg) {
     localStorage.setItem('lastmsg7list', JSON.stringify(list));
 }
 
+function savelastmsg9list(msg) {
+    let list = [];
+    if (localStorage.getItem('lastmsg9list')) {
+        list = JSON.parse(localStorage.getItem('lastmsg9list'));
+    }
+    if (list.length >= 10) {
+        list.shift(); // 删除第一个元素
+        list.shift(); // 再次删除第一个元素（原来的第二个元素）
+    }
+
+    list = list.concat(msg);
+
+    localStorage.setItem('lastmsg9list', JSON.stringify(list));
+}
+
 function loadid() {
     const savedid = localStorage.getItem('lastid');
     if (savedid) {
@@ -1074,6 +1095,14 @@ function loadmsg6() {
 
 function loadmsg7() {
     const savedmsg = localStorage.getItem('lastmsg7list');
+    if (savedmsg) {
+        return JSON.parse(savedmsg);
+    }
+    return "";
+}
+
+function loadmsg9() {
+    const savedmsg = localStorage.getItem('lastmsg9list');
     if (savedmsg) {
         return JSON.parse(savedmsg);
     }
