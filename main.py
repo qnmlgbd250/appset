@@ -253,7 +253,7 @@ async def curl2requests(request: Request):
     return {'output': output}
 
 
-async def get_chat(msgdict, token=None, max_retries=8):
+async def get_chat(msgdict, token=None, max_retries=2):
     headers = {
         "Accept": "application/json, text/plain, */*",
         "Accept-Encoding": "gzip, deflate, br",
@@ -341,7 +341,7 @@ async def get_chat(msgdict, token=None, max_retries=8):
         break
 
 
-async def get_chat2(msgdict, token=None, max_retries=8):
+async def get_chat2(msgdict, token=None, max_retries=2):
     headers = {
         "accept": "application/json, text/plain, */*",
         "accept-encoding": "gzip, deflate, br",
@@ -417,7 +417,7 @@ async def get_chat2(msgdict, token=None, max_retries=8):
             break
 
 
-async def get_chat3(msgdict, max_retries=8):
+async def get_chat3(msgdict, max_retries=2):
     headers = {
         "Host": AISET3,
         "Connection": "keep-alive",
@@ -480,7 +480,7 @@ async def get_chat3(msgdict, max_retries=8):
         break
 
 
-async def get_chat4(msgdict, token=None, max_retries=8):
+async def get_chat4(msgdict, token=None, max_retries=3):
     headers = {
         "authority": AISET4,
         "accept": "text/event-stream",
@@ -550,7 +550,7 @@ async def get_chat4(msgdict, token=None, max_retries=8):
         break
 
 
-async def get_chat5(msgdict, token=None, max_retries=8):
+async def get_chat5(msgdict, token=None, max_retries=3):
     headers = {
         "authority": AISET5,
         "accept": "*/*",
@@ -612,7 +612,7 @@ async def get_chat5(msgdict, token=None, max_retries=8):
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
-async def get_chat6(msgdict, token=None, max_retries=8):
+async def get_chat6(msgdict, token=None, max_retries=2):
     headers = {
       "Accept": "text/event-stream",
       "Accept-Encoding": "gzip, deflate, br",
@@ -825,7 +825,7 @@ async def get_chat8(msgdict, max_retries=8):
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
-async def get_chat9(msgdict, token=None, max_retries=8):
+async def get_chat9(msgdict, token=None, max_retries=3):
     headers = {
         "authority": AISET9,
         "accept": "text/event-stream",
