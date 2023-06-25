@@ -582,10 +582,11 @@ async def get_chat5(msgdict, token=None, max_retries=8):
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
     data = {"conversation": messages, "stream": True, "model": "gpt-4", "temperature": 0.8, "presence_penalty": 1}
+    custom_timeout = httpx.Timeout(read=30, write=30, connect=15, pool=None)
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_bytes():
                         if line.strip() == "":
                             continue
@@ -845,7 +846,7 @@ async def get_chat9(msgdict, token=None, max_retries=8):
     msg = msgdict.get('text')
     lastmsg9list = msgdict.get('lastmsg9list')
     messages = [
-        {"role": "system", "content": "IMPORTANT: You are a virtual assistant powered by the gpt-4-0613 model, now time is 2023/6/24 22:32:45}"}
+        {"role": "system", "content": "IMPORTANT: You are a virtual assistant powered by the gpt-4-0613 model, now time is 2023/6/25 21:02:45}"}
     ]
     currenttext = {"role": "user", "content": msg}
     if lastmsg9list:
@@ -856,10 +857,11 @@ async def get_chat9(msgdict, token=None, max_retries=8):
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
     data = {"messages": messages, "stream": True, "model": "gpt-4-0613", "temperature": 0.8, "presence_penalty": 1}
+    custom_timeout = httpx.Timeout(read=30, write=30, connect=15, pool=None)
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
