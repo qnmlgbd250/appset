@@ -2,9 +2,8 @@
 import re
 import json
 import requests
+from typing import Dict, Optional, Any
 from urllib.parse import urlencode
-import os
-import redis
 import random
 import asyncio
 import threading
@@ -18,44 +17,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from datetime import datetime
-from dotenv import load_dotenv
 import ujson
-
-load_dotenv(".env")
-
-
-#读取参数设置全局
-REDIS_HOST = os.getenv('REDIS_HOST')
-REDIS_PORT = os.getenv('REDIS_PORT')
-REDIS_DB = os.getenv('REDIS_DB')
-REDIS_PASS = os.getenv('REDIS_PASS')
-
-ZWYMOCK = os.getenv('ZWYMOCK')
-ZWYPROD = os.getenv('ZWYPROD')
-CAIYUNURL = os.getenv('CAIYUNURL')
-CAIYUNTOKEN = os.getenv('CAIYUNTOKEN')
-OCRAPIKEY = os.getenv('OCRAPIKEY')
-OCRSECRETKEY = os.getenv('OCRSECRETKEY')
-AISET = os.getenv('AISET')
-AISET2 = os.getenv('AISET2')
-AISET2HOME = os.getenv('AISET2HOME')
-AISET3 = os.getenv('AISET3')
-AISET4 = os.getenv('AISET4')
-AISET4HOME = os.getenv('AISET4HOME')
-AISET5 = os.getenv('AISET5')
-AISET6 = os.getenv('AISET6')
-AISET7 = os.getenv('AISET7')
-AISET8 = os.getenv('AISET8')
-AISET9 = os.getenv('AISET9')
-MINIACCOUNT = os.getenv('MINIACCOUNT')
-MINIPASSWORD = os.getenv('MINIPASSWORD')
-
-IP138TOKEN = os.getenv('IP138TOKEN')
+from config import *
 
 
-PROXIES = {'http://': os.getenv('HTTPROXY')}
-
-redis_pool = redis.Redis(host=REDIS_HOST, port=int(REDIS_PORT), db=int(REDIS_DB), password=REDIS_PASS)
 
 app = FastAPI()
 app.add_middleware(
@@ -253,29 +218,12 @@ async def curl2requests(request: Request):
     return {'output': output}
 
 
-async def get_chat(msgdict, token=None, max_retries=2):
-    headers = {
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-CN,zh;q=0.9",
-        "Authorization": "Bearer " + token,
-        "Connection": "keep-alive",
-        "Content-Type": "application/json",
-        "Host": AISET,
-        "Origin": f"https://{AISET}",
-        "Referer": f"https://{AISET}/chat/1683609658988",
-        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36"
-    }
-    url = f"https://{AISET}/api/chat-process"
+async def get_chat1(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    headers.update({"Authorization": "Bearer " + token})
     msg = msgdict.get('text')
     lastid = msgdict.get('id')
-
     data = {
         "openaiKey": "",
         "prompt": msg,
@@ -286,7 +234,7 @@ async def get_chat(msgdict, token=None, max_retries=2):
             "completionParams": {
                 "presence_penalty": 0.8,
                 "temperature": 1,
-                "model": "gpt-3.5-turbo-16k-0613"
+                "model": model
             }
         }
     }
@@ -294,7 +242,7 @@ async def get_chat(msgdict, token=None, max_retries=2):
         data = {"openaiKey": "", "prompt": msg,
                 "options": {"parentMessageId": lastid,
                             "systemMessage": f"You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: {datetime.today().strftime('%Y-%m-%d')}",
-                            "completionParams": {"presence_penalty": 0.8, "temperature": 1, "model": "gpt-3.5-turbo-16k-0613"}}}
+                            "completionParams": {"presence_penalty": 0.8, "temperature": 1, "model": model}}}
 
     for attempt in range(max_retries):
         try:
@@ -909,9 +857,29 @@ async def send_message(websocket, message):
     # await asyncio.sleep(0.03)
     await websocket.send_json(message)
 
+async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
+    if selected_site == "1":
+        token = await get_token_by_redis()
+    elif selected_site == "2":
+        token = await get_minitoken()
+    elif selected_site == "4":
+        token = await get_hash_by_redis()
+    elif selected_site == "5":
+        token = await get_gpt4_by_redis()
+    else:
+        token = None
+    logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+
+    return site(data, token=token, **kwargs)
+
 
 @app.websocket("/chat")
 async def chat(websocket: WebSocket):
+    chat_functions = {
+        "1": get_chat1,
+        "2": get_chat2,
+        "3": get_chat3,
+    }
     client_ip = websocket.scope["client"][0]
     await websocket.accept()
     while True:
@@ -925,10 +893,10 @@ async def chat(websocket: WebSocket):
 
             selected_site = data.get("site", "1")
             if selected_site == "1":
-                token = await get_token_by_redis()
-                logging.info(
-                    f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat(data, token=token)
+                site_config = SITE_CONFIF_DICT[selected_site]
+                selected_function = chat_functions.get(selected_site)
+                chat_generator = await get_chat_with_token(selected_function, data, selected_site, client_ip,
+                                                           **site_config)
             elif selected_site == "2":
                 token = await get_minitoken()
                 logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
