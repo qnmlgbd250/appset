@@ -629,9 +629,6 @@ function connect() {
             savelastmsg3list(receivedData.lastmsg3list)
             isTyping = false;
         }
-        if (receivedData.lastmsg4list) {
-            isTyping = false;
-        }
         if (receivedData.lastmsg5list) {
             savelastmsg5list(receivedData.lastmsg5list)
             isTyping = false;

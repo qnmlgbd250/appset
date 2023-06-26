@@ -111,7 +111,7 @@ SITE_CONFIF_DICT = {
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
         },
         "url": f"https://{AISET4}/api/send_bot",
-        "model": "gpt-3.5-turbo-16k-0613",
+        "model": "gpt-4",
         "max_retries": 2,
     },
     "5": {

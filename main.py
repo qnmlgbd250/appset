@@ -411,7 +411,9 @@ async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
     msg = msgdict.get('text')
     data = {
         "info": msg,
-        "session_id": 688
+        "session_id": 688,
+        "scene_preset": [{"key": 1, "value": "", "sel": "system"}],
+        "model_is_select": model
     }
     for attempt in range(max_retries):
         try:
@@ -421,9 +423,9 @@ async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         if line.strip() == "":
                             continue
                         try:
-                            start_index = line.find("reply_content:") + len("reply_content:")
-                            reply_content = line[start_index:].strip()
-
+                            start_index = line.find("data:") + len("data:")
+                            json_str = line[start_index:].strip()
+                            data = json.loads(json_str)
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
@@ -432,9 +434,12 @@ async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
-
+                        if data.get('choices') is None or data.get('choices')[0].get(
+                                'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
                         try:
-                            yield {"choices": [{"delta": {"content": reply_content}}]}
+                            yield {"choices": data.get('choices')}
                         except Exception as e:
                             logging.error(e)
                             yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
