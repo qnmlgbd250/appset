@@ -448,6 +448,8 @@ p {
 }
 
 .user {
+    display: flex;
+    align-items: center; /* 添加这一行来实现垂直居中对齐 */
     justify-content: flex-end;
 }
 
