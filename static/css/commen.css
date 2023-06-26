@@ -18,6 +18,16 @@ p {
     margin-block-start: 0.1em !important;
 }
 
+a {
+    color: #27b9a3; /* 将颜色更改为红色 */
+    text-decoration: none; /* 移除下划线 */
+}
+
+/* 修改鼠标悬停时的颜色 */
+a:hover {
+    color: #176754; /* 将颜色更改为绿色 */
+}
+
 .my-ordered-list {
     list-style-type: decimal;
     margin-left: -1em;
@@ -266,8 +276,8 @@ p {
 @media screen and (max-width: 700px) {
     .parent {
         height: calc(100vh - 80px);
-        grid-template-columns: repeat(4,1fr); /* 修改列数和列宽度 */
-      grid-template-rows:auto auto repeat(2,1fr); /* 修改行高度 */
+        grid-template-columns: repeat(4, 1fr); /* 修改列数和列宽度 */
+        grid-template-rows:auto auto repeat(2, 1fr); /* 修改行高度 */
     }
 
     .div3 {
@@ -309,6 +319,7 @@ p {
 
         margin-left: -20px;
     }
+
     .share-button {
         margin-right: -20px;
     }
@@ -334,14 +345,16 @@ p {
         grid-column-start: 1;
         transition: transform 0.3s ease;
     }
+
     .div5 {
         margin-bottom: 50px;
     }
+
     .div6 {
-       grid-row-start: unset!important; /* 移除默认的行起始位置设置，这将允许我们自由控制元素的位置和大小 */
-       top:50%;                /* 将元素向下移动，使其顶部与父容器高度的一半对齐 */
-       height:50% !important;             /* 设置元素高度为父容器的50% */
-   }
+        grid-row-start: unset !important; /* 移除默认的行起始位置设置，这将允许我们自由控制元素的位置和大小 */
+        top: 50%; /* 将元素向下移动，使其顶部与父容器高度的一半对齐 */
+        height: 50% !important; /* 设置元素高度为父容器的50% */
+    }
 }
 
 
@@ -382,18 +395,18 @@ p {
 
 
 #messageInput {
-  padding: 7px;
-  resize: none;
-  overflow-y: auto;
-  width: calc(100% - 50px);
-  margin-top: 8px;
+    padding: 7px;
+    resize: none;
+    overflow-y: auto;
+    width: calc(100% - 50px);
+    margin-top: 8px;
 
-  font: 14px 微软雅黑;
-  border-radius: 6px;
-  bottom: 200px; /* 设置输入框与浏览器窗口底边的距离 */
-  border: 1px solid #ccc;
-  outline: none;
-  position: fixed; /* 添加此行，将 messageInput 设置为固定定位 */
+    font: 14px 微软雅黑;
+    border-radius: 6px;
+    bottom: 200px; /* 设置输入框与浏览器窗口底边的距离 */
+    border: 1px solid #ccc;
+    outline: none;
+    position: fixed; /* 添加此行，将 messageInput 设置为固定定位 */
 }
 
 
@@ -602,18 +615,19 @@ pre {
     /*line-height: 1.5; !* 修改为您喜欢的行高 *!*/
 
 }
+
 pre::-webkit-scrollbar {
-    height: 5px!important;
+    height: 5px !important;
 }
 
 pre::-webkit-scrollbar-track {
-    background-color: transparent!important;
-    border-radius: 15px!important;
+    background-color: transparent !important;
+    border-radius: 15px !important;
 }
 
 pre::-webkit-scrollbar-thumb {
-    background-color: rgba(178, 178, 178, 0.4)!important;
-    border-radius: 4px!important;
+    background-color: rgba(178, 178, 178, 0.4) !important;
+    border-radius: 4px !important;
 }
 
 /* 通用覆盖样式 */
@@ -796,14 +810,16 @@ code {
 
 .model-label {
     flex-shrink: 0;
-  margin-right: 1rem;
+    margin-right: 1rem;
     margin-left: 20px;
 
 }
+
 .model-label-custom {
-            margin-bottom: 3px;
+    margin-bottom: 3px;
     font-size: 16px;
-        }
+}
+
 h5 {
     font-weight: normal;
 }
@@ -813,13 +829,14 @@ h5 {
     background-color: #fefefe;
     margin: 25% auto;
     padding: 20px;
-max-width: 50%;
+    max-width: 50%;
     border: 1px solid #888;
     color: #333;
     border-radius: 10px;
     width: 80%;
     z-index: 1001;
 }
+
 @media screen and (max-width: 700px) {
     .modal-content {
         max-width: 70%;
@@ -922,7 +939,7 @@ max-width: 50%;
     background-color: #fff;
 }
 
-.dark-theme .white-icon{
+.dark-theme .white-icon {
     background-color: #414146;
 }
 
@@ -993,9 +1010,10 @@ hr {
     border: none;
     border-top: solid 1px #ccc;
 }
+
 .options-container {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .option {
@@ -1004,13 +1022,16 @@ hr {
     justify-content: flex-start;
     margin-bottom: 1rem;
 }
+
 .option:last-child {
     margin-right: 0; /* 移除最后一个选项的右边距 */
 }
+
 .color-options {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
+
 .color-option {
     margin-right: 1rem;
 
@@ -1024,6 +1045,7 @@ hr {
 .color-option:last-child {
     margin-left: 20px; /* 移除最后一个选项的右边距 */
 }
+
 .color-option.selected {
     border: 1.5px solid #4b9e5f;
 }
@@ -1057,6 +1079,7 @@ hr {
 .light-theme .dropdown-content {
     background-color: #fefefe;
 }
+
 .dropdown-content {
     background-color: #fefefe;
 }
@@ -1098,10 +1121,14 @@ hr {
 }
 
 .close {
-          float:right;cursor:pointer
-        }
-.close svg{
-  width:18px;height:auto;fill:#aaa;
+    float: right;
+    cursor: pointer
+}
+
+.close svg {
+    width: 18px;
+    height: auto;
+    fill: #aaa;
     z-index: 2000;
 }
 

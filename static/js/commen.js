@@ -690,6 +690,7 @@ function connect() {
             observer.disconnect();
         }
         saveChatContent();
+        linksblank()
     });
 
 
@@ -1110,8 +1111,19 @@ function loadmsg9() {
 }
 
 
+function linksblank() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    links[i].setAttribute('target', '_blank');
+  }
+}
+
+
+
+
 window.onload = function () {
-    loadChatContent(); // 加载聊天记录
+    loadChatContent();
+     linksblank();
 }
 
 

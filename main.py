@@ -622,37 +622,90 @@ async def get_chat7(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
-async def generate_random_number():
-    first_digit = 8
-    remaining_digits = [random.randint(1, 9) for _ in range(7)]
-    return int(str(first_digit) + ''.join(map(str, remaining_digits)))
+async def current_time():
+    now = datetime.utcnow()
+    return now.isoformat(timespec='microseconds') + 'Z'
+
+async def get_searchjsonresults(msg):
+    try:
+        headers = {
+            "authority": AISET5,
+            "accept": "*/*",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "referer": f"https://{AISET5}/",
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "token": "",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.58"
+        }
+        url = f"https://{AISET5}/api/web-search"
+        params = {
+            "query": msg
+        }
+        response = requests.get(url, headers=headers, params=params,proxies=PROXIES)
+        return response.json()
+    except Exception as e:
+        logging.error(e)
+        return None
+
+
+
 async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
                    headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
                    model: Optional[str] = None) -> Any:
     msg = msgdict.get('text')
-    data = {
-        "msg": msg,
-        "id": await generate_random_number(),
-        "type": "true"
-    }
+    messages = [
+        {"role": "system",
+         "content": "IMPRTANT: You are a virtual assistant powered by the {} model, now time is 2023/5/27 22:47:30}}".format(
+             model)}
+    ]
+    searchjsonresults = await get_searchjsonresults(msg)
+    current = await current_time()
+    content = f"\
+                Using the provided web search results, write a comprehensive reply to the given query.\
+                If the provided search results refer to multiple subjects with the same name, write separate answers for each subject.\
+                Make sure to cite results using `[[number](URL)]` notation after the reference.\
+                \
+                Web search json results:\
+                \"\"\"\
+                {searchjsonresults}\
+                \"\"\"\
+                \
+                Current date:\
+                \"\"\"\
+                {current}\
+                \"\"\"\
+                \
+                Query:\
+                \"\"\"\
+                {msg}\
+                \"\"\"\
+                \
+                Reply in Chinese and markdown.\
+                          "
+    currenttext = {"role": "user", "content": content}
+    messages.append(currenttext)
+    data = {"messages": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, data=data,timeout=custom_timeout) as response:
-                    if response.status_code != 200:
-                        yield {"choices": [{"delta": {"content": "服务器连接失败"}}]}
-                        yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
-                        return
-                    else:
-                        async for line in response.aiter_lines():
-                            if line.strip() == "":
-                                continue
-                            try:
-                                yield {"choices": [{"delta": {"content": line}}]}
-                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
-                            except Exception as e:
-                                logging.error(e)
-                                yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                    async for line in response.aiter_bytes():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            decoded_chunk = line.decode("utf-8")
+                            yield {"choices": [{"delta": {"content": decoded_chunk}}]}
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
 
@@ -670,18 +723,35 @@ async def get_chat9(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                    headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
                    model: Optional[str] = None) -> Any:
     msg = msgdict.get('text')
-    lastmsg9list = msgdict.get('lastmsg9list')
+    searchjsonresults = await get_searchjsonresults(msg)
+    current = await current_time()
     messages = [
         {"role": "system", "content": "IMPORTANT: You are a virtual assistant powered by the {} model, now time is 2023/6/25 21:02:45}}".format(model)}
     ]
-    currenttext = {"role": "user", "content": msg}
-    if lastmsg9list:
-        lastmsg9list.append(currenttext)
-        messages += lastmsg9list
-    else:
-        messages.append(currenttext)
-    if len(messages) > 10:
-        messages = messages[0:1] + messages[-7:]
+    content = f"\
+                    Using the provided web search results, write a comprehensive reply to the given query.\
+                    If the provided search results refer to multiple subjects with the same name, write separate answers for each subject.\
+                    Make sure to cite results using `[[number](URL)]` notation after the reference.\
+                    \
+                    Web search json results:\
+                    \"\"\"\
+                    {searchjsonresults}\
+                    \"\"\"\
+                    \
+                    Current date:\
+                    \"\"\"\
+                    {current}\
+                    \"\"\"\
+                    \
+                    Query:\
+                    \"\"\"\
+                    {msg}\
+                    \"\"\"\
+                    \
+                    Reply in Chinese and markdown.\
+                              "
+    currenttext = {"role": "user", "content": content}
+    messages.append(currenttext)
     data = {"messages": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
@@ -784,7 +854,7 @@ async def chat(websocket: WebSocket):
                         response_data = {"text": response_text, "miniid": i.get('id')}
                     else:
                         response_data = {"text": response_text, "id": i.get('id')}
-                    if selected_site == "3" and 'THE_END_哈哈哈' not in response_text:
+                    if selected_site in ["3", "8"] and 'THE_END_哈哈哈' not in response_text:
                         lastmsg3 += response_text
                     elif selected_site == "4":
                         lastmsg4 += response_text
@@ -797,7 +867,7 @@ async def chat(websocket: WebSocket):
                     elif selected_site == "9" and 'THE_END_哈哈哈' not in response_text:
                         lastmsg9 += response_text
                     await send_message(websocket, response_data)
-            if selected_site == "3":
+            if selected_site in ["3", "8"]:
                 response_data = {"lastmsg3list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg3}]}
                 await send_message(websocket, response_data)
             elif selected_site == "4":
