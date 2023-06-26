@@ -20,7 +20,7 @@ from datetime import datetime
 import ujson
 from config import *
 
-
+custom_timeout = httpx.Timeout(read=10, write=10, connect=10, pool=None)
 
 app = FastAPI()
 app.add_middleware(
@@ -289,28 +289,20 @@ async def get_chat1(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
         break
 
 
-async def get_chat2(msgdict, token=None, max_retries=2):
-    headers = {
-        "accept": "application/json, text/plain, */*",
-        "accept-encoding": "gzip, deflate, br",
-        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "authorization": "Bearer " + token,
-        "content-type": "application/json",
-        "origin": AISET2,
-        "referer": AISET2,
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
-    }
-    url = f"{AISET2}/api/chatgpt/chat-process"
+async def get_chat2(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    headers.update({"authorization": "Bearer " + token})
     msg = msgdict.get('text')
     lastid = msgdict.get('miniid')
 
     data = {"prompt": msg,
-            "options": {"temperature": 1, "model": 3},
+            "options": {"temperature": 1, "model": model},
             "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
     if lastid:
         data = {"prompt": msg,
                 "options": {"parentMessageId": lastid,
-                            "temperature": 1, "model": 3},
+                            "temperature": 1, "model": model},
                 "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
     context_too_long = False
     for attempt in range(max_retries):
@@ -365,29 +357,13 @@ async def get_chat2(msgdict, token=None, max_retries=2):
             break
 
 
-async def get_chat3(msgdict, max_retries=2):
-    headers = {
-        "Host": AISET3,
-        "Connection": "keep-alive",
-        "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-ch-ua-mobile": "?0",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
-        "Content-Type": "application/json",
-        "Accept": "*/*",
-        "Origin": f"https://{AISET3}",
-        "Sec-Fetch-Site": "same-origin",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Dest": "empty",
-        "Referer": f"https://{AISET3}",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
-    }
-    url = f"https://{AISET3}/api/openai/v1/chat/completions"
+async def get_chat3(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
     msg = msgdict.get('text')
     lastmsg3list = msgdict.get('lastmsg3list')
     messages = [
-        {"role": "system", "content": "IMPRTANT: You are a virtual assistant powered by the gpt-3.5-turbo model, now time is 2023/5/27 22:47:30}"}
+        {"role": "system", "content": "IMPRTANT: You are a virtual assistant powered by the {} model, now time is 2023/5/27 22:47:30}}".format(model)}
     ]
     currenttext = {"role": "user", "content": msg}
     if lastmsg3list:
@@ -397,7 +373,7 @@ async def get_chat3(msgdict, max_retries=2):
         messages.append(currenttext)
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
-    data = {"messages": messages, "stream": True, "model": "gpt-3.5-turbo-16k-0613", "temperature": 0.8, "presence_penalty": 1}
+    data = {"messages": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
@@ -428,24 +404,10 @@ async def get_chat3(msgdict, max_retries=2):
         break
 
 
-async def get_chat4(msgdict, token=None, max_retries=3):
-    headers = {
-        "authority": AISET4,
-        "accept": "text/event-stream",
-        "accept-language": "zh-CN,zh;q=0.9",
-        "authorization": "Bearer " + token,
-        "content-type": "text/plain;charset=UTF-8",
-        "origin": AISET4HOME,
-        "referer": AISET4HOME,
-        "sec-ch-ua": "\"Google Chrome\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
-    }
-    url = f"https://{AISET4}/api/send_bot"
+async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    headers.update({"authorization": "Bearer " + token})
     msg = msgdict.get('text')
     data = {
         "info": msg,
@@ -459,14 +421,9 @@ async def get_chat4(msgdict, token=None, max_retries=3):
                         if line.strip() == "":
                             continue
                         try:
-                            # 查找 "data:" 的位置
-                            start_index = line.find("data:") + len("data:")
+                            start_index = line.find("reply_content:") + len("reply_content:")
+                            reply_content = line[start_index:].strip()
 
-                            # 提取 JSON 字符串
-                            json_str = line[start_index:].strip()
-
-                            # 将 JSON 字符串转换为 Python 字典
-                            data = json.loads(json_str)
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
@@ -475,12 +432,9 @@ async def get_chat4(msgdict, token=None, max_retries=3):
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
-                        if data.get('choices') is None or data.get('choices')[0].get(
-                                'finish_reason') is not None:
-                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
-                            return
+
                         try:
-                            yield {"choices": data.get('choices')}
+                            yield {"choices": [{"delta": {"content": reply_content}}]}
                         except Exception as e:
                             logging.error(e)
                             yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
@@ -498,24 +452,10 @@ async def get_chat4(msgdict, token=None, max_retries=3):
         break
 
 
-async def get_chat5(msgdict, token=None, max_retries=3):
-    headers = {
-        "authority": AISET5,
-        "accept": "*/*",
-        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "authorization": token,
-        "content-type": "application/json",
-        "origin": f"https://{AISET5}",
-        "referer": f"https://{AISET5}/",
-        "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
-    }
-    url = f"https://{AISET5}/api/bots/openai"
+async def get_chat5(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    headers.update({"authorization": token})
     msg = msgdict.get('text')
     lastmsg5list = msgdict.get('lastmsg5list')
     messages = [
@@ -529,8 +469,7 @@ async def get_chat5(msgdict, token=None, max_retries=3):
         messages.append(currenttext)
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
-    data = {"conversation": messages, "stream": True, "model": "gpt-4", "temperature": 0.8, "presence_penalty": 1}
-    custom_timeout = httpx.Timeout(read=30, write=30, connect=15, pool=None)
+    data = {"conversation": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
@@ -560,29 +499,14 @@ async def get_chat5(msgdict, token=None, max_retries=3):
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
-async def get_chat6(msgdict, token=None, max_retries=2):
-    headers = {
-      "Accept": "text/event-stream",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-      "Content-Type": "application/json",
-      "Origin": AISET6,
-      "Referer": AISET6,
-      "Sec-Ch-Ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
-      "Sec-Ch-Ua-Mobile": "?0",
-      "Sec-Ch-Ua-Platform": "\"Windows\"",
-      "Sec-Fetch-Dest": "empty",
-      "Sec-Fetch-Mode": "cors",
-      "Sec-Fetch-Site": "same-origin",
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43",
-      "X-Requested-With": "XMLHttpRequest"
-    }
-    url = f"{AISET6}/api/openai/v1/chat/completions"
+async def get_chat6(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
     msg = msgdict.get('text')
     lastmsg6list = msgdict.get('lastmsg6list')
     messages = [
         {"role": "system",
-         "content": "IMPORTANT: You are a virtual assistant powered by the gpt-3.5-turbo-16k-0613, now time is 2023/6/11 21:15:34}"}
+         "content": "IMPORTANT: You are a virtual assistant powered by the {}, now time is 2023/6/11 21:15:34}}".format(model)}
     ]
     currenttext = {"role": "user", "content": msg}
     if lastmsg6list:
@@ -592,22 +516,17 @@ async def get_chat6(msgdict, token=None, max_retries=2):
         messages.append(currenttext)
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
-    data = {"messages": messages, "stream": True, "model": "gpt-3.5-turbo-16k-0613", "temperature": 0.9, "presence_penalty": 1}
+    data = {"messages": messages, "stream": True, "model": model, "temperature": 0.9, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
-            async with AsyncClient() as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+            async with AsyncClient(proxies=PROXIES) as client:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
                         try:
-                            # 查找 "data:" 的位置
                             start_index = line.find("data:") + len("data:")
-
-                            # 提取 JSON 字符串
                             json_str = line[start_index:].strip()
-
-                            # 将 JSON 字符串转换为 Python 字典
                             data = json.loads(json_str)
                         except Exception as e:
                             logging.error(e)
@@ -640,29 +559,13 @@ async def get_chat6(msgdict, token=None, max_retries=2):
         break
 
 
-async def get_chat7(msgdict, max_retries=8):
-    headers = {
-        "Host": AISET7,
-        "Connection": "keep-alive",
-        "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-ch-ua-mobile": "?0",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
-        "Content-Type": "application/json",
-        "Accept": "*/*",
-        "Origin": f"https://{AISET7}",
-        "Sec-Fetch-Site": "same-origin",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Dest": "empty",
-        "Referer": f"https://{AISET7}",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
-    }
-    url = f"https://{AISET7}/api/openai/v1/chat/completions"
+async def get_chat7(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
     msg = msgdict.get('text')
     lastmsg7list = msgdict.get('lastmsg7list')
     messages = [
-        {"role": "system", "content": "IMPRTANT: You are a virtual assistant powered by the gpt-4 model, now time is 2023/5/27 22:47:30}"}
+        {"role": "system", "content": "IMPRTANT: You are a virtual assistant powered by the {} model, now time is 2023/5/27 22:47:30}}".format(model)}
     ]
     currenttext = {"role": "user", "content": msg}
     if lastmsg7list:
@@ -672,7 +575,7 @@ async def get_chat7(msgdict, max_retries=8):
         messages.append(currenttext)
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
-    data = {"messages": messages, "stream": True, "model": "gpt-4", "temperature": 0.8, "presence_penalty": 1}
+    data = {"messages": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
@@ -681,13 +584,8 @@ async def get_chat7(msgdict, max_retries=8):
                         if line.strip() == "":
                             continue
                         try:
-                            # 查找 "data:" 的位置
                             start_index = line.find("data:") + len("data:")
-
-                            # 提取 JSON 字符串
                             json_str = line[start_index:].strip()
-
-                            # 将 JSON 字符串转换为 Python 字典
                             data = json.loads(json_str)
                         except Exception as e:
                             logging.error(e)
@@ -723,25 +621,15 @@ async def generate_random_number():
     first_digit = 8
     remaining_digits = [random.randint(1, 9) for _ in range(7)]
     return int(str(first_digit) + ''.join(map(str, remaining_digits)))
-async def get_chat8(msgdict, max_retries=8):
-    headers = {
-        "Accept": "*/*",
-        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "Connection": "keep-alive",
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Origin": AISET8,
-        "Referer": f"{AISET8}/chatgpt/",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51",
-        "X-Requested-With": "XMLHttpRequest"
-    }
-    url = f"{AISET8}/chatgpt/gpt4.php"
+async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
     msg = msgdict.get('text')
     data = {
         "msg": msg,
         "id": await generate_random_number(),
         "type": "true"
     }
-    custom_timeout = httpx.Timeout(read=30, write=30, connect=15, pool=None)
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
@@ -773,28 +661,13 @@ async def get_chat8(msgdict, max_retries=8):
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
-async def get_chat9(msgdict, token=None, max_retries=3):
-    headers = {
-        "authority": AISET9,
-        "accept": "text/event-stream",
-        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "content-type": "application/json",
-        "origin": f"https://{AISET9}",
-        "referer": f"https://{AISET9}/",
-        "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51",
-        "x-requested-with": "XMLHttpRequest"
-    }
-    url = f"https://{AISET9}/api/openai/v1/chat/completions"
+async def get_chat9(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
     msg = msgdict.get('text')
     lastmsg9list = msgdict.get('lastmsg9list')
     messages = [
-        {"role": "system", "content": "IMPORTANT: You are a virtual assistant powered by the gpt-4-0613 model, now time is 2023/6/25 21:02:45}"}
+        {"role": "system", "content": "IMPORTANT: You are a virtual assistant powered by the {} model, now time is 2023/6/25 21:02:45}}".format(model)}
     ]
     currenttext = {"role": "user", "content": msg}
     if lastmsg9list:
@@ -804,8 +677,7 @@ async def get_chat9(msgdict, token=None, max_retries=3):
         messages.append(currenttext)
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
-    data = {"messages": messages, "stream": True, "model": "gpt-4-0613", "temperature": 0.8, "presence_penalty": 1}
-    custom_timeout = httpx.Timeout(read=30, write=30, connect=15, pool=None)
+    data = {"messages": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
@@ -814,13 +686,8 @@ async def get_chat9(msgdict, token=None, max_retries=3):
                         if line.strip() == "":
                             continue
                         try:
-                            # 查找 "data:" 的位置
                             start_index = line.find("data:") + len("data:")
-
-                            # 提取 JSON 字符串
                             json_str = line[start_index:].strip()
-
-                            # 将 JSON 字符串转换为 Python 字典
                             data = json.loads(json_str)
                         except Exception as e:
                             logging.error(e)
@@ -879,6 +746,12 @@ async def chat(websocket: WebSocket):
         "1": get_chat1,
         "2": get_chat2,
         "3": get_chat3,
+        "4": get_chat4,
+        "5": get_chat5,
+        "6": get_chat6,
+        "7": get_chat7,
+        "8": get_chat8,
+        "9": get_chat9
     }
     client_ip = websocket.scope["client"][0]
     await websocket.accept()
@@ -892,45 +765,10 @@ async def chat(websocket: WebSocket):
             lastmsg9 = ''
 
             selected_site = data.get("site", "1")
-            if selected_site == "1":
-                site_config = SITE_CONFIF_DICT[selected_site]
-                selected_function = chat_functions.get(selected_site)
-                chat_generator = await get_chat_with_token(selected_function, data, selected_site, client_ip,
-                                                           **site_config)
-            elif selected_site == "2":
-                token = await get_minitoken()
-                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat2(data, token=token)
-
-            elif selected_site == "3":
-                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat3(data)
-
-            elif selected_site == "4":
-                token = await get_hash_by_redis()
-                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat4(data, token=token)
-
-            elif selected_site == "5":
-                token = await get_gpt4_by_redis()
-                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat5(data, token=token)
-
-            elif selected_site == "6":
-                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat6(data)
-
-            elif selected_site == "7":
-                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat7(data)
-
-            elif selected_site == "8":
-                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat8(data)
-
-            elif selected_site == "9":
-                logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
-                chat_generator = get_chat9(data)
+            site_config = SITE_CONFIF_DICT[selected_site]
+            selected_function = chat_functions.get(selected_site)
+            chat_generator = await get_chat_with_token(selected_function, data, selected_site, client_ip,
+                                                       **site_config)
 
             async for i in chat_generator:
                 if i['choices'][0].get('delta').get('content'):
