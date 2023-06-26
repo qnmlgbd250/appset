@@ -461,7 +461,7 @@ p {
 .message {
     padding: 10px;
     border-radius: 10px;
-    max-width: 60%;
+    max-width: 70%;
     word-wrap: break-word;
     position: relative; /* 添加此行 */
     font: 14px 微软雅黑;
