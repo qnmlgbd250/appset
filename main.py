@@ -759,6 +759,7 @@ async def chat(websocket: WebSocket):
         try:
             data = await websocket.receive_json()
             lastmsg3 = ''
+            lastmsg4 = ''
             lastmsg5 = ''
             lastmsg6 = ''
             lastmsg7 = ''
@@ -780,6 +781,8 @@ async def chat(websocket: WebSocket):
                         response_data = {"text": response_text, "id": i.get('id')}
                     if selected_site == "3" and 'THE_END_哈哈哈' not in response_text:
                         lastmsg3 += response_text
+                    elif selected_site == "4":
+                        lastmsg4 += response_text
                     elif selected_site == "5" and 'THE_END_哈哈哈' not in response_text:
                         lastmsg5 += response_text
                     elif selected_site == "6" and 'THE_END_哈哈哈' not in response_text:
@@ -791,6 +794,9 @@ async def chat(websocket: WebSocket):
                     await send_message(websocket, response_data)
             if selected_site == "3":
                 response_data = {"lastmsg3list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg3}]}
+                await send_message(websocket, response_data)
+            elif selected_site == "4":
+                response_data = {"lastmsg4list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg4}]}
                 await send_message(websocket, response_data)
             elif selected_site == "5":
                 response_data = {"lastmsg5list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg5}]}
