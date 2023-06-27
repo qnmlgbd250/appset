@@ -892,7 +892,7 @@ async def chat(websocket: WebSocket):
                         chat_functions[selected_site][1] += response_text
                     await send_message(websocket, response_data)
             if selected_site in needlastmsg:
-                response_data = {f"lastmsg{selected_site}list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg3}]}
+                response_data = {f"lastmsg{selected_site}list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": chat_functions[selected_site][1]}]}
                 await send_message(websocket, response_data)
         except WebSocketDisconnect as e:
             break
