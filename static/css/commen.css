@@ -404,7 +404,11 @@ a:hover {
     border: 1px solid #ccc;
     outline: none;
     position: fixed; /* 添加此行，将 messageInput 设置为固定定位 */
+     text-indent:5px;
 }
+
+
+
 
 
 #messageInput:focus {

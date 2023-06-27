@@ -256,6 +256,8 @@ async def get_chat1(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -324,6 +326,8 @@ async def get_chat2(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -387,6 +391,8 @@ async def get_chat3(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -423,12 +429,19 @@ async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         if line.strip() == "":
                             continue
                         try:
-                            start_index = line.find("data:") + len("data:")
-                            json_str = line[start_index:].strip()
-                            data = json.loads(json_str)
+                            if "reply_content" in line:
+                                start_index = line.find("reply_content:") + len("reply_content:")
+                                str = line[start_index:].strip()
+                                data = {'choices': [{'delta': {'content': str}}]}
+                            else:
+                                start_index = line.find("data:") + len("data:")
+                                json_str = line[start_index:].strip()
+                                data = json.loads(json_str)
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -440,6 +453,9 @@ async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
                         try:
                             yield {"choices": data.get('choices')}
+                            if data.get('choices')[0].get('delta').get('content') == "你好啊":
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
                         except Exception as e:
                             logging.error(e)
                             yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
@@ -484,10 +500,16 @@ async def get_chat5(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             continue
                         try:
                             decoded_chunk = line.decode("utf-8")
+                            if "Contains sensitive keywords." in decoded_chunk:
+                                yield {"choices": [{"delta": {"content": "你说的话有敏感词哦"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
                             yield {"choices": [{"delta": {"content": decoded_chunk}}]}
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -536,6 +558,8 @@ async def get_chat6(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -595,6 +619,8 @@ async def get_chat7(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -703,6 +729,8 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -767,6 +795,8 @@ async def get_chat9(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                             else:
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
@@ -817,73 +847,52 @@ async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
 
 @app.websocket("/chat")
 async def chat(websocket: WebSocket):
-    chat_functions = {
-        "1": get_chat1,
-        "2": get_chat2,
-        "3": get_chat3,
-        "4": get_chat4,
-        "5": get_chat5,
-        "6": get_chat6,
-        "7": get_chat7,
-        "8": get_chat8,
-        "9": get_chat9
-    }
+
     client_ip = websocket.scope["client"][0]
     await websocket.accept()
     while True:
         try:
             data = await websocket.receive_json()
+            lastmsg1 = ''
+            lastmsg2 = ''
             lastmsg3 = ''
             lastmsg4 = ''
             lastmsg5 = ''
             lastmsg6 = ''
             lastmsg7 = ''
+            lastmsg8 = ''
             lastmsg9 = ''
+            chat_functions = {
+                "1": [get_chat1, lastmsg1],
+                "2": [get_chat2, lastmsg2],
+                "3": [get_chat3, lastmsg3],
+                "4": [get_chat4, lastmsg4],
+                "5": [get_chat5, lastmsg5],
+                "6": [get_chat6, lastmsg6],
+                "7": [get_chat7, lastmsg7],
+                "8": [get_chat8, lastmsg8],
+                "9": [get_chat9, lastmsg9]
+            }
+            needlastmsg = ["3", "4", "5", "6", "7", "8", "9"]
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]
-            selected_function = chat_functions.get(selected_site)
+            selected_function = chat_functions[selected_site][0]
             chat_generator = await get_chat_with_token(selected_function, data, selected_site, client_ip,
                                                        **site_config)
 
             async for i in chat_generator:
                 if i['choices'][0].get('delta').get('content'):
-                    # logging.info(i['choices'][0].get('delta'))
                     response_text = i['choices'][0].get('delta').get('content')
                     if selected_site == "2":
                         response_data = {"text": response_text, "miniid": i.get('id')}
                     else:
                         response_data = {"text": response_text, "id": i.get('id')}
-                    if selected_site in ["3", "8"] and 'THE_END_哈哈哈' not in response_text:
-                        lastmsg3 += response_text
-                    elif selected_site == "4":
-                        lastmsg4 += response_text
-                    elif selected_site == "5" and 'THE_END_哈哈哈' not in response_text:
-                        lastmsg5 += response_text
-                    elif selected_site == "6" and 'THE_END_哈哈哈' not in response_text:
-                        lastmsg6 += response_text
-                    elif selected_site == "7" and 'THE_END_哈哈哈' not in response_text:
-                        lastmsg7 += response_text
-                    elif selected_site == "9" and 'THE_END_哈哈哈' not in response_text:
-                        lastmsg9 += response_text
+                    if selected_site in needlastmsg and 'THE_END_哈哈哈' not in response_text:
+                        chat_functions[selected_site][1] += response_text
                     await send_message(websocket, response_data)
-            if selected_site in ["3", "8"]:
-                response_data = {"lastmsg3list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg3}]}
-                await send_message(websocket, response_data)
-            elif selected_site == "4":
-                response_data = {"lastmsg4list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg4}]}
-                await send_message(websocket, response_data)
-            elif selected_site == "5":
-                response_data = {"lastmsg5list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg5}]}
-                await send_message(websocket, response_data)
-            elif selected_site == "6":
-                response_data = {"lastmsg6list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg6}]}
-                await send_message(websocket, response_data)
-            elif selected_site == "7":
-                response_data = {"lastmsg7list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg7}]}
-                await send_message(websocket, response_data)
-            elif selected_site == "9":
-                response_data = {"lastmsg9list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg9}]}
+            if selected_site in needlastmsg:
+                response_data = {f"lastmsg{selected_site}list": [{"role": "user", "content": data.get('text')}, {"role": "assistant", "content": lastmsg3}]}
                 await send_message(websocket, response_data)
         except WebSocketDisconnect as e:
             break

@@ -641,6 +641,9 @@ function connect() {
             savelastmsg7list(receivedData.lastmsg7list)
             isTyping = false;
         }
+        if (receivedData.lastmsg8list) {
+            isTyping = false;
+        }
         if (receivedData.lastmsg9list) {
             savelastmsg9list(receivedData.lastmsg9list)
             isTyping = false;
