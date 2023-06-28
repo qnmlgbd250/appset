@@ -435,13 +435,14 @@ a:hover {
     margin: 5px;
     align-items: flex-start;
     border-radius: 6px;
+    min-height: 37px;
 }
 
 .chat img {
     width: 37px;
     height: 37px;
     margin-right: 5px;
-    border-radius: 6px;
+    border-radius: 50%;
     margin-top: 20px;
 }
 
@@ -469,7 +470,7 @@ a:hover {
     margin-right: 0;
     margin-left: 5px;
     margin-top: 20px;
-    border-radius: 6px;
+    border-radius: 50%;
 }
 
 .message {
