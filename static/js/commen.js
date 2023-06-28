@@ -1623,39 +1623,50 @@ function handleClickOutside(event) {
   }
 }
 
+function resetStyles() {
+  messageInput.style.position = '';
+  messageInput.style.bottom = '';
+  messageInput.style.marginBottom = '';
+  messageInput.style.width = '';
+  messageInputWrapper.style.height = '';
+  messageInputWrapper.style.bottom = '';
+}
 
-  const messageInputWrapper = document.getElementById('messageInputWrapper');
 
-  function updateMessageInputPosition() {
-    const windowHeight = window.innerHeight;
-    const wrapperRect = messageInputWrapper.getBoundingClientRect();
+const messageInputWrapper = document.getElementById('messageInputWrapper');
 
-    if (wrapperRect.bottom > windowHeight) {
-      messageInput.style.position = 'fixed';
-      if (isMobileDevice()) {
-          messageInput.style.bottom = '10px';
-          messageInput.style.marginBottom = "30px"
-          messageInput.style.width = "calc(100% - 35px)"
-          messageInputWrapper.style.height = "0"
-          messageInputWrapper.style.bottom = '10px';
-      } else {
-            messageInput.style.bottom = '20px';
-            messageInput.style.marginBottom = "0"
-      }
-    } else {
-      messageInput.style.position = 'absolute';
-      if (isMobileDevice()) {
-          messageInput.style.bottom = '10px';
-          messageInput.style.marginBottom = "30px"
-          messageInput.style.width = "calc(100% - 35px)"
-          messageInputWrapper.style.height = "0"
-          messageInputWrapper.style.bottom = '10px';
-      } else {
-      messageInput.style.bottom = '20px';
-      messageInput.style.marginBottom = "0"}
-    }
+function updateMessageInputPosition() {
+const windowHeight = window.innerHeight;
+const wrapperRect = messageInputWrapper.getBoundingClientRect();
+
+ resetStyles();
+
+if (wrapperRect.bottom > windowHeight) {
+  messageInput.style.position = 'fixed';
+  if (isMobileDevice()) {
+      messageInput.style.bottom = '10px';
+      messageInput.style.marginBottom = "30px"
+      messageInput.style.width = "calc(100% - 35px)"
+      messageInputWrapper.style.height = "0"
+      messageInputWrapper.style.bottom = '10px';
+  } else {
+        messageInput.style.bottom = '20px';
+        messageInput.style.marginBottom = "0"
   }
+} else {
+  messageInput.style.position = 'absolute';
+  if (isMobileDevice()) {
+      messageInput.style.bottom = '10px';
+      messageInput.style.marginBottom = "30px"
+      messageInput.style.width = "calc(100% - 35px)"
+      messageInputWrapper.style.height = "0"
+      messageInputWrapper.style.bottom = '10px';
+  } else {
+  messageInput.style.bottom = '20px';
+  messageInput.style.marginBottom = "0"}
+}
+}
 
-  window.addEventListener('resize', updateMessageInputPosition);
-  updateMessageInputPosition();
+window.addEventListener('resize', updateMessageInputPosition);
+updateMessageInputPosition();
 
