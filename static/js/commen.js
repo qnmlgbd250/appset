@@ -38,6 +38,9 @@ for (var i = 0; i < divs.length; i++) {
             imageContainer.style.display = 'none';
             imageContainer.removeEventListener('paste', handlePaste);
         }
+        if (this.id === 'signBtn') {
+            loadsigntime();
+        }
     };
 }
 
@@ -350,6 +353,9 @@ function signTransform(inputText) {
     new_HH = Math.floor(new_total_minutes / 60);
     new_MM = new_total_minutes % 60;
     output.value = four_s + `\n8工时打卡时间为：${new_HH.toString().padStart(2, '0')}:${new_MM.toString().padStart(2, '0')}`;
+
+    localStorage.setItem('signtimeinput', inputText);
+    localStorage.setItem('signtimeoutput', output.value);
 }
 
 
@@ -993,6 +999,11 @@ function loadChatContent() {
     }
 }
 
+function loadsigntime() {
+        input.value = localStorage.getItem('signtimeinput');
+        output.value = localStorage.getItem('signtimeoutput');
+}
+
 
 function saveid(id) {
     if (!id) {
@@ -1158,6 +1169,7 @@ function linksblank() {
 window.onload = function () {
     loadChatContent();
      linksblank();
+
 }
 
 
