@@ -107,36 +107,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //headers转换主函数
 function headersTransform(inputText) {
-    // 如果输入为空，将输出清空并返回
-    if (!inputText.trim()) {
-        output.value = '';
-        return;
-    }
-    const headers = parseHeaders(inputText);
-    output.value = JSON.stringify(headers, null, 2);
+  if (!inputText.trim()) {
+    output.value = '';
+    return;
+  }
+  const headers = parseHeaders(inputText);
+  output.value = JSON.stringify(headers, null, 2);
 }
 
-// 解析 HTTP 请求头字符串
-function parseHeaders(headerStr) {
+// 解析HTTP请求头字符串
+function parseHeaders(headerStr){
     const lines = headerStr.split(/\r?\n/);
-    const headers = {};
+    let headers = {};
+    let currentKey = '';
+    let currentValue = '';
 
-    for (let i = 0; i < lines.length; i++) {
+    for(let i=0; i<lines.length; i++){
         const line = lines[i];
-        const index = line.indexOf(':');
-        if (index !== -1) {
-            const key = line.slice(0, index).trim();
-            const value = line.slice(index + 1).trim();
-            if (headers[key]) {
-                headers[key] += ', ' + value;
+        if(line.includes(':')){
+            if(currentKey){
+                // 将上一个header保存到headers对象中
+                addHeader(headers, currentKey, currentValue);
+            }
+            // 开始新的header
+            const index = line.indexOf(':');
+            currentKey = line.slice(0, index).trim();
+            currentValue = line.slice(index+1).trim();
+        }else{
+            // 如果没有冒号,则认为这是上一个header的继续
+            if(currentValue){
+                currentValue += ',' + line.trim();
             } else {
-                headers[key] = value;
+                currentValue += line.trim();
             }
         }
     }
 
+    // 保存最后一个header
+    addHeader(headers, currentKey, currentValue);
+
     return headers;
 }
+
+function addHeader(headers, key, value) {
+   headers[key] = value;
+}
+
+
+
+
 
 //Cookie转换主函数
 function cookieTransform(inputText) {
