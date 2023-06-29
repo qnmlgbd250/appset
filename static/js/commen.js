@@ -504,7 +504,7 @@ copyBtn.addEventListener('click', () => {
 });
 document.getElementById('chat-content').addEventListener('click', (event) => {
     if (event.target.matches('.copy-code')) {
-        const preElement = event.target.closest('pre');
+        const preElement = event.target.parentElement.previousElementSibling;
         const codeElement = preElement.querySelector('code');
         const codeText = codeElement.textContent;
         const textArea = document.createElement('textarea');
@@ -769,7 +769,19 @@ function addCopyCodeButtons(htmlString) {
         copyCodeSpan.textContent = '复制代码';
 
         copyCodeWrapper.appendChild(copyCodeSpan);
-        pre.appendChild(copyCodeWrapper);
+
+        // 将 pre 元素包裹在一个 div 中，并将该 div 作为父元素
+        const parentDiv = document.createElement('div');
+        parentDiv.style.position = 'relative';  // 给父元素加上相对定位
+
+        // 插入新创建的 div 到 pre 的前面
+        pre.parentNode.insertBefore(parentDiv, pre);
+
+        // 将 pre 移到新创建的 div 中
+        parentDiv.appendChild(pre);
+
+         // 将复制按钮添加到新创建的 div 中
+         parentDiv.appendChild(copyCodeWrapper);
     });
 
     return doc.documentElement.innerHTML;
