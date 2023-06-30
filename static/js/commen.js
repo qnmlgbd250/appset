@@ -38,6 +38,9 @@ for (var i = 0; i < divs.length; i++) {
             imageContainer.style.display = 'none';
             imageContainer.removeEventListener('paste', handlePaste);
         }
+        if (this.id === 'signBtn') {
+            loadsigntime();
+        }
     };
 }
 
@@ -107,36 +110,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //headers转换主函数
 function headersTransform(inputText) {
-    // 如果输入为空，将输出清空并返回
-    if (!inputText.trim()) {
-        output.value = '';
-        return;
-    }
-    const headers = parseHeaders(inputText);
-    output.value = JSON.stringify(headers, null, 2);
+  if (!inputText.trim()) {
+    output.value = '';
+    return;
+  }
+  const headers = parseHeaders(inputText);
+  output.value = JSON.stringify(headers, null, 2);
 }
 
-// 解析 HTTP 请求头字符串
-function parseHeaders(headerStr) {
+// 解析HTTP请求头字符串
+function parseHeaders(headerStr){
     const lines = headerStr.split(/\r?\n/);
-    const headers = {};
+    let headers = {};
+    let currentKey = '';
+    let currentValue = '';
 
-    for (let i = 0; i < lines.length; i++) {
+    for(let i=0; i<lines.length; i++){
         const line = lines[i];
-        const index = line.indexOf(':');
-        if (index !== -1) {
-            const key = line.slice(0, index).trim();
-            const value = line.slice(index + 1).trim();
-            if (headers[key]) {
-                headers[key] += ', ' + value;
+        if(line.includes(':')){
+            if(currentKey){
+                // 将上一个header保存到headers对象中
+                addHeader(headers, currentKey, currentValue);
+            }
+            // 开始新的header
+            const index = line.indexOf(':');
+            currentKey = line.slice(0, index).trim();
+            currentValue = line.slice(index+1).trim();
+        }else{
+            // 如果没有冒号,则认为这是上一个header的继续
+            if(currentValue){
+                currentValue += ',' + line.trim();
             } else {
-                headers[key] = value;
+                currentValue += line.trim();
             }
         }
     }
 
+    // 保存最后一个header
+    addHeader(headers, currentKey, currentValue);
+
     return headers;
 }
+
+function addHeader(headers, key, value) {
+   headers[key] = value;
+}
+
+
+
+
 
 //Cookie转换主函数
 function cookieTransform(inputText) {
@@ -331,6 +353,9 @@ function signTransform(inputText) {
     new_HH = Math.floor(new_total_minutes / 60);
     new_MM = new_total_minutes % 60;
     output.value = four_s + `\n8工时打卡时间为：${new_HH.toString().padStart(2, '0')}:${new_MM.toString().padStart(2, '0')}`;
+
+    localStorage.setItem('signtimeinput', inputText);
+    localStorage.setItem('signtimeoutput', output.value);
 }
 
 
@@ -504,7 +529,7 @@ copyBtn.addEventListener('click', () => {
 });
 document.getElementById('chat-content').addEventListener('click', (event) => {
     if (event.target.matches('.copy-code')) {
-        const preElement = event.target.closest('pre');
+        const preElement = event.target.parentElement.previousElementSibling;
         const codeElement = preElement.querySelector('code');
         const codeText = codeElement.textContent;
         const textArea = document.createElement('textarea');
@@ -769,7 +794,19 @@ function addCopyCodeButtons(htmlString) {
         copyCodeSpan.textContent = '复制代码';
 
         copyCodeWrapper.appendChild(copyCodeSpan);
-        pre.appendChild(copyCodeWrapper);
+
+        // 将 pre 元素包裹在一个 div 中，并将该 div 作为父元素
+        const parentDiv = document.createElement('div');
+        parentDiv.style.position = 'relative';  // 给父元素加上相对定位
+
+        // 插入新创建的 div 到 pre 的前面
+        pre.parentNode.insertBefore(parentDiv, pre);
+
+        // 将 pre 移到新创建的 div 中
+        parentDiv.appendChild(pre);
+
+         // 将复制按钮添加到新创建的 div 中
+         parentDiv.appendChild(copyCodeWrapper);
     });
 
     return doc.documentElement.innerHTML;
@@ -962,6 +999,11 @@ function loadChatContent() {
     }
 }
 
+function loadsigntime() {
+        input.value = localStorage.getItem('signtimeinput');
+        output.value = localStorage.getItem('signtimeoutput');
+}
+
 
 function saveid(id) {
     if (!id) {
@@ -1127,6 +1169,7 @@ function linksblank() {
 window.onload = function () {
     loadChatContent();
      linksblank();
+
 }
 
 
