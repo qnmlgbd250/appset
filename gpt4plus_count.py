@@ -255,10 +255,10 @@ if __name__ == '__main__':
 
     #升级计划
     # data = {
-    #     "peizvqt@end.tw":
-    #         {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlaXp2cXRAZW5kLnR3IiwiZXhwIjoxNjg2NzUwMDE3LCJpYXQiOjE2ODYxNDUyMTcsIm5iZiI6MTY4NjE0NTIxN30.sXnN_iP9Uj9jdAh47fE8-yweoDCU4a4EZDfk1kaq5uQ', 'exp': 1686750017}
-    #
-    #
+    #     "tbyekkb@uuf.me":
+    #         {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRieWVra2JAdXVmLm1lIiwiZXhwIjoxNjg4NzIxMDkxLCJpYXQiOjE2ODgxMTYyOTEsIm5iZiI6MTY4ODExNjI5MX0.HOuSUMJfBPzQLN6v7aSwt0Scriybl1MY-YaJR9lkYDk', 'exp': 1688721091}
+
+
     # }
     # save_redis(data)
 
