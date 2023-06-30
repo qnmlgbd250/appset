@@ -606,7 +606,7 @@ a:hover {
 
 pre {
     position: relative;
-    background-color: #fcfcfc;
+    background-color: #f6f8fa;
     padding: 30px;
     border-radius: 6px;
     margin-top: 10px;
@@ -792,6 +792,125 @@ code {
 .light-theme .hljs-theme-dark,
 .dark-theme .hljs-theme-light {
     display: none;
+}
+
+.dark-theme .hljs-keyword,.dark-theme .hljs-operator,.dark-theme .hljs-pattern-match {
+    color: #f92672
+}
+
+.dark-theme .hljs-function,.dark-theme .hljs-pattern-match .hljs-constructor {
+    color: #61aeee
+}
+
+.dark-theme .hljs-function .hljs-params {
+    color: #a6e22e
+}
+
+.dark-theme .hljs-function .hljs-params .hljs-typing {
+    color: #fd971f
+}
+
+.dark-theme .hljs-module-access .hljs-module {
+    color: #7e57c2
+}
+
+.dark-theme .hljs-constructor {
+    color: #e2b93d
+}
+
+.dark-theme .hljs-constructor .hljs-string {
+    color: #9ccc65
+}
+
+.dark-theme .hljs-comment,.dark-theme .hljs-quote {
+    color: #b18eb1;
+    font-style: italic
+}
+
+.dark-theme .hljs-doctag,.dark-theme .hljs-formula {
+    color: #c678dd
+}
+
+.dark-theme .hljs-deletion,.dark-theme .hljs-name,.dark-theme .hljs-section,.dark-theme .hljs-selector-tag,.dark-theme .hljs-subst {
+    color: #e06c75
+}
+
+.dark-theme .hljs-literal {
+    color: #56b6c2
+}
+
+.dark-theme .hljs-addition,.dark-theme .hljs-attribute,.dark-theme .hljs-meta .hljs-string,.dark-theme .hljs-regexp,.dark-theme .hljs-string {
+    color: #98c379
+}
+
+.dark-theme .hljs-built_in,.dark-theme .hljs-class .hljs-title,.dark-theme .hljs-title.class_ {
+    color: #e6c07b
+}
+
+.dark-theme .hljs-attr,.dark-theme .hljs-number,.dark-theme .hljs-selector-attr,.dark-theme .hljs-selector-class,.dark-theme .hljs-selector-pseudo,.dark-theme .hljs-template-variable,.dark-theme .hljs-type,.dark-theme .hljs-variable {
+    color: #d19a66
+}
+
+.dark-theme .hljs-bullet,.dark-theme .hljs-link,.dark-theme .hljs-meta,.dark-theme .hljs-selector-id,.dark-theme .hljs-symbol,.dark-theme .hljs-title {
+    color: #61aeee
+}
+
+.dark-theme .hljs-emphasis {
+    font-style: italic
+}
+
+.dark-theme .hljs-strong {
+    font-weight: 700
+}
+
+.dark-theme .hljs-link {
+    text-decoration: underline
+}
+
+
+.light-theme .hljs-comment,.light-theme .hljs-quote {
+    color: #a0a1a7;
+    font-style: italic
+}
+
+.light-theme .hljs-doctag,.light-theme .hljs-formula,.light-theme .hljs-keyword {
+    color: #a626a4
+}
+
+.light-theme .hljs-deletion,.light-theme .hljs-name,.light-theme .hljs-section,.light-theme .hljs-selector-tag,.light-theme .hljs-subst {
+    color: #e45649
+}
+
+.light-theme .hljs-literal {
+    color: #0184bb
+}
+
+.light-theme .hljs-addition,.light-theme .hljs-attribute,.light-theme .hljs-meta .hljs-string,.light-theme .hljs-regexp,.light-theme .hljs-string {
+    color: #50a14f
+}
+
+.light-theme .hljs-attr,.light-theme .hljs-number,.light-theme .hljs-selector-attr,.light-theme .hljs-selector-class,.light-theme .hljs-selector-pseudo,.light-theme .hljs-template-variable,.light-theme .hljs-type,.light-theme .hljs-variable {
+    color: #986801
+}
+
+.light-theme .hljs-bullet,.light-theme .hljs-link,.light-theme .hljs-meta,.light-theme .hljs-selector-id,.light-theme .hljs-symbol,.light-theme .hljs-title {
+    color: #4078f2
+}
+
+.light-theme .hljs-built_in,.light-theme .hljs-class .hljs-title,.light-theme .hljs-title.class_ {
+    color: #c18401
+}
+
+.light-theme .hljs-emphasis {
+    font-style: italic
+}
+
+.light-theme .hljs-strong {
+    font-weight: 700
+}
+
+.light-theme .hljs-link {
+    text-decoration: underline
 }
 
 
