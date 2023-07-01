@@ -824,7 +824,7 @@ code {
 
 .dark-theme .hljs-comment,.dark-theme .hljs-quote {
     color: #a0a1a7;
-    font-style: italic
+    font-style: normal
 }
 
 .dark-theme .hljs-doctag,.dark-theme .hljs-formula {
@@ -856,7 +856,7 @@ code {
 }
 
 .dark-theme .hljs-emphasis {
-    font-style: italic
+    font-style: normal
 }
 
 .dark-theme .hljs-strong {
@@ -870,7 +870,7 @@ code {
 
 .light-theme .hljs-comment,.light-theme .hljs-quote {
     color: #a0a1a7;
-    font-style: italic
+    font-style: normal
 }
 
 .light-theme .hljs-params {
@@ -906,7 +906,7 @@ code {
 }
 
 .light-theme .hljs-emphasis {
-    font-style: italic
+    font-style: normal
 }
 
 .light-theme .hljs-strong {
