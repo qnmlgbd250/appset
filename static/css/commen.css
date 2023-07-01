@@ -806,7 +806,7 @@ code {
     color: #a6e22e
 }
 
-.dark-theme .hljs-function .hljs-params .hljs-typing {
+.dark-theme .hljs-function,.dark-theme .hljs-params,.dark-theme .hljs-typing {
     color: #fd971f
 }
 
@@ -823,7 +823,7 @@ code {
 }
 
 .dark-theme .hljs-comment,.dark-theme .hljs-quote {
-    color: #b18eb1;
+    color: #a0a1a7;
     font-style: italic
 }
 
