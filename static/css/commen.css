@@ -873,6 +873,10 @@ code {
     font-style: italic
 }
 
+.light-theme .hljs-params {
+    color: #fd971f
+}
+
 .light-theme .hljs-doctag,.light-theme .hljs-formula,.light-theme .hljs-keyword {
     color: #a626a4
 }
