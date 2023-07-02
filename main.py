@@ -417,14 +417,14 @@ async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
     msg = msgdict.get('text')
     data = {
         "info": msg,
-        "session_id": 688,
+        "session_id": 1123,
         "scene_preset": [{"key": 1, "value": "", "sel": "system"}],
         "model_is_select": model
     }
     for attempt in range(max_retries):
         try:
             async with AsyncClient() as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
