@@ -112,7 +112,7 @@ SITE_CONFIF_DICT = {
         },
         "url": f"https://{AISET4}/api/send_bot",
         "model": "gpt-4",
-        "max_retries": 2,
+        "max_retries": 5,
     },
     "5": {
         "headers": {
