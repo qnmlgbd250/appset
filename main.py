@@ -1082,17 +1082,16 @@ async def login_get_token(miniaccount, minipassword):
         return None
 
 async def get_4ip(cip):
-    for key in redis_pool.hkeys("ipv4"):
-        valuejson = redis_pool.hget("ipv4", key)
-        if cip == key.decode("utf-8"):
-            value_dict = json.loads(valuejson)
-            return value_dict["session_id"]
-        else:
-            ipv4cont = int(redis_pool.get('ipv4cont'))
-            newip = ipv4cont + 1
-            redis_pool.set('ipv4cont', newip)
-            redis_pool.hset("ipv4", cip, json.dumps({"session_id": newip}))
-            return newip
+    valuejson = redis_pool.hget("ipv4", cip)
+    if valuejson:
+        value_dict = json.loads(valuejson)
+        return value_dict["session_id"]
+    else:
+        ipv4cont = int(redis_pool.get('ipv4cont'))
+        newip = ipv4cont + 1
+        redis_pool.set('ipv4cont', newip)
+        redis_pool.hset("ipv4", cip, json.dumps({"session_id": newip}))
+        return newip
 
 
 if __name__ == '__main__':
