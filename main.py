@@ -412,12 +412,12 @@ async def get_chat3(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
 
 async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
                    headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
-                   model: Optional[str] = None) -> Any:
+                   model: Optional[str] = None, session_id: Optional[int] = None) -> Any:
     headers.update({"authorization": "Bearer " + token})
     msg = msgdict.get('text')
     data = {
         "info": msg,
-        "session_id": 1123,
+        "session_id": session_id,
         "scene_preset": [{"key": 1, "value": "", "sel": "system"}],
         "model_is_select": model
     }
@@ -877,6 +877,8 @@ async def chat(websocket: WebSocket):
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]
+            if selected_site == "4":
+                site_config.update({"session_id": await get_4ip(client_ip)})
             selected_function = chat_functions[selected_site][0]
             chat_generator = await get_chat_with_token(selected_function, data, selected_site, client_ip,
                                                        **site_config)
@@ -1079,6 +1081,18 @@ async def login_get_token(miniaccount, minipassword):
         logging.error(f"登录获取token异常: {repr(e)}")
         return None
 
+async def get_4ip(cip):
+    for key in redis_pool.hkeys("ipv4"):
+        valuejson = redis_pool.hget("ipv4", key)
+        if cip == key.decode("utf-8"):
+            value_dict = json.loads(valuejson)
+            return value_dict["session_id"]
+        else:
+            ipv4cont = int(redis_pool.get('ipv4cont'))
+            newip = ipv4cont + 1
+            redis_pool.set('ipv4cont', newip)
+            redis_pool.hset("ipv4", cip, json.dumps({"session_id": newip}))
+            return newip
 
 
 if __name__ == '__main__':
