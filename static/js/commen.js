@@ -115,46 +115,37 @@ function headersTransform(inputText) {
     return;
   }
   const headers = parseHeaders(inputText);
-  output.value = JSON.stringify(headers, null, 2);
+  output.value = JSON.stringify(headers, null, 4);
 }
 
 // 解析HTTP请求头字符串
-function parseHeaders(headerStr){
-    const lines = headerStr.split(/\r?\n/);
-    let headers = {};
-    let currentKey = '';
-    let currentValue = '';
-
-    for(let i=0; i<lines.length; i++){
-        const line = lines[i];
-        if(line.includes(':')){
-            if(currentKey){
-                // 将上一个header保存到headers对象中
-                addHeader(headers, currentKey, currentValue);
-            }
-            // 开始新的header
-            const index = line.indexOf(':');
-            currentKey = line.slice(0, index).trim();
-            currentValue = line.slice(index+1).trim();
-        }else{
-            // 如果没有冒号,则认为这是上一个header的继续
-            if(currentValue){
-                currentValue += ',' + line.trim();
-            } else {
-                currentValue += line.trim();
-            }
+function parseHeaders(header){
+    let headerDict = {};
+    let lastKey = null;
+    let splitStrList = header.split("\n");
+    for (let index = 0; index < splitStrList.length; index++) {
+        if (splitStrList[index].endsWith(":")) {
+            splitStrList[index] = splitStrList[index] + splitStrList[index + 1];
+            splitStrList[index + 1] = "";
         }
     }
-
-    // 保存最后一个header
-    addHeader(headers, currentKey, currentValue);
-
-    return headers;
+    let formatList = splitStrList.filter(x => x);
+    for (let line of formatList) {
+        if (line.trim() === "") {
+            continue;
+        }
+        if (/[A-Za-z0-9\-]+:/.test(line)) {
+            let colonIndex = line.indexOf(':')
+            lastKey = line.substring(0, colonIndex).trim();
+            headerDict[lastKey] = line.substring(colonIndex + 1).trim();
+        } else if (lastKey != null) {
+            headerDict[lastKey] += line.trim();
+        }
+    }
+    return headerDict;
 }
 
-function addHeader(headers, key, value) {
-   headers[key] = value;
-}
+
 
 
 
