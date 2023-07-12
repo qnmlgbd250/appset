@@ -333,8 +333,7 @@ async def get_chat2(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
-                        if "detail" in data and (data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
-                                'finish_reason') is not None):
+                        if "detail" in data and (data['detail'].get('choices') is None or data['detail'].get('usage') is not None):
                             yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
                         try:
