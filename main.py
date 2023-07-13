@@ -308,7 +308,7 @@ async def get_chat2(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
         if context_too_long:
             data = {
                 "prompt": msg,
-                "options": {"temperature": 1, "model": 3},
+                "options": {"temperature": 1, "model": model},
                 "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."
             }
             context_too_long = False
@@ -486,7 +486,7 @@ async def get_chat5(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
         messages.append(currenttext)
     if len(messages) > 10:
         messages = messages[0:1] + messages[-7:]
-    data = {"conversation": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
+    data = {"conversation": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1, "max_tokens": 500}
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
@@ -933,76 +933,9 @@ async def get_hash_by_redis():
 async def get_gpt4_by_redis():
     for key in redis_pool.hkeys("gpt4plus"):
         value = redis_pool.hget("gpt4plus", key)
-        if value:
-            value_dict = json.loads(value)
-            if value_dict["count"] > 0:
-                value_dict["count"] -= 1
-                redis_pool.hset("gpt4plus", key, json.dumps(value_dict))
-                token = value_dict['token']
-                islive = await check_4plus_token(token)
-                if not islive:
-                    token = await login_gpt4p_token(key.decode('utf-8'), MINIPASSWORD)
-                    if token:
-                        value_dict['token'] = token
-                        redis_pool.hset("gpt4plus", key, json.dumps(value_dict))
-                return token
-    return None
+        value_dict = json.loads(value)
+        return value_dict['token']
 
-async def login_gpt4p_token(email,password):
-    headers = {
-        "authority": AISET5,
-        "accept": "*/*",
-        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "content-type": "application/json",
-        "origin": f"https://{AISET5}",
-        "referer": f"https://{AISET5}/login",
-        "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43"
-    }
-    url = f"https://{AISET5}/api/user/login"
-    data = {
-        "email": email,
-        "password": password
-    }
-    data = json.dumps(data, separators=(',', ':'))
-    try:
-        response = requests.post(url, headers=headers, data=data, proxies=PROXIES)
-        token = response.json()['sessionToken']
-        return token
-    except Exception as e:
-        logging.error(f"登录获取token异常: {repr(e)}")
-        return None
-
-async def check_4plus_token(token):
-    headers = {
-        "authority": AISET5,
-        "accept": "*/*",
-        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "authorization": token,
-        "referer": f"{AISET5}/profile",
-        "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43"
-    }
-    url = f"{AISET5}/api/user/info"
-    try:
-        response = requests.get(url, headers=headers, proxies=PROXIES)
-        if response.json()['status'] == 0:
-            return True
-        else:
-            return False
-    except Exception as e:
-        logging.error(f"检测token异常: {repr(e)}")
-        return False
 
 
 async def get_minitoken():
