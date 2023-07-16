@@ -82,7 +82,7 @@ def get_invitecode(token):
 #升级计划
 def upgrade_plan(inviteCode):
     conut = 0
-    for _ in range(100):
+    for _ in range(1000):
         try:
             email_af_str = random.choice(email_af)
             letters = string.ascii_lowercase
@@ -169,7 +169,7 @@ def upgrade_plan(inviteCode):
             if 'sessionToken' in response.json():
                 conut += 1
                 print(response.json())
-            if conut == 10:
+            if conut == 500:
                 return True
         except:
             print("error")
@@ -179,7 +179,7 @@ def upgrade_plan(inviteCode):
 def save_redis(data):
     for k, v in data.items():
         token = v.get('sessionToken')
-        inviteCode = get_invitecode(token)
+        inviteCode = 'abb424'
         if upgrade_plan(inviteCode):
             print("升级成功")
             hash_name = 'gpt4plus'
@@ -254,21 +254,21 @@ def login_(user,pwd):
 if __name__ == '__main__':
 
     #升级计划
-    # data = {
-    #     "tbyekkb@uuf.me":
-    #         {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRieWVra2JAdXVmLm1lIiwiZXhwIjoxNjg4NzIxMDkxLCJpYXQiOjE2ODgxMTYyOTEsIm5iZiI6MTY4ODExNjI5MX0.HOuSUMJfBPzQLN6v7aSwt0Scriybl1MY-YaJR9lkYDk', 'exp': 1688721091}
+    data = {
+        "inbvmqn@qabq.com":
+            {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImluYnZtcW5AcWFicS5jb20iLCJleHAiOjE2ODk5NDQzMTAsImlhdCI6MTY4OTMzOTUxMCwibmJmIjoxNjg5MzM5NTEwfQ.VJdmxmnIB6Wx9CKtLIkzIJAiRNaTR2JsmKdYOTL1iHE', 'exp': 1689944310}
 
 
-    # }
-    # save_redis(data)
+    }
+    save_redis(data)
 
     #检查是否升级成功
-    for key in redis_pool.hkeys("gpt4plus"):
-        value = redis_pool.hget("gpt4plus", key)
-        if value:
-            value_dict = json.loads(value)
-            token = value_dict.get('token')
-            check_plus(key,token)
+    # for key in redis_pool.hkeys("gpt4plus"):
+    #     value = redis_pool.hget("gpt4plus", key)
+    #     if value:
+    #         value_dict = json.loads(value)
+    #         token = value_dict.get('token')
+    #         check_plus(key,token)
 
 
 
