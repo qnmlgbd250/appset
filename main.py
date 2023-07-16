@@ -378,12 +378,18 @@ async def get_chat3(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
         try:
             async with AsyncClient(proxies=PROXIES) as client:
                 async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
-                    async for line in response.aiter_bytes():
+                    async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
                         try:
-                            decoded_chunk = line.decode("utf-8")
-                            yield {"choices": [{"delta": {"content": decoded_chunk}}]}
+                            if "reply_content" in line:
+                                start_index = line.find("reply_content:") + len("reply_content:")
+                                str = line[start_index:].strip()
+                                data = {'choices': [{'delta': {'content': str}}]}
+                            else:
+                                start_index = line.find("data:") + len("data:")
+                                json_str = line[start_index:].strip()
+                                data = json.loads(json_str)
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
@@ -394,6 +400,20 @@ async def get_chat3(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
+                        if data.get('choices') is None or data.get('choices')[0].get(
+                                'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        try:
+                            yield {"choices": data.get('choices')}
+                            if data.get('choices')[0].get('delta').get('content') == "你好啊":
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
 
         except httpx.HTTPError as e:
             logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
@@ -716,12 +736,18 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
         try:
             async with AsyncClient(proxies=PROXIES) as client:
                 async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
-                    async for line in response.aiter_bytes():
+                    async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
                         try:
-                            decoded_chunk = line.decode("utf-8")
-                            yield {"choices": [{"delta": {"content": decoded_chunk}}]}
+                            if "reply_content" in line:
+                                start_index = line.find("reply_content:") + len("reply_content:")
+                                str = line[start_index:].strip()
+                                data = {'choices': [{'delta': {'content': str}}]}
+                            else:
+                                start_index = line.find("data:") + len("data:")
+                                json_str = line[start_index:].strip()
+                                data = json.loads(json_str)
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
@@ -732,6 +758,20 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
+                        if data.get('choices') is None or data.get('choices')[0].get(
+                                'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        try:
+                            yield {"choices": data.get('choices')}
+                            if data.get('choices')[0].get('delta').get('content') == "你好啊":
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
 
         except httpx.HTTPError as e:
             logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
