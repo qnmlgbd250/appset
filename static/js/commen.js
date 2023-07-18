@@ -196,7 +196,7 @@ function rsaTransform(inputText) {
 //curl转换主函数
 function curlTransform(inputText) {
 
-    const url = '/c';
+    const url = '/tool/c';
     fetch(url, {
         method: 'POST',
         body: JSON.stringify({input_str: inputText})
@@ -220,7 +220,7 @@ function curlTransform(inputText) {
 //Data转换主函数
 function dataTransform(inputText) {
     inputText = inputText.trim();
-    const url = '/d/';
+    const url = '/tool/d/';
     fetch(url + inputText)
         .then(response => {
             if (response.ok) {
@@ -256,7 +256,7 @@ function transTransform(input) {
 function translate(inputText) {
 
     inputText = inputText.trim();
-    const url = '/t';
+    const url = '/tool/t';
     fetch(url, {
         method: 'POST',
         body: JSON.stringify({input_str: inputText})
@@ -353,7 +353,7 @@ function signTransform(inputText) {
 //OCR主函数
 function ocrTransform(input) {
     inputText = input.querySelector('img').getAttribute('src').trim();
-    const url = '/o';
+    const url = '/tool/o';
     fetch(url, {
         method: 'POST',
         headers: {
@@ -613,9 +613,9 @@ md.renderer.rules.bullet_list_close = (tokens, idx) => {
 let isTyping = false;
 const host = window.location.hostname;
 const port = window.location.port;
-let url = `ws://${host}:${port}/chat`;
-if (host === 'chat250.top') {
-    url = `wss://${host}/chat`;
+let url = `ws://${host}:${port}/tool/chat`;
+if (host === 'chat250.top/tool') {
+    url = `wss://${host}/tool/chat`;
 
 }
 

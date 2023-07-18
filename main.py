@@ -54,12 +54,18 @@ async def log_requests(request: Request, call_next):
     return response
 
 
+
 @app.get("/")
+def getdate(request: Request):
+    return templates.TemplateResponse('home.html', context={'request': request})
+
+@app.get("/tool")
 def getdate(request: Request):
     return templates.TemplateResponse('main.html', context={'request': request})
 
 
-@app.get("/d/{taskid}")
+
+@app.get("/tool/d/{taskid}")
 def turn(taskid: str):
     try:
         taskid = taskid.strip()
@@ -99,7 +105,7 @@ def turn(taskid: str):
     return {'output': output}
 
 
-@app.post("/t")
+@app.post("/tool/t")
 async def translate(request: Request):
     try:
         proxies = {
@@ -136,7 +142,7 @@ async def translate(request: Request):
     return {'output': output}
 
 
-@app.post("/o")
+@app.post("/tool/o")
 async def ocr(request: Request):
     output = {}
     try:
@@ -177,7 +183,7 @@ async def ocr(request: Request):
     return {'output': output}
 
 
-@app.post("/c")
+@app.post("/tool/c")
 async def curl2requests(request: Request):
     output = {}
     try:
@@ -881,7 +887,7 @@ async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
     return site(data, token=token, **kwargs)
 
 
-@app.websocket("/chat")
+@app.websocket("/tool/chat")
 async def chat(websocket: WebSocket):
 
     client_ip = websocket.scope["client"][0]
