@@ -56,6 +56,10 @@ async def log_requests(request: Request, call_next):
 
 @app.get("/")
 def getdate(request: Request):
+    return templates.TemplateResponse('home.html', context={'request': request})
+
+@app.get("/tool")
+def getdate(request: Request):
     return templates.TemplateResponse('main.html', context={'request': request})
 
 

@@ -179,7 +179,7 @@ def upgrade_plan(inviteCode):
 def save_redis(data):
     for k, v in data.items():
         token = v.get('sessionToken')
-        inviteCode = 'abb424'
+        inviteCode = get_invitecode(token)
         if upgrade_plan(inviteCode):
             print("升级成功")
             hash_name = 'gpt4plus'
@@ -255,8 +255,8 @@ if __name__ == '__main__':
 
     #升级计划
     data = {
-        "inbvmqn@qabq.com":
-            {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImluYnZtcW5AcWFicS5jb20iLCJleHAiOjE2ODk5NDQzMTAsImlhdCI6MTY4OTMzOTUxMCwibmJmIjoxNjg5MzM5NTEwfQ.VJdmxmnIB6Wx9CKtLIkzIJAiRNaTR2JsmKdYOTL1iHE', 'exp': 1689944310}
+        "zmumewc@yzm.de":
+            {'status': 0, 'sessionToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InptdW1ld2NAeXptLmRlIiwiZXhwIjoxNjkwMjUzNzM1LCJpYXQiOjE2ODk2NDg5MzUsIm5iZiI6MTY4OTY0ODkzNX0.88FGNkmkAiY58NYQ1GOAuziO11kfd0UFAanTGFTJLVo', 'exp': 1690253735}
 
 
     }
