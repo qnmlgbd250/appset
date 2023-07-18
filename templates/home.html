@@ -12,13 +12,14 @@
     <button onclick="location.href='/tool'">Start for free</button>
 
     <footer>
-        <p>版权所有 ? Gadget  |  豫ICP备2023011688号-1</p>
+        <p>&copy; 2023 Gadget 版权所有  |  豫ICP备2023011688号-1</p>
         <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">中国工业和信息化部网站备案系统</a>
     </footer>
 
     <script>
         var i = 0;
-        var txt = '一触即发，我是你的效率助手';
+        var txts = ['一触即发, 我是你的灵感引擎', '奇思妙想, 我是你的创意搭档', '创你所需, 我是你的效率伙伴','跨界协作, 我是你的智能助手']; // 这里添加你想要的句子
+        var txt = txts[Math.floor(Math.random() * txts.length)]; // 随机选择一个句子
         var speed = 150;
 
         function typeWriter() {
@@ -29,6 +30,7 @@
             } else {
                 i = 0;
                 document.getElementById("welcome").innerHTML = '';
+                txt = txts[Math.floor(Math.random() * txts.length)]; // 在每次循环结束时，重新选择一个句子
                 setTimeout(typeWriter, speed);
             }
         }
