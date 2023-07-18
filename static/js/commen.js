@@ -614,7 +614,7 @@ let isTyping = false;
 const host = window.location.hostname;
 const port = window.location.port;
 let url = `ws://${host}:${port}/tool/chat`;
-if (host === 'chat250.top/tool') {
+if (host === 'chat250.top') {
     url = `wss://${host}/tool/chat`;
 
 }
