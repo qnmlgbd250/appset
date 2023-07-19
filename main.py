@@ -706,11 +706,6 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                    headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
                    model: Optional[str] = None) -> Any:
     msg = msgdict.get('text')
-    messages = [
-        {"role": "system",
-         "content": "IMPRTANT: You are a virtual assistant powered by the {} model, now time is 2023/5/27 22:47:30}}".format(
-             model)}
-    ]
     searchjsonresults = await get_searchjsonresults(msg)
     current = await current_time()
     content = f"\
@@ -735,10 +730,20 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                 \
                 Reply in Chinese and markdown.\
                           "
-    currenttext = {"role": "user", "content": content}
-    messages.append(currenttext)
-    data = {"messages": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
+    headers.update({"authorization": "Bearer " + token})
+    data = {"prompt": content,
+            "options": {"temperature": 1, "model": model},
+            "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."}
+
+    context_too_long = False
     for attempt in range(max_retries):
+        if context_too_long:
+            data = {
+                "prompt": content,
+                "options": {"temperature": 1, "model": model},
+                "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."
+            }
+            context_too_long = False
         try:
             async with AsyncClient(proxies=PROXIES) as client:
                 async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
@@ -746,14 +751,7 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                         if line.strip() == "":
                             continue
                         try:
-                            if "reply_content" in line:
-                                start_index = line.find("reply_content:") + len("reply_content:")
-                                str = line[start_index:].strip()
-                                data = {'choices': [{'delta': {'content': str}}]}
-                            else:
-                                start_index = line.find("data:") + len("data:")
-                                json_str = line[start_index:].strip()
-                                data = json.loads(json_str)
+                            data = json.loads(line)
                         except Exception as e:
                             logging.error(e)
                             if 'line 1 column' in str(e):
@@ -764,18 +762,18 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                                 yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
-                        if data.get('choices') is None or data.get('choices')[0].get(
-                                'finish_reason') is not None:
+                        if "detail" in data and (data['detail'].get('choices') is None or data['detail'].get('usage') is not None):
                             yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
                         try:
-                            yield {"choices": data.get('choices')}
-                            if data.get('choices')[0].get('delta').get('content') == "你好啊":
-                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
-                                return
+                            yield data['detail']
                         except Exception as e:
                             logging.error(e)
-                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            if '[OpenAI] 当前请求上下文过长' in str(data):
+                                context_too_long = True
+                                logging.info('上下文超限')
+                                break
+                            yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
                             yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
 
@@ -787,7 +785,8 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
             else:
                 yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
-        break
+        if not context_too_long:
+            break
 
 async def get_chat9(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
                    headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
@@ -874,7 +873,7 @@ async def send_message(websocket, message):
 async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
     if selected_site == "1":
         token = await get_token_by_redis()
-    elif selected_site == "2":
+    elif selected_site in ["2","8"]:
         token = await get_minitoken()
     elif selected_site == "4":
         token = await get_hash_by_redis()

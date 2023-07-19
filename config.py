@@ -183,24 +183,16 @@ SITE_CONFIF_DICT = {
     },
     "8": {
         "headers": {
-            "Host": AISET3,
-            "Connection": "keep-alive",
-            "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
-            "Content-Type": "application/json",
-            "Accept": "*/*",
-            "Origin": f"https://{AISET3}",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": f"https://{AISET3}",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "content-type": "application/json",
+            "origin": AISET2,
+            "referer": AISET2,
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50"
         },
-        "url": f"https://{AISET3}/api/openai/v1/chat/completions",
-        "model": "gpt-3.5-turbo-16k-0613",
+        "url": f"{AISET2}/api/chatgpt/chat-process",
+        "model": 3,
         "max_retries": 2,
     },
     "9": {
