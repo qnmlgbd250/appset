@@ -865,6 +865,87 @@ async def get_chat9(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def get_chat10(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    msg = msgdict.get('text')
+    lastid360 = msgdict.get('id360')
+    if lastid360:
+        data = {
+            "conversation_id": lastid360,
+            "role": "00000001",
+            "prompt": msg,
+            "source_type": "prophet_web",
+            "is_regenerate": False,
+            "is_so": False
+        }
+        id360 = lastid360
+    else:
+        data = {
+            "conversation_id": "",
+            "role": "00000001",
+            "prompt": msg,
+            "source_type": "prophet_web",
+            "is_regenerate": False,
+            "is_so": False
+        }
+        id360 = ""
+    id360 = ""
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies=PROXIES) as client:
+                async with client.stream('POST', url, headers=headers, cookies=token, json=data, timeout=8) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        if "event: 100" in line:
+                            continue
+                        if "event: 101" in line:
+                            continue
+                        if 'MESSAGEID####' in line:
+                            continue
+                        if "event: 200" in line:
+                            continue
+                        if "用户登录失败，请重新登录" in line:
+                            yield {"choices": [{"delta": {"content": "360账号失效，请重新登录"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        try:
+                            start_index = line.find("data:") + len("data:")
+                            json_str = line[start_index:].strip()
+                            if 'CONVERSATIONID####' in json_str:
+                                id360 = json_str.split('####')[1]
+                                detail = {"id360": id360, "choices": [{"delta": {"role": "assistant", "content": ""}}]}
+                                yield detail
+                            elif not json_str:
+                                detail = {"id360": id360, "choices": [{"delta": {"role": "assistant", "content": "THE_END_哈哈哈"}}]}
+                                yield detail
+                            else:
+                                detail = {"id360": id360, "choices": [{"delta": {"role": "assistant", "content": json_str}}]}
+                                yield detail
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
+
 
 async def send_message(websocket, message):
     # await asyncio.sleep(0.03)
@@ -879,6 +960,8 @@ async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
         token = await get_hash_by_redis()
     elif selected_site == "5":
         token = await get_gpt4_by_redis()
+    elif selected_site == "10":
+        token = await get_360cookie_by_redis()
     else:
         token = None
     logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
@@ -903,6 +986,7 @@ async def chat(websocket: WebSocket):
             lastmsg7 = ''
             lastmsg8 = ''
             lastmsg9 = ''
+            lastmsg10 = ''
             chat_functions = {
                 "1": [get_chat1, lastmsg1],
                 "2": [get_chat2, lastmsg2],
@@ -912,7 +996,8 @@ async def chat(websocket: WebSocket):
                 "6": [get_chat6, lastmsg6],
                 "7": [get_chat7, lastmsg7],
                 "8": [get_chat8, lastmsg8],
-                "9": [get_chat9, lastmsg9]
+                "9": [get_chat9, lastmsg9],
+                "10": [get_chat10, lastmsg10],
             }
             needlastmsg = ["3", "4", "5", "6", "7", "8", "9"]
 
@@ -929,6 +1014,8 @@ async def chat(websocket: WebSocket):
                     response_text = i['choices'][0].get('delta').get('content')
                     if selected_site == "2":
                         response_data = {"text": response_text, "miniid": i.get('id')}
+                    elif selected_site == "10":
+                        response_data = {"text": response_text, "id360": i.get('id360')}
                     else:
                         response_data = {"text": response_text, "id": i.get('id')}
                     if selected_site in needlastmsg and 'THE_END_哈哈哈' not in response_text:
@@ -1002,6 +1089,14 @@ async def get_4ip(cip):
         redis_pool.set('ipv4cont', newip)
         redis_pool.hset("ipv4", cip, json.dumps({"session_id": newip}))
         return newip
+
+async def get_360cookie_by_redis():
+    tdict = redis_pool.hget("token360", ACC360)
+    tdict = json.loads(tdict)
+    token = tdict['token']
+
+    return token
+
 
 
 if __name__ == '__main__':

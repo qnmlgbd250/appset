@@ -697,6 +697,9 @@ function connect() {
             if (receivedData.miniid) {
                 saveminiid(receivedData.miniid)
             }
+            if (receivedData.id360) {
+                saveid360(receivedData.id360)
+            }
 
             // 停止监听 element 的子节点变化
             observer.disconnect();
@@ -901,6 +904,7 @@ function sendMessage() {
                 text: message,
                 id: loadid(),
                 miniid: loadminiid(),
+                id360: loadid360(),
                 site: selectedSite,
                 lastmsg3list: loadmsg3(),
                 lastmsg5list: loadmsg5(),
@@ -956,6 +960,7 @@ function deleteMessages() {
     localStorage.setItem('lastmsg9list', '');
     saveid('');
     saveminiid('');
+    saveid360('');
 }
 
 
@@ -1009,6 +1014,13 @@ function saveminiid(id) {
         localStorage.setItem('miniid', '');
     } else {
         localStorage.setItem('miniid', id);
+    }
+}
+function saveid360(id) {
+    if (!id) {
+        localStorage.setItem('id360', '');
+    } else {
+        localStorage.setItem('id360', id);
     }
 }
 
@@ -1100,6 +1112,13 @@ function loadid() {
 
 function loadminiid() {
     const savedid = localStorage.getItem('miniid');
+    if (savedid) {
+        return savedid;
+    }
+    return "";
+}
+function loadid360() {
+    const savedid = localStorage.getItem('id360');
     if (savedid) {
         return savedid;
     }

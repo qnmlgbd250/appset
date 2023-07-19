@@ -34,6 +34,7 @@ AISET8 = os.getenv('AISET8')
 AISET9 = os.getenv('AISET9')
 MINIACCOUNT = os.getenv('MINIACCOUNT')
 MINIPASSWORD = os.getenv('MINIPASSWORD')
+ACC360 = os.getenv('ACC360')
 
 PROXIES = {'http://': os.getenv('HTTPROXY')}
 
@@ -214,6 +215,26 @@ SITE_CONFIF_DICT = {
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
         },
         "url": f"https://{AISET7}/api/openai/v1/chat/completions",
+        "model": "gpt-4-0613",
+        "max_retries": 2,
+    },
+    "10": {
+        "headers": {
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Origin": "https://chat.360.cn",
+            "Referer": "https://chat.360.cn/?src=ai_360_cn",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.79",
+            "accept": "text/event-stream",
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\""
+        },
+        "url": "https://chat.360.cn/backend-api/api/common/chat",
         "model": "gpt-4-0613",
         "max_retries": 2,
     },
