@@ -890,7 +890,6 @@ async def get_chat10(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
             "is_so": False
         }
         id360 = ""
-    id360 = ""
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
