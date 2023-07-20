@@ -944,6 +944,70 @@ async def get_chat10(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def get_chat11(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None, session_id: Optional[int] = None) -> Any:
+    headers.update({"authorization": "Bearer " + token})
+    msg = msgdict.get('text')
+    data = {
+        "info": msg,
+        "session_id": session_id,
+        "scene_preset": [{"key": 1, "value": "", "sel": "system"}],
+        "model_is_select": model,
+        "answer_num": 3,
+        "answer_tem": 0.8
+    }
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient() as client:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            if "reply_content" in line:
+                                start_index = line.find("reply_content:") + len("reply_content:")
+                                str = line[start_index:].strip()
+                                data = {'choices': [{'delta': {'content': str}}]}
+                            else:
+                                start_index = line.find("data:") + len("data:")
+                                json_str = line[start_index:].strip()
+                                data = json.loads(json_str)
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        if data.get('choices') is None or data.get('choices')[0].get(
+                                'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        try:
+                            yield {"choices": data.get('choices')}
+                            if data.get('choices')[0].get('delta').get('content') == "你好啊":
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
 
 
 async def send_message(websocket, message):
@@ -961,6 +1025,8 @@ async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
         token = await get_gpt4_by_redis()
     elif selected_site == "10":
         token = await get_360cookie_by_redis()
+    elif selected_site == "11":
+        token = await get_11token_redis()
     else:
         token = None
     logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
@@ -986,6 +1052,7 @@ async def chat(websocket: WebSocket):
             lastmsg8 = ''
             lastmsg9 = ''
             lastmsg10 = ''
+            lastmsg11 = ''
             chat_functions = {
                 "1": [get_chat1, lastmsg1],
                 "2": [get_chat2, lastmsg2],
@@ -997,12 +1064,13 @@ async def chat(websocket: WebSocket):
                 "8": [get_chat8, lastmsg8],
                 "9": [get_chat9, lastmsg9],
                 "10": [get_chat10, lastmsg10],
+                "11": [get_chat11, lastmsg11],
             }
-            needlastmsg = ["3", "4", "5", "6", "7", "8", "9"]
+            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "11"]
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]
-            if selected_site == "4":
+            if selected_site in ["4", "11"]:
                 site_config.update({"session_id": await get_4ip(client_ip)})
             selected_function = chat_functions[selected_site][0]
             chat_generator = await get_chat_with_token(selected_function, data, selected_site, client_ip,
@@ -1059,6 +1127,14 @@ async def get_hash_by_redis():
                 redis_pool.hset("hash_db", key, json.dumps(value_dict))
                 return value_dict['token']
     return None
+
+async def get_11token_redis():
+    for key in redis_pool.hkeys("chat199oken"):
+        value = redis_pool.hget("chat199oken", key)
+        if value:
+            value_dict = json.loads(value)
+            return value_dict['token']
+
 
 
 async def get_gpt4_by_redis():

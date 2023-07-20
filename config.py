@@ -32,6 +32,8 @@ AISET6 = os.getenv('AISET6')
 AISET7 = os.getenv('AISET7')
 AISET8 = os.getenv('AISET8')
 AISET9 = os.getenv('AISET9')
+AISET10 = os.getenv('AISET10')
+AISET10HOME = os.getenv('AISET10HOME')
 MINIACCOUNT = os.getenv('MINIACCOUNT')
 MINIPASSWORD = os.getenv('MINIPASSWORD')
 ACC360 = os.getenv('ACC360')
@@ -238,5 +240,27 @@ SITE_CONFIF_DICT = {
         "model": "gpt-4-0613",
         "max_retries": 2,
     },
+    "11": {
+        "headers": {
+            "Host": AISET10,
+            "Connection": "keep-alive",
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
+            "Accept": "text/event-stream",
+            "Content-Type": "text/plain;charset=UTF-8",
+            "sec-ch-ua-mobile": "?0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "Origin": AISET10HOME,
+            "Sec-Fetch-Site": "cross-site",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Referer": AISET10HOME,
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+        },
+        "url": f"https://{AISET10}/api/send_bot",
+        "model": "gpt-4",
+        "max_retries": 2,
+        },
 
 }
