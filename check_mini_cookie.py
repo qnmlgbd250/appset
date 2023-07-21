@@ -174,9 +174,90 @@ def get_4plus_limit(token):
         logging.error(f"获取剩余次数异常: {repr(e)}")
         return 0
 
+def get_gpt4199_token():
+    try:
+        for key in redis_pool.hkeys("chat199oken"):
+            value = redis_pool.hget("chat199oken", key)
+            value_dict = json.loads(value)
+            token = value_dict['token']
+            islive,vip = check_4_token(token)
+            print("gpt4p token活性状态：", islive)
+            if not islive:
+                token = login_4_token(key.decode('utf-8'), MINIPASSWORD)
+                islive, vip = check_4_token(token)
+            value_dict['token'] = token
+            value_dict['vip'] = vip
+            redis_pool.hset("chat199oken", key, json.dumps(value_dict))
+        return True
+    except Exception as e:
+        logging.error(f"获取gpt4账号异常: {repr(e)}")
+        return False
+
+def check_4_token(token):
+    headers = {
+        "authority": AISET10,
+        "accept": "*/*",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "authorization": "Bearer " + token,
+        "origin": AISET10HOME,
+        "referer": AISET10HOME,
+        "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    }
+    url = f"https://{AISET10}/api/get_user"
+    try:
+        response = requests.post(url, headers=headers, proxies=PROXIES)
+        if response.json()['status'] == 200:
+            return True, response.json()['vip']
+        else:
+            return False, None
+    except Exception as e:
+        logging.error(f"检测token异常: {repr(e)}")
+        return False
+
+def login_4_token(email,password):
+    headers = {
+        "authority": AISET10,
+        "accept": "*/*",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "content-length": "0",
+        "origin": AISET10HOME,
+        "referer": AISET10HOME,
+        "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    }
+    url = f"https://{AISET10}/api/web_login"
+    params = {
+        "email": email,
+        "password": password
+    }
+    try:
+        response = requests.post(url, headers=headers, params=params, proxies=PROXIES)
+        token = response.json()['token']
+        return token
+    except Exception as e:
+        logging.error(f"登录获取token异常: {repr(e)}")
+        return None
+
+
+
+
+
 
 if __name__ == '__main__':
     if not get_minitoken():
         send_msg.send_dingding('小号token过期，请及时处理')
     if not get_gpt4_by_redis():
         send_msg.send_dingding('gpt4plus token过期，请及时处理')
+    if not get_gpt4199_token():
+        send_msg.send_dingding('gpt4 token过期，请及时处理')
