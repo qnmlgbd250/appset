@@ -1112,7 +1112,7 @@ async def chat(websocket: WebSocket):
             lastmsg8 = ''
             lastmsg9 = ''
             lastmsg10 = ''
-            lastmsg11 = '',
+            lastmsg11 = ''
             lastmsg12 = ''
             chat_functions = {
                 "1": [get_chat1, lastmsg1],
