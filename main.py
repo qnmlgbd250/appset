@@ -1128,7 +1128,7 @@ async def chat(websocket: WebSocket):
                 "11": [get_chat11, lastmsg11],
                 "12": [get_chat12, lastmsg12],
             }
-            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "11", "12"]
+            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12"]
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]
