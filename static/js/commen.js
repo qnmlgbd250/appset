@@ -664,6 +664,10 @@ function connect() {
             savelastmsg9list(receivedData.lastmsg9list)
             isTyping = false;
         }
+        if (receivedData.lastmsg12list) {
+            savelastmsg12list(receivedData.lastmsg12list)
+            isTyping = false;
+        }
         const replyElement = document.getElementById('temporary-reply').querySelector('.message');
         const blinkElement = replyElement.querySelector('.placeholder-cursor');
         const chatContent = document.getElementById('chat-content');
@@ -911,6 +915,7 @@ function sendMessage() {
                 lastmsg6list: loadmsg6(),
                 lastmsg7list: loadmsg7(),
                 lastmsg9list: loadmsg9(),
+                lastmsg12list: loadmsg12(),
             }));
             userInput.value = '';
             resetAccumulatedText();
@@ -958,6 +963,7 @@ function deleteMessages() {
     localStorage.setItem('lastmsg6list', '');
     localStorage.setItem('lastmsg7list', '');
     localStorage.setItem('lastmsg9list', '');
+    localStorage.setItem('lastmsg12list', '');
     saveid('');
     saveminiid('');
     saveid360('');
@@ -1102,6 +1108,23 @@ function savelastmsg9list(msg) {
     localStorage.setItem('lastmsg9list', JSON.stringify(list));
 }
 
+function savelastmsg12list(msg) {
+    let list = [];
+    if (localStorage.getItem('lastmsg12list')) {
+        list = JSON.parse(localStorage.getItem('lastmsg12list'));
+    }
+
+    if (list.length >= 10) {
+        list.shift(); // 删除第一个元素
+        list.shift(); // 再次删除第一个元素（原来的第二个元素）
+    }
+
+    list = list.concat(msg);
+
+    localStorage.setItem('lastmsg12list', JSON.stringify(list));
+
+}
+
 function loadid() {
     const savedid = localStorage.getItem('lastid');
     if (savedid) {
@@ -1159,6 +1182,14 @@ function loadmsg7() {
 
 function loadmsg9() {
     const savedmsg = localStorage.getItem('lastmsg9list');
+    if (savedmsg) {
+        return JSON.parse(savedmsg);
+    }
+    return "";
+}
+
+function loadmsg12() {
+    const savedmsg = localStorage.getItem('lastmsg12list');
     if (savedmsg) {
         return JSON.parse(savedmsg);
     }

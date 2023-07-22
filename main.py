@@ -1008,6 +1008,66 @@ async def get_chat11(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def get_chat12(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    msg = msgdict.get('text')
+    lastmsg12list = msgdict.get('lastmsg12list')
+    messages = [
+        {"role": "system", "content": "IMPRTANT: You are a virtual assistant powered by the {} model, now time is 2023/5/27 22:47:30}}".format(model)}
+    ]
+    currenttext = {"role": "user", "content": msg}
+    if lastmsg12list:
+        lastmsg12list.append(currenttext)
+        messages += lastmsg12list
+    else:
+        messages.append(currenttext)
+    if len(messages) > 10:
+        messages = messages[0:1] + messages[-7:]
+    data = {"messages": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies=PROXIES) as client:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            start_index = line.find("data:") + len("data:")
+                            json_str = line[start_index:].strip()
+                            data = json.loads(json_str)
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        if data.get('choices') is None or data.get('choices')[0].get(
+                                'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        try:
+                            yield {"choices": data.get('choices')}
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
 
 
 async def send_message(websocket, message):
@@ -1052,7 +1112,8 @@ async def chat(websocket: WebSocket):
             lastmsg8 = ''
             lastmsg9 = ''
             lastmsg10 = ''
-            lastmsg11 = ''
+            lastmsg11 = '',
+            lastmsg12 = ''
             chat_functions = {
                 "1": [get_chat1, lastmsg1],
                 "2": [get_chat2, lastmsg2],
@@ -1065,8 +1126,9 @@ async def chat(websocket: WebSocket):
                 "9": [get_chat9, lastmsg9],
                 "10": [get_chat10, lastmsg10],
                 "11": [get_chat11, lastmsg11],
+                "12": [get_chat12, lastmsg12],
             }
-            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "11"]
+            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "11", "12"]
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]

@@ -217,7 +217,7 @@ SITE_CONFIF_DICT = {
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
         },
         "url": f"https://{AISET7}/api/openai/v1/chat/completions",
-        "model": "gpt-4-0613",
+        "model": "gpt-4-32k-poe",
         "max_retries": 2,
     },
     "10": {
@@ -262,5 +262,26 @@ SITE_CONFIF_DICT = {
         "model": "gpt-4",
         "max_retries": 2,
         },
+    "12": {
+        "headers": {
+            "authority": "workergpt.cn",
+            "accept": "text/event-stream",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "content-type": "application/json",
+            "origin": "https://workergpt.cn",
+            "referer": "https://workergpt.cn/",
+            "sec-ch-ua": "\"Not/A)Brand\";v=\"99\", \"Microsoft Edge\";v=\"115\", \"Chromium\";v=\"115\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
+            "x-requested-with": "XMLHttpRequest"
+        },
+        "url": "https://workergpt.cn/api/openai/v1/chat/completions",
+        "model": "gpt-3.5-turbo-16k",
+        "max_retries": 2,
+    },
 
 }
