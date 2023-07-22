@@ -181,7 +181,7 @@ SITE_CONFIF_DICT = {
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
         },
         "url": f"https://{AISET7}/api/openai/v1/chat/completions",
-        "model": "gpt-4-0613",
+        "model": "gpt-4-32k-poe",
         "max_retries": 2,
     },
     "8": {
