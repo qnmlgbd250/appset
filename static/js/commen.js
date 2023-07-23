@@ -867,8 +867,8 @@ function sendMessage() {
     if (message.length > 0 && !isTyping) {
         isTyping = true;
 
-        const userAvatar = '/static/img/user.png';
-        const replyAvatar = '/static/img/chat.jpg';
+        const userAvatar = '/static/img/girl.png';
+        const replyAvatar = '/static/img/color.jpg';
         const userMessageId = `user-message-${Date.now()}`;
         const userMessage = `<div class="chat user" id="${userMessageId}"><span class="message">${escapeHtml(message)}</span><img src="${userAvatar}" alt="User"></div>`;
         const replyMessage = `<div class="chat reply" id="temporary-reply"><img src="${replyAvatar}" alt="Reply"><span class="message"><span class="placeholder-cursor"></span></span></div>`;
