@@ -975,6 +975,18 @@ function saveChatContent() {
     localStorage.setItem('chatContent', chatContent.innerHTML);
 }
 
+function loadnotice() {
+    var lastPopupTime = localStorage.getItem('lastPopupTime');
+    var currentTime = new Date().getTime();
+
+    if (lastPopupTime && currentTime - lastPopupTime > 86400000) {
+        myModal.style.display = "block";
+    }
+    if (!lastPopupTime) {
+        myModal.style.display = "block";
+    }
+}
+
 
 function loadChatContent() {
     const chatContent = document.getElementById('chat-content');
@@ -1210,6 +1222,7 @@ function linksblank() {
 window.onload = function () {
     loadChatContent();
      linksblank();
+     loadnotice();
 
 }
 
@@ -1641,6 +1654,7 @@ noticeButton.addEventListener("click", () => {
 
 acknowledged.addEventListener("click", () => {
      myModal.style.display = "none";
+     localStorage.setItem('lastPopupTime', new Date().getTime());
 });
 
 // 当点击关闭按钮时，隐藏颜色选择器弹窗
