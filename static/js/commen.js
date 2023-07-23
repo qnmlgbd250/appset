@@ -1623,17 +1623,33 @@ function updateTemplatePopupPosition() {
 
 // 获取齿轮图标、颜色选择器弹窗和关闭按钮元素
 const settingsButton = document.getElementById("settingsButton");
+const noticeButton = document.getElementById("noticeButton");
+const acknowledged = document.getElementById("acknowledged");
 const colorPickerModal = document.getElementById("colorPickerModal");
+const myModal = document.getElementById("myModal");
 const closeColorPickerModal = document.getElementById("closeColorPickerModal");
+const closeModal1 = document.getElementById("closeModal1");
 
 // 当点击齿轮图标时，显示颜色选择器弹窗
 settingsButton.addEventListener("click", () => {
     colorPickerModal.style.display = "block";
 });
 
+noticeButton.addEventListener("click", () => {
+    myModal.style.display = "block";
+});
+
+acknowledged.addEventListener("click", () => {
+     myModal.style.display = "none";
+});
+
 // 当点击关闭按钮时，隐藏颜色选择器弹窗
 closeColorPickerModal.addEventListener("click", () => {
     colorPickerModal.style.display = "none";
+});
+
+closeModal1.addEventListener("click", () => {
+    myModal.style.display = "none";
 });
 
 document.querySelector('.dropdown-btn').addEventListener('click', function () {
@@ -1699,13 +1715,22 @@ function closeModal() {
       var dropdownContent = document.getElementById("siteSelectDiv");
         dropdownContent.style.display = "none";
 }
+function closenotice() {
+      document.getElementById('myModal').style.display = 'none';
+
+}
 
 function handleClickOutside(event) {
-  var modal = document.getElementById('colorPickerModal');
-  if (event.target == modal) {
+  var modal1 = document.getElementById('colorPickerModal');
+  var modal2 = document.getElementById('myModal');
+  if (event.target == modal1) {
     closeModal();
   }
+  if (event.target == modal2) {
+    closenotice();
+  }
 }
+
 
 function resetStyles() {
   messageInput.style.position = '';

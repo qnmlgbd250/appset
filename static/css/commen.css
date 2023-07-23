@@ -196,6 +196,7 @@ a:hover {
 .color-buttons {
     display: flex;
     justify-content: center;
+     gap: 50px;
     margin-bottom: 15px;
 }
 
@@ -1084,7 +1085,7 @@ h5 {
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
-    border-radius: 6px;
+    border-radius: 4px;
     width: 70%;
     position: relative;
 }
@@ -1246,6 +1247,7 @@ hr {
 
 .close {
     float: right;
+    margin-top: -8px;
     cursor: pointer
 }
 
@@ -1255,4 +1257,94 @@ hr {
     fill: #aaa;
     z-index: 2000;
 }
+
+.right-bottom-button {
+    background-color: #63e2b7;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
+
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body {
+  margin-top: 20px;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 5px;
+  border-left: 1px dashed #eee8e8;
+  background: none;
+}
+
+
+.timeline-event {
+  position: relative;
+  margin-bottom: 100px;
+    line-height: 1.667;
+    max-height: 300px;      /* 设置最大高度 */
+    overflow-y: auto;       /* 设置当内容超出容器时显示垂直滚动条 */
+}
+.event {
+    margin-bottom: 20px;
+}
+
+
+.timeline-icon {
+  position: absolute;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #49d4aa;
+}
+
+.timeline-date {
+  margin-left: 20px;
+
+    color: #999999;
+    font-size: 12px;
+    line-height: 1.667
+}
+
+.timeline-description {
+  margin-left: 20px;
+    display: block;
+
+}
+.timeline-img {
+  margin-left: 20px;
+    display: block;
+
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.right-bottom-button {
+  // 按钮样式
+}
+
+
+
 
