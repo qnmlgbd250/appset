@@ -954,7 +954,7 @@ async def get_chat11(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
         "session_id": session_id,
         "scene_preset": [{"key": 1, "value": "", "sel": "system"}],
         "model_is_select": model,
-        "answer_num": 3,
+        "answer_num": 8,
         "answer_tem": 0.8
     }
     for attempt in range(max_retries):
