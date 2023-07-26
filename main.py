@@ -17,7 +17,7 @@ from datetime import datetime
 import ujson
 from config import *
 
-custom_timeout = httpx.Timeout(read=10, write=10, connect=10, pool=None)
+custom_timeout = httpx.Timeout(read=15, write=15, connect=15, pool=None)
 
 app = FastAPI()
 app.add_middleware(
