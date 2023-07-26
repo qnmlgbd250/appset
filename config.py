@@ -5,6 +5,7 @@ import json
 import send_msg
 import logging
 import requests
+import traceback
 from dotenv import load_dotenv
 
 load_dotenv(".env")

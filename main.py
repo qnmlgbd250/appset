@@ -284,7 +284,7 @@ async def get_chat1(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -352,7 +352,7 @@ async def get_chat2(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -422,7 +422,7 @@ async def get_chat3(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -485,7 +485,7 @@ async def get_chat4(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -539,7 +539,7 @@ async def get_chat5(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                                 return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -600,7 +600,7 @@ async def get_chat6(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {str(e)}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {str(e)} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -661,7 +661,7 @@ async def get_chat7(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -778,7 +778,7 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -856,7 +856,7 @@ async def get_chat9(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -935,7 +935,7 @@ async def get_chat10(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
 
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -999,7 +999,7 @@ async def get_chat11(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
@@ -1059,7 +1059,7 @@ async def get_chat12(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                             return
 
         except httpx.HTTPError as e:
-            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            logging.error(f"WebSocket ReadError: {e} traceback: {traceback.format_exc()}. Attempt {attempt + 1} of {max_retries}")
             if attempt < max_retries - 1:
                 await asyncio.sleep(2 ** attempt)  # 指数退避策略
                 continue
