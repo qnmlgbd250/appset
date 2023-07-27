@@ -1634,37 +1634,30 @@ function updateTemplatePopupPosition() {
 }
 
 
-// 获取齿轮图标、颜色选择器弹窗和关闭按钮元素
-const settingsButton = document.getElementById("settingsButton");
 const noticeButton = document.getElementById("noticeButton");
 const acknowledged = document.getElementById("acknowledged");
 const colorPickerModal = document.getElementById("colorPickerModal");
 const myModal = document.getElementById("myModal");
 const closeColorPickerModal = document.getElementById("closeColorPickerModal");
-const closeModal1 = document.getElementById("closeModal1");
+
 
 // 当点击齿轮图标时，显示颜色选择器弹窗
-settingsButton.addEventListener("click", () => {
-    colorPickerModal.style.display = "block";
-});
+
 
 noticeButton.addEventListener("click", () => {
     myModal.style.display = "block";
 });
 
 acknowledged.addEventListener("click", () => {
-     myModal.style.display = "none";
+     closeModal();
      localStorage.setItem('lastPopupTime', new Date().getTime());
 });
 
 // 当点击关闭按钮时，隐藏颜色选择器弹窗
 closeColorPickerModal.addEventListener("click", () => {
-    colorPickerModal.style.display = "none";
+    closeModalsetting();
 });
 
-closeModal1.addEventListener("click", () => {
-    myModal.style.display = "none";
-});
 
 document.querySelector('.dropdown-btn').addEventListener('click', function () {
     var dropdownContent = document.querySelector('.dropdown-content');
@@ -1724,24 +1717,60 @@ document.addEventListener('DOMContentLoaded', function () {
     setDefaultOption();}
 });
 
+
+
+function showModal() {
+    const myModal = document.getElementById('myModal');
+    myModal.style.display = "block";
+    // 在显示弹窗前添加modal-show类
+    setTimeout(() => {
+        myModal.classList.add('modal-show');
+    }, 0);
+}
+
 function closeModal() {
-      document.getElementById('colorPickerModal').style.display = 'none';
-      var dropdownContent = document.getElementById("siteSelectDiv");
+    const myModal = document.getElementById('myModal');
+    // 在隐藏弹窗前移除modal-show类
+    myModal.classList.remove('modal-show');
+    // 因为过渡效果需要时间，所以我们在过渡结束后再隐藏弹窗
+    setTimeout(() => {
+        myModal.style.display = "none";
+    }, 300);  // 这个300毫秒应该与你在CSS中设置的过渡时间相同
+}
+function closeModalsetting() {
+    const colorPickerModal = document.getElementById('colorPickerModal');
+    // 在隐藏弹窗前移除modal-show类
+    colorPickerModal.classList.remove('custom-modal-show');
+    // 因为过渡效果需要时间，所以我们在过渡结束后再隐藏弹窗
+    setTimeout(() => {
+        colorPickerModal.style.display = "none";
+    }, 300);  // 这个300毫秒应该与你在CSS中设置的过渡时间相同
+}
+
+function showModalsetting() {
+    const colorPickerModal = document.getElementById('colorPickerModal');
+    colorPickerModal.style.display = "block";
+    // 在显示弹窗前添加modal-show类
+    setTimeout(() => {
+        colorPickerModal.classList.add('custom-modal-show');
+    }, 0);
+    var dropdownContent = document.getElementById("siteSelectDiv");
         dropdownContent.style.display = "none";
 }
-function closenotice() {
-      document.getElementById('myModal').style.display = 'none';
 
-}
+document.getElementById('settingsButton').addEventListener('click', showModalsetting);
+document.getElementById('noticeButton').addEventListener('click', showModal);
+document.getElementById('closeModal1').addEventListener('click', closeModal);
+
 
 function handleClickOutside(event) {
   var modal1 = document.getElementById('colorPickerModal');
   var modal2 = document.getElementById('myModal');
   if (event.target == modal1) {
-    closeModal();
+    closeModalsetting();
   }
   if (event.target == modal2) {
-    closenotice();
+    closeModal();
   }
 }
 

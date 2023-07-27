@@ -927,10 +927,16 @@ code {
     top: 0;
     width: 100%;
     height: 100%;
+     opacity: 0; /* 初始是隐藏的 */
+    transition: opacity 0.3s ease-in-out;
 
 
 
     background-color: rgba(0, 0, 0, 0.4);
+}
+.modal-show {
+    opacity: 1; /* 显示弹窗时的状态 */
+    /* transition属性在.modal中已定义，此处无需再次定义 */
 }
 
 .model-label {
@@ -1079,6 +1085,12 @@ h5 {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0; /* 初始是隐藏的 */
+    transition: opacity 0.3s ease-in-out;
+}
+.custom-modal-show {
+    opacity: 1; /* 显示弹窗时的状态 */
+    /* transition属性在.modal中已定义，此处无需再次定义 */
 }
 
 .modal-content {
