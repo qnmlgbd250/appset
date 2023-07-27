@@ -34,6 +34,7 @@ AISET8 = os.getenv('AISET8')
 AISET9 = os.getenv('AISET9')
 AISET10 = os.getenv('AISET10')
 AISET10HOME = os.getenv('AISET10HOME')
+AISET11 = os.getenv('AISET11')
 MINIACCOUNT = os.getenv('MINIACCOUNT')
 MINIPASSWORD = os.getenv('MINIPASSWORD')
 ACC360 = os.getenv('ACC360')
@@ -281,6 +282,28 @@ SITE_CONFIF_DICT = {
         },
         "url": f"https://{AISET9}/api/openai/v1/chat/completions",
         "model": "gpt-3.5-turbo-16k",
+        "max_retries": 2,
+    },
+    "13":{
+        "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Host": AISET11,
+            "Origin": f"http://{AISET11}",
+            "Referer": f"http://{AISET11}/",
+            "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36"
+        },
+        "url": f"http://{AISET11}/api/chat-process",
+        "model": "ckk369",
         "max_retries": 2,
     },
 

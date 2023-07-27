@@ -1068,6 +1068,74 @@ async def get_chat12(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def get_chat13(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    headers.update({"Authorization": "Bearer " + model})
+    msg = msgdict.get('text')
+    lastid = msgdict.get('id')
+    data = {
+        "prompt": msg,
+        "options": {},
+        "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown.",
+        "temperature": 0.8,
+        "top_p": 1,
+    }
+    if lastid:
+        data = {
+            "prompt": msg,
+            "options": {"parentMessageId": lastid},
+            "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown.",
+            "temperature": 0.8,
+            "top_p": 1,
+        }
+
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies=PROXIES) as client:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=5) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            data = json.loads(line)
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        if "内容涉及敏感词汇，请遵守相关法律法规~" in str(data):
+                            yield {"choices": [{"delta": {"content": '触发敏感词，尝试把提问语句转成"your question + 请用中文回答"的形式'}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        if "detail" in data and (
+                                data['detail'].get('choices') is None or data['detail'].get('choices')[0].get(
+                                'finish_reason') is not None):
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        try:
+                            yield data['detail']
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "连接失败,刷新试试或请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
 
 
 async def send_message(websocket, message):
@@ -1114,6 +1182,7 @@ async def chat(websocket: WebSocket):
             lastmsg10 = ''
             lastmsg11 = ''
             lastmsg12 = ''
+            lastmsg13 = ''
             chat_functions = {
                 "1": [get_chat1, lastmsg1],
                 "2": [get_chat2, lastmsg2],
@@ -1127,6 +1196,7 @@ async def chat(websocket: WebSocket):
                 "10": [get_chat10, lastmsg10],
                 "11": [get_chat11, lastmsg11],
                 "12": [get_chat12, lastmsg12],
+                "13": [get_chat13, lastmsg13],
             }
             needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12"]
 
