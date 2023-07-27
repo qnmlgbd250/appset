@@ -668,6 +668,10 @@ function connect() {
             savelastmsg12list(receivedData.lastmsg12list)
             isTyping = false;
         }
+        if (receivedData.lastmsg14list) {
+            savelastmsg14list(receivedData.lastmsg14list)
+            isTyping = false;
+        }
         const replyElement = document.getElementById('temporary-reply').querySelector('.message');
         const blinkElement = replyElement.querySelector('.placeholder-cursor');
         const chatContent = document.getElementById('chat-content');
@@ -916,6 +920,7 @@ function sendMessage() {
                 lastmsg7list: loadmsg7(),
                 lastmsg9list: loadmsg9(),
                 lastmsg12list: loadmsg12(),
+                lastmsg14list: loadmsg14(),
             }));
             userInput.value = '';
             resetAccumulatedText();
@@ -964,6 +969,7 @@ function deleteMessages() {
     localStorage.setItem('lastmsg7list', '');
     localStorage.setItem('lastmsg9list', '');
     localStorage.setItem('lastmsg12list', '');
+    localStorage.setItem('lastmsg14list', '');
     saveid('');
     saveminiid('');
     saveid360('');
@@ -1137,6 +1143,23 @@ function savelastmsg12list(msg) {
 
 }
 
+function savelastmsg14list(msg) {
+    let list = [];
+    if (localStorage.getItem('lastmsg14list')) {
+        list = JSON.parse(localStorage.getItem('lastmsg14list'));
+    }
+
+    if (list.length >= 10) {
+        list.shift(); // 删除第一个元素
+        list.shift(); // 再次删除第一个元素（原来的第二个元素）
+    }
+
+    list = list.concat(msg);
+
+    localStorage.setItem('lastmsg14list', JSON.stringify(list));
+
+}
+
 function loadid() {
     const savedid = localStorage.getItem('lastid');
     if (savedid) {
@@ -1202,6 +1225,14 @@ function loadmsg9() {
 
 function loadmsg12() {
     const savedmsg = localStorage.getItem('lastmsg12list');
+    if (savedmsg) {
+        return JSON.parse(savedmsg);
+    }
+    return "";
+}
+
+function loadmsg14() {
+    const savedmsg = localStorage.getItem('lastmsg14list');
     if (savedmsg) {
         return JSON.parse(savedmsg);
     }

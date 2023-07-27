@@ -1136,6 +1136,69 @@ async def get_chat13(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def get_chat14(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    headers.update({"Authorization": "Bearer " + "ak-LfZmv0wZoltbR0k"})
+    msg = msgdict.get('text')
+    lastmsg14list = msgdict.get('lastmsg14list')
+    messages = [
+        {"role": "system",
+         "content": "\nYou are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2021-09\nCurrent model: gpt-4\nCurrent time: 2023/7/27 21:05:19\n"
+}
+    ]
+    currenttext = {"role": "user", "content": msg}
+    if lastmsg14list:
+        lastmsg14list.append(currenttext)
+        messages += lastmsg14list
+    else:
+        messages.append(currenttext)
+    if len(messages) > 10:
+        messages = messages[0:1] + messages[-7:]
+    data = {"messages": messages, "stream": True, "model": model, "temperature": 0.8, "presence_penalty": 1}
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies=PROXIES) as client:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            start_index = line.find("data:") + len("data:")
+                            json_str = line[start_index:].strip()
+                            data = json.loads(json_str)
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        if data.get('choices') is None or data.get('choices')[0].get(
+                                'finish_reason') is not None:
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+                        try:
+                            yield {"choices": data.get('choices')}
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
 
 
 async def send_message(websocket, message):
@@ -1183,6 +1246,7 @@ async def chat(websocket: WebSocket):
             lastmsg11 = ''
             lastmsg12 = ''
             lastmsg13 = ''
+            lastmsg14 = ''
             chat_functions = {
                 "1": [get_chat1, lastmsg1],
                 "2": [get_chat2, lastmsg2],
@@ -1197,8 +1261,9 @@ async def chat(websocket: WebSocket):
                 "11": [get_chat11, lastmsg11],
                 "12": [get_chat12, lastmsg12],
                 "13": [get_chat13, lastmsg13],
+                "14": [get_chat14, lastmsg14]
             }
-            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12"]
+            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12", "14"]
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]
