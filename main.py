@@ -1089,7 +1089,7 @@ async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
         token = await get_11token_redis()
     else:
         token = None
-    logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data)}')
+    logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data["text"])} | {selected_site}')
 
     return site(data, token=token, **kwargs)
 
