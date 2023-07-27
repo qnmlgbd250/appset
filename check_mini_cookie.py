@@ -87,7 +87,7 @@ def get_gpt4_by_redis():
             if not islive:
                 token = login_gpt4p_token(key.decode('utf-8'), MINIPASSWORD)
             value_dict['token'] = token
-            value_dict['count'] = get_4plus_limit(token)
+            value_dict['info'] = get_4plus_limit(token)
             redis_pool.hset("gpt4plus", key, json.dumps(value_dict))
         return True
     except Exception as e:
@@ -165,14 +165,18 @@ def get_4plus_limit(token):
         "sec-fetch-site": "same-origin",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.79"
     }
-    url = f"https://{AISET5}/api/user/info/rate-limit"
+    url1 = f"https://{AISET5}/api/user/info/rate-limit"
+    url2 = f"https://{AISET5}/api/user/info/subscription"
     try:
-        response = requests.get(url, headers=headers, proxies=PROXIES)
+        response = requests.get(url1, headers=headers, proxies=PROXIES)
         remaining_gpt4 = response.json()['data']['remaining_gpt4']
-        return remaining_gpt4
+        response = requests.get(url2, headers=headers, proxies=PROXIES)
+        gpt4ptime = response.json()['data']
+        return [remaining_gpt4, gpt4ptime]
     except Exception as e:
         logging.error(f"获取剩余次数异常: {repr(e)}")
         return 0
+
 
 def get_gpt4199_token():
     try:
