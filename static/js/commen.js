@@ -482,21 +482,37 @@ chatBtn.addEventListener('click', () => {
     scrollToBottom();
 });
 
-// 恢复样式
+const confirmBox = document.getElementById('confirmBox');
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
 
+document.addEventListener('click', (e) => {
+    if (e.target !== clearBtn && e.target !== confirmBox && confirmBox.classList.contains('show')) {
+        confirmBox.classList.remove('show');
+    }
+});
 
 clearBtn.addEventListener('click', () => {
     input.value = '';
     output.value = '';
-    const selectedid = document.querySelector('.menu-div.selected').id
-    if (selectedid === 'chatBtn') {
-        deleteMessages();
+    const selectedId = document.querySelector('.menu-div.selected').id;
+    if (selectedId === 'chatBtn') {
+        confirmBox.style.display = 'block';
+        confirmBox.classList.add('show');
+        yesBtn.addEventListener('click', () => {
+            confirmBox.classList.remove('show'); // Hide the confirm box
+            deleteMessages();
+        });
+        noBtn.addEventListener('click', () => {
+            confirmBox.classList.remove('show');
+        });
     }
-    if (selectedid === 'ocrBtn') {
+    if (selectedId === 'ocrBtn') {
         imageContainer.innerHTML = '';
     }
-
 });
+
+
 copyBtn.addEventListener('click', () => {
     const selectedid = document.querySelector('.menu-div.selected').id
     if (selectedid !== 'chatBtn') {

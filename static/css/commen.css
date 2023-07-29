@@ -1362,4 +1362,107 @@ hr {
     }
 }
 
+.confirm-box {
+  position:absolute;
+  z-index:10;
+  background-color:#ffffff;
+  border:1px solid #4b9e5f;
+  font:14px 微软雅黑;
+  padding:10px 20px;
+  border-radius:6px;
+  text-align:center;
+    box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, 0.5);
+  cursor:pointer;
+  width:118px;
+  margin-left:20px;
+  margin-top:-150px;
 
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+}
+
+
+.confirm-box.show {
+    opacity: 1;
+}
+
+
+.confirm-box::before {
+  content: "";
+  position: absolute;
+  top: 100%; /* Position it at the bottom of the confirm-box */
+  left: 50%; /* Center it horizontaly */
+  /* To create the arrow */
+  border: solid transparent;
+
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  /* Adjust these values to change the size of the arrow */
+  border-color: transparent;
+  border-top-color: #4b9e5f; /* Same color as the border of the .confirm-box */
+  border-width: 11px; /* Make this slightly bigger than the actual arrow */
+  margin-left: -11px; /* This value should be negative half of border-width to center the arrow */
+
+}
+
+
+
+.confirm-box::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Position it at the bottom of the confirm-box */
+  left: 50%; /* Center it horizontaly */
+  /* To create the arrow */
+  border: solid transparent;
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  /* Adjust these values to change the size of the arrow */
+  border-color: transparent;
+  border-top-color: #ffffff; /* Same color as the background of the .confirm-box */
+  border-width: 10px; /* This creates the actual arrow */
+  margin-left: -10px; /* This value should be negative half of border-width to center the arrow */
+}
+
+
+
+.confirm-btn-n {
+  margin-top: 10px;
+    border-radius: 2px;
+ height: 25px;
+    justify-content: right;
+margin-right: 20px;
+    border: 1px solid #4b9e5f;
+background-color: #ffffff;
+}
+
+
+.confirm-btn-y {
+  margin-top: 10px;
+    border-radius: 2px;
+    height: 25px;
+    justify-content: right;
+
+    margin-right: -10px;
+
+    border: 1px solid #4b9e5f;
+    background-color: #18a058;
+    color: #ffffff;
+}
+
+.dark-theme .confirm-box {
+    background-color: #444654;
+}
+.dark-theme .confirm-btn-n {
+    color: #ffffff;
+    background-color: #444654;
+}
+.light-theme.confirm-btn-n {
+
+}
+.dark-theme .confirm-box::after  {
+    border-top-color: #444654;
+}
