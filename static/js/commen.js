@@ -1008,10 +1008,10 @@ function loadnotice() {
     var currentTime = new Date().getTime();
 
     if (lastPopupTime && currentTime - lastPopupTime > 86400000) {
-        myModal.style.display = "block";
+        showModal();
     }
     if (!lastPopupTime) {
-        myModal.style.display = "block";
+        showModal();
     }
 }
 
