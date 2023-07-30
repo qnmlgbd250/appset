@@ -1227,6 +1227,10 @@ async def get_chat15(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                                 yield {"choices": [{"delta": {"content": "你说的话有敏感词哦"}}]}
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
+                            if "[1234][网络错误" in decoded_chunk:
+                                yield {"choices": [{"delta": {"content": "GLM服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
                             yield {"choices": [{"delta": {"content": decoded_chunk}}]}
                         except Exception as e:
                             logging.error(e)
