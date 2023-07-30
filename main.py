@@ -1199,6 +1199,56 @@ async def get_chat14(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def get_chat15(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None) -> Any:
+    msg = msgdict.get('text')
+    lastmsg15list = msgdict.get('lastmsg15list')
+    messages = []
+    currenttext = {"role": "user", "content": msg}
+    if lastmsg15list:
+        lastmsg15list.append(currenttext)
+        messages += lastmsg15list
+    else:
+        messages.append(currenttext)
+    if len(messages) > 10:
+        messages = messages[0:1] + messages[-7:]
+    data = {"message": messages, "mode": model, "key": None}
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient(proxies=PROXIES) as client:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                    async for line in response.aiter_bytes():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            decoded_chunk = line.decode("utf-8")
+                            if "Contains sensitive keywords." in decoded_chunk:
+                                yield {"choices": [{"delta": {"content": "你说的话有敏感词哦"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                            yield {"choices": [{"delta": {"content": decoded_chunk}}]}
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
 
 
 async def send_message(websocket, message):
@@ -1247,6 +1297,7 @@ async def chat(websocket: WebSocket):
             lastmsg12 = ''
             lastmsg13 = ''
             lastmsg14 = ''
+            lastmsg15 = ''
             chat_functions = {
                 "1": [get_chat1, lastmsg1],
                 "2": [get_chat2, lastmsg2],
@@ -1261,9 +1312,10 @@ async def chat(websocket: WebSocket):
                 "11": [get_chat11, lastmsg11],
                 "12": [get_chat12, lastmsg12],
                 "13": [get_chat13, lastmsg13],
-                "14": [get_chat14, lastmsg14]
+                "14": [get_chat14, lastmsg14],
+                "15": [get_chat15, lastmsg15],
             }
-            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12", "14"]
+            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12", "14", "15"]
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]

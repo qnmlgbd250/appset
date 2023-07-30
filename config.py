@@ -36,6 +36,8 @@ AISET10 = os.getenv('AISET10')
 AISET10HOME = os.getenv('AISET10HOME')
 AISET11 = os.getenv('AISET11')
 AISET12 = os.getenv('AISET12')
+AISET13 = os.getenv('AISET13')
+AISET13HOME = os.getenv('AISET13HOME')
 MINIACCOUNT = os.getenv('MINIACCOUNT')
 MINIPASSWORD = os.getenv('MINIPASSWORD')
 ACC360 = os.getenv('ACC360')
@@ -263,7 +265,7 @@ SITE_CONFIF_DICT = {
         "url": f"https://{AISET10}/api/send_bot",
         "model": "gpt-4",
         "max_retries": 2,
-        },
+    },
     "12": {
         "headers": {
             "authority": AISET9,
@@ -285,7 +287,7 @@ SITE_CONFIF_DICT = {
         "model": "gpt-3.5-turbo-16k",
         "max_retries": 2,
     },
-    "13":{
+    "13": {
         "headers": {
             "Accept": "application/json, text/plain, */*",
             "Accept-Encoding": "gzip, deflate, br",
@@ -326,6 +328,27 @@ SITE_CONFIF_DICT = {
         },
         "url": f"https://{AISET12}/api/openai/v1/chat/completions",
         "model": "gpt-4",
+        "max_retries": 2,
+    },
+    "15": {
+        "headers": {
+            "Accept": "*/*",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Access-Control-Allow-Origin": "*",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Origin": f"http://{AISET13}",
+            "Referer": f"http://{AISET13}/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "cross-site",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
+            "sec-ch-ua": "\"Not/A)Brand\";v=\"99\", \"Microsoft Edge\";v=\"115\", \"Chromium\";v=\"115\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\""
+        },
+        "url": f"https://{AISET13HOME}/message",
+        "model": "chatglm_std",
         "max_retries": 2,
     },
 

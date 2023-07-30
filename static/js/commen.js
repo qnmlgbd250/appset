@@ -688,6 +688,10 @@ function connect() {
             savelastmsg14list(receivedData.lastmsg14list)
             isTyping = false;
         }
+        if (receivedData.lastmsg15list) {
+            savelastmsg15list(receivedData.lastmsg15list)
+            isTyping = false;
+        }
         const replyElement = document.getElementById('temporary-reply').querySelector('.message');
         const blinkElement = replyElement.querySelector('.placeholder-cursor');
         const chatContent = document.getElementById('chat-content');
@@ -937,6 +941,7 @@ function sendMessage() {
                 lastmsg9list: loadmsg9(),
                 lastmsg12list: loadmsg12(),
                 lastmsg14list: loadmsg14(),
+                lastmsg15list: loadmsg15(),
             }));
             userInput.value = '';
             resetAccumulatedText();
@@ -986,6 +991,7 @@ function deleteMessages() {
     localStorage.setItem('lastmsg9list', '');
     localStorage.setItem('lastmsg12list', '');
     localStorage.setItem('lastmsg14list', '');
+    localStorage.setItem('lastmsg15list', '');
     saveid('');
     saveminiid('');
     saveid360('');
@@ -1175,6 +1181,22 @@ function savelastmsg14list(msg) {
     localStorage.setItem('lastmsg14list', JSON.stringify(list));
 
 }
+function savelastmsg15list(msg) {
+    let list = [];
+    if (localStorage.getItem('lastmsg15list')) {
+        list = JSON.parse(localStorage.getItem('lastmsg15list'));
+    }
+
+    if (list.length >= 10) {
+        list.shift(); // 删除第一个元素
+        list.shift(); // 再次删除第一个元素（原来的第二个元素）
+    }
+
+    list = list.concat(msg);
+
+    localStorage.setItem('lastmsg15list', JSON.stringify(list));
+
+}
 
 function loadid() {
     const savedid = localStorage.getItem('lastid');
@@ -1249,6 +1271,13 @@ function loadmsg12() {
 
 function loadmsg14() {
     const savedmsg = localStorage.getItem('lastmsg14list');
+    if (savedmsg) {
+        return JSON.parse(savedmsg);
+    }
+    return "";
+}
+function loadmsg15() {
+    const savedmsg = localStorage.getItem('lastmsg15list');
     if (savedmsg) {
         return JSON.parse(savedmsg);
     }
