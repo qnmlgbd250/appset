@@ -1211,7 +1211,7 @@ async def get_chat15(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
         messages += lastmsg15list
     else:
         messages.append(currenttext)
-    if len(messages) > 10:
+    if len(messages) > 8:
         messages = messages[0:1] + messages[-7:]
     data = {"message": messages, "mode": model, "key": None}
     for attempt in range(max_retries):
