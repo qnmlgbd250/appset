@@ -38,6 +38,8 @@ AISET11 = os.getenv('AISET11')
 AISET12 = os.getenv('AISET12')
 AISET13 = os.getenv('AISET13')
 AISET13HOME = os.getenv('AISET13HOME')
+AISET14 = os.getenv('AISET14')
+AISET14HOME = os.getenv('AISET14HOME')
 MINIACCOUNT = os.getenv('MINIACCOUNT')
 MINIPASSWORD = os.getenv('MINIPASSWORD')
 ACC360 = os.getenv('ACC360')
@@ -268,12 +270,12 @@ SITE_CONFIF_DICT = {
     },
     "12": {
         "headers": {
-            "authority": AISET9,
+            "authority": AISET14,
             "accept": "text/event-stream",
             "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "content-type": "application/json",
-            "origin": f"https://{AISET9}",
-            "referer": f"https://{AISET9}/",
+            "origin": f"https://{AISET14HOME}",
+            "referer": f"https://{AISET14HOME}/",
             "sec-ch-ua": "\"Not/A)Brand\";v=\"99\", \"Microsoft Edge\";v=\"115\", \"Chromium\";v=\"115\"",
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
@@ -283,7 +285,7 @@ SITE_CONFIF_DICT = {
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
             "x-requested-with": "XMLHttpRequest"
         },
-        "url": f"https://{AISET9}/api/openai/v1/chat/completions",
+        "url": f"https://{AISET14}/api/openai/v1/chat/completions",
         "model": "gpt-3.5-turbo-16k",
         "max_retries": 2,
     },
