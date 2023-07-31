@@ -250,7 +250,7 @@ async def get_chat1(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=5) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -320,7 +320,7 @@ async def get_chat2(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
             context_too_long = False
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -383,7 +383,7 @@ async def get_chat3(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -630,7 +630,7 @@ async def get_chat7(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -746,7 +746,7 @@ async def get_chat8(msgdict: Dict[str, Any],token: Optional[str] = None,max_retr
             context_too_long = False
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -893,7 +893,7 @@ async def get_chat10(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, cookies=token, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, cookies=token, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -1028,7 +1028,7 @@ async def get_chat12(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -1093,7 +1093,7 @@ async def get_chat13(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=5) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_lines():
                         if line.strip() == "":
                             continue
@@ -1217,7 +1217,7 @@ async def get_chat15(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
     for attempt in range(max_retries):
         try:
             async with AsyncClient(proxies=PROXIES) as client:
-                async with client.stream('POST', url, headers=headers, json=data, timeout=8) as response:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
                     async for line in response.aiter_bytes():
                         if line.strip() == "":
                             continue
