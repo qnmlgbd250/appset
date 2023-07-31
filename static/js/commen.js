@@ -1442,11 +1442,11 @@ document.getElementById('toggleButton').addEventListener('click', function () {
 
 
 document.getElementById('shareButton').addEventListener('click', function () {
-    document.getElementById('modal').style.display = 'block';
+    showsModal();
 });
 
 document.getElementById('closeModal').addEventListener('click', function () {
-    document.getElementById('modal').style.display = 'none';
+    closesModal()
 });
 
 // 点击遮罩层时，关闭模态窗口
@@ -1832,6 +1832,25 @@ function showModalsetting() {
     }, 0);
     var dropdownContent = document.getElementById("siteSelectDiv");
         dropdownContent.style.display = "none";
+}
+
+function showsModal() {
+    const myModal = document.getElementById('modal');
+    myModal.style.display = "block";
+    // 在显示弹窗前添加modal-show类
+    setTimeout(() => {
+        myModal.classList.add('modal-show');
+    }, 0);
+}
+
+function closesModal() {
+    const myModal = document.getElementById('modal');
+    // 在隐藏弹窗前移除modal-show类
+    myModal.classList.remove('modal-show');
+    // 因为过渡效果需要时间，所以我们在过渡结束后再隐藏弹窗
+    setTimeout(() => {
+        myModal.style.display = "none";
+    }, 300);  // 这个300毫秒应该与你在CSS中设置的过渡时间相同
 }
 
 document.getElementById('settingsButton').addEventListener('click', showModalsetting);
