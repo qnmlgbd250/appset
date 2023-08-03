@@ -429,7 +429,18 @@ a:hover {
     height: 100%; /* 修改此行 */
 
 }
+.sendButton {
+    background: #8bcfab;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 6px;
+    z-index: 10000;
+}
 
+.sendButton:focus {
+    outline: none; /* 移除焦点时的轮廓 */
+}
 
 .chat {
     display: flex;

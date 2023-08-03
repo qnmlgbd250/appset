@@ -955,7 +955,7 @@ function sendMessage() {
 
 
 function handleKeyDown(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey && !isMobileDevice()) {
         event.preventDefault(); // 阻止默认行为（换行）
         sendMessage();
         const messageInput = document.getElementById('messageInput');
@@ -1408,7 +1408,7 @@ function checkScreenWidth() {
 
     if (isMobileDevice()) {
         parentElement.classList.add('collapsed');
-        document.getElementById("messageInput").placeholder = "说点什么吧...  Enter 发送";
+        document.getElementById("messageInput").placeholder = "说点什么吧...  ";
     } else {
         parentElement.classList.remove('collapsed');
         document.getElementById("messageInput").placeholder = '说点什么吧...     Shift + Enter 换行    输入 "/" 弹出提问模板   输入 "/ + 关键词" 搜素模板';
@@ -1881,6 +1881,7 @@ function resetStyles() {
 
 
 const messageInputWrapper = document.getElementById('messageInputWrapper');
+const sendButton = document.getElementById('sendButton');
 
 function updateMessageInputPosition() {
 const windowHeight = window.innerHeight;
@@ -1896,9 +1897,16 @@ if (wrapperRect.bottom > windowHeight) {
       messageInput.style.width = "calc(100% - 35px)"
       messageInputWrapper.style.height = "0"
       messageInputWrapper.style.bottom = '10px';
+       sendButton.style.marginTop = "-60px"
+      sendButton.style.marginRight = "calc(-100% + 60px)"
+
+
   } else {
         messageInput.style.bottom = '20px';
         messageInput.style.marginBottom = "0"
+      sendButton.style.marginTop = "100px"
+      sendButton.style.marginRight = "calc(-100% + 80px)"
+
   }
 } else {
   messageInput.style.position = 'absolute';
@@ -1908,12 +1916,33 @@ if (wrapperRect.bottom > windowHeight) {
       messageInput.style.width = "calc(100% - 35px)"
       messageInputWrapper.style.height = "0"
       messageInputWrapper.style.bottom = '10px';
+        sendButton.style.marginTop = "-60px"
+      sendButton.style.marginRight = "calc(-100% + 60px)"
   } else {
   messageInput.style.bottom = '20px';
-  messageInput.style.marginBottom = "0"}
+  messageInput.style.marginBottom = "0";
+  sendButton.style.marginTop = "100px"
+  sendButton.style.marginRight = "calc(-100% + 80px)"
+  }
 }
 }
 
 window.addEventListener('resize', updateMessageInputPosition);
 updateMessageInputPosition();
 
+
+
+function checkInput() {
+  if (messageInput.value.length > 0) {
+    sendButton.style.backgroundColor = "#18a058";
+  } else {
+    sendButton.style.backgroundColor = "#8bcfab";
+  }
+}
+
+sendButton.addEventListener('click', function() {
+    sendMessage();
+    const messageInput = document.getElementById('messageInput');
+    messageInput.value = '';
+    setmessageInputsize();
+});

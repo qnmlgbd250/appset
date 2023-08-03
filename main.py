@@ -952,7 +952,7 @@ async def get_chat11(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
     data = {
         "info": msg,
         "session_id": session_id,
-        "scene_preset": [{"key": 1, "value": "", "sel": "system"}],
+        "scene_preset": [],
         "model_is_select": model,
         "answer_num": 8,
         "answer_tem": 0.8
