@@ -353,5 +353,27 @@ SITE_CONFIF_DICT = {
         "model": "chatglm_std",
         "max_retries": 2,
     },
+    "16": {
+        "headers": {
+            "Host": AISET10,
+            "Connection": "keep-alive",
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Microsoft Edge\";v=\"114\"",
+            "Accept": "text/event-stream",
+            "Content-Type": "text/plain;charset=UTF-8",
+            "sec-ch-ua-mobile": "?0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "Origin": AISET10HOME,
+            "Sec-Fetch-Site": "cross-site",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Referer": AISET10HOME,
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+        },
+        "url": f"https://{AISET10}/api/send_fly_msg",
+        "model": "xf",
+        "max_retries": 2,
+    },
 
 }
