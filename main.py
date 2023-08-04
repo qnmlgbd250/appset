@@ -1322,6 +1322,72 @@ async def get_chat16(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
         break
 
+async def get_chat17(msgdict: Dict[str, Any],token: Optional[str] = None,max_retries: Optional[int] = None,
+                   headers: Optional[Dict[str, str]] = None,url: Optional[str] = None,
+                   model: Optional[str] = None, session_id: Optional[int] = None) -> Any:
+    headers.update({"authorization": "Bearer " + token})
+    msg = msgdict.get('text')
+    data = {
+        "info": msg,
+        "session_id": session_id,
+        "scene_preset": [],
+        "model_is_select": model,
+        "answer_num": 8,
+        "answer_tem": 0.8
+    }
+    for attempt in range(max_retries):
+        try:
+            async with AsyncClient() as client:
+                async with client.stream('POST', url, headers=headers, json=data, timeout=custom_timeout) as response:
+                    async for line in response.aiter_lines():
+                        if line.strip() == "":
+                            continue
+                        try:
+                            if "reply_content" in line:
+                                start_index = line.find("reply_content:") + len("reply_content:")
+                                str = line[start_index:].strip()
+                                data = {'choices': [{'delta': {'content': str}}]}
+                            else:
+                                start_index = line.find("data:") + len("data:")
+                                json_str = line[start_index:].strip()
+                                data = json.loads(json_str)
+                        except Exception as e:
+                            logging.error(e)
+                            if 'line 1 column' in str(e):
+                                yield {"choices": [{"delta": {"content": "非预期错误,请重新提问或联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                            else:
+                                yield {"choices": [{"delta": {"content": "OpenAI服务器连接失败,请联系管理员"}}]}
+                                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                                return
+                        if data.get('is_end'):
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+
+
+                        try:
+                            if not data.get('is_end'):
+                                data['choices'] = [{}]
+                                data['choices'][0]['delta'] = {"content": data["result"]}
+                            yield {"choices": data['choices']}
+
+                        except Exception as e:
+                            logging.error(e)
+                            yield {"choices": [{"delta": {"content": "非预期错误,请联系管理员"}}]}
+                            yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+                            return
+
+        except httpx.HTTPError as e:
+            logging.error(f"WebSocket ReadError: {e}. Attempt {attempt + 1} of {max_retries}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(2 ** attempt)  # 指数退避策略
+                continue
+            else:
+                yield {"choices": [{"delta": {"content": "服务器连接失败，请稍后重试。"}}]}
+                yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
+        break
+
 
 
 async def send_message(websocket, message):
@@ -1331,7 +1397,7 @@ async def send_message(websocket, message):
 async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
     if selected_site == "1":
         token = await get_token_by_redis()
-    elif selected_site in ["2","8"]:
+    elif selected_site in ["2", "8"]:
         token = await get_minitoken()
     elif selected_site == "4":
         token = await get_hash_by_redis()
@@ -1339,8 +1405,10 @@ async def get_chat_with_token(site, data, selected_site,client_ip, **kwargs):
         token = await get_gpt4_by_redis()
     elif selected_site == "10":
         token = await get_360cookie_by_redis()
-    elif selected_site in ["11","16"]:
+    elif selected_site in ["11", "16"]:
         token = await get_11token_redis()
+    elif selected_site == "17":
+        token = await get_ciyuntoken_redis()
     else:
         token = None
     logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | {client_ip} | {str(data["text"])} | {selected_site}')
@@ -1372,6 +1440,7 @@ async def chat(websocket: WebSocket):
             lastmsg14 = ''
             lastmsg15 = ''
             lastmsg16 = ''
+            lastmsg17 = ''
             chat_functions = {
                 "1": [get_chat1, lastmsg1],
                 "2": [get_chat2, lastmsg2],
@@ -1389,12 +1458,13 @@ async def chat(websocket: WebSocket):
                 "14": [get_chat14, lastmsg14],
                 "15": [get_chat15, lastmsg15],
                 "16": [get_chat16, lastmsg16],
+                "17": [get_chat17, lastmsg17],
             }
-            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12", "14", "15", "16"]
+            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12", "14", "15"]
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]
-            if selected_site in ["4", "11", "16"]:
+            if selected_site in ["4", "11", "16", "17"]:
                 site_config.update({"session_id": await get_4ip(client_ip)})
             selected_function = chat_functions[selected_site][0]
             chat_generator = await get_chat_with_token(selected_function, data, selected_site, client_ip,
@@ -1459,6 +1529,12 @@ async def get_11token_redis():
             value_dict = json.loads(value)
             return value_dict['token']
 
+async def get_ciyuntoken_redis():
+    for key in redis_pool.hkeys("ciyuntoken"):
+        value = redis_pool.hget("ciyuntoken", key)
+        if value:
+            value_dict = json.loads(value)
+            return value_dict['token']
 
 
 async def get_gpt4_by_redis():

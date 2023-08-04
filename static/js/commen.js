@@ -692,10 +692,7 @@ function connect() {
             savelastmsg15list(receivedData.lastmsg15list)
             isTyping = false;
         }
-        if (receivedData.lastmsg16list) {
-            savelastmsg16list(receivedData.lastmsg16list)
-            isTyping = false;
-        }
+
         const replyElement = document.getElementById('temporary-reply').querySelector('.message');
         const blinkElement = replyElement.querySelector('.placeholder-cursor');
         const chatContent = document.getElementById('chat-content');
@@ -953,7 +950,7 @@ function sendMessage() {
                 lastmsg12list: loadmsg12(),
                 lastmsg14list: loadmsg14(),
                 lastmsg15list: loadmsg15(),
-                lastmsg16list: loadmsg16(),
+
             }));
             userInput.value = '';
             resetAccumulatedText();
@@ -1004,7 +1001,7 @@ function deleteMessages() {
     localStorage.setItem('lastmsg12list', '');
     localStorage.setItem('lastmsg14list', '');
     localStorage.setItem('lastmsg15list', '');
-    localStorage.setItem('lastmsg16list', '');
+
     saveid('');
     saveminiid('');
     saveid360('');
@@ -1211,22 +1208,7 @@ function savelastmsg15list(msg) {
 
 }
 
-function savelastmsg16list(msg) {
-    let list = [];
-    if (localStorage.getItem('lastmsg16list')) {
-        list = JSON.parse(localStorage.getItem('lastmsg16list'));
-    }
 
-    if (list.length >= 10) {
-        list.shift(); // 删除第一个元素
-        list.shift(); // 再次删除第一个元素（原来的第二个元素）
-    }
-
-    list = list.concat(msg);
-
-    localStorage.setItem('lastmsg16list', JSON.stringify(list));
-
-}
 
 function loadid() {
     const savedid = localStorage.getItem('lastid');
@@ -1314,13 +1296,7 @@ function loadmsg15() {
     return "";
 }
 
-function loadmsg16() {
-    const savedmsg = localStorage.getItem('lastmsg16list');
-    if (savedmsg) {
-        return JSON.parse(savedmsg);
-    }
-    return "";
-}
+
 
 
 function linksblank() {

@@ -217,7 +217,10 @@ def check_4_token(token):
     try:
         response = requests.post(url, headers=headers, proxies=PROXIES)
         if response.json()['status'] == 200:
-            return True, response.json()['vip']
+            resjson = response.json()
+            vip = resjson['vip']
+            vip.update({'last_msg': resjson["last_msg"]})
+            return True, vip
         else:
             return False, None
     except Exception as e:
@@ -255,6 +258,88 @@ def login_4_token(email,password):
 
 
 
+def get_gptciyun_token():
+    try:
+        for key in redis_pool.hkeys("ciyuntoken"):
+            value = redis_pool.hget("ciyuntoken", key)
+            value_dict = json.loads(value)
+            token = value_dict['token']
+            islive,vip = check_ciyun_token(token)
+            print("gpt4p token活性状态：", islive)
+            if not islive:
+                token = login_ciyun_token(key.decode('utf-8'), MINIPASSWORD)
+                islive, vip = check_ciyun_token(token)
+            value_dict['token'] = token
+            value_dict['vip'] = vip
+            redis_pool.hset("ciyuntoken", key, json.dumps(value_dict))
+        return True
+    except Exception as e:
+        logging.error(f"获取慈云账号异常: {repr(e)}")
+        return False
+
+def check_ciyun_token(token):
+    headers = {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+    "Content-Length": "0",
+    "authorization": "Bearer " + token,
+    "Origin": f"https://ai.{AISET15}",
+    "Referer": f"https://ai.{AISET15}/",
+    "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"99\", \"Microsoft Edge\";v=\"115\", \"Chromium\";v=\"115\"",
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": "\"Windows\"",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-site",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188"
+}
+    url = f"https://gpt.{AISET15}/api/get_user"
+    try:
+        response = requests.post(url, headers=headers, proxies=PROXIES)
+        if response.json()['status'] == 200:
+            resjson = response.json()
+            vip = resjson['vip']
+            vip.update({'last_msg': resjson["last_msg"]})
+            return True, vip
+        else:
+            return False, None
+    except Exception as e:
+        logging.error(f"检测token异常: {repr(e)}")
+        return False
+
+def login_ciyun_token(email,password):
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "Authorization": "Bearer",
+        "Content-Length": "0",
+        "Origin": f"https://ai.{AISET15}",
+        "Referer": f"https://ai.{AISET15}/",
+        "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"99\", \"Microsoft Edge\";v=\"115\", \"Chromium\";v=\"115\"",
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": "\"Windows\"",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188"
+    }
+    url = f"https://gpt.{AISET15}/api/web_login"
+    params = {
+        "email": email,
+        "password": password
+    }
+    try:
+        response = requests.post(url, headers=headers, params=params, proxies=PROXIES)
+        token = response.json()['token']
+        return token
+    except Exception as e:
+        logging.error(f"登录获取token异常: {repr(e)}")
+        return None
+
+
+
 
 
 
@@ -265,3 +350,5 @@ if __name__ == '__main__':
         send_msg.send_dingding('gpt4plus token过期，请及时处理')
     if not get_gpt4199_token():
         send_msg.send_dingding('gpt4 token过期，请及时处理')
+    if not get_gptciyun_token():
+        send_msg.send_dingding('gpt4p token过期，请及时处理')
