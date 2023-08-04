@@ -721,7 +721,9 @@ function connect() {
 
 
             chatContent.scrollTop = chatContent.scrollHeight;
-            userInput.focus();
+            if (!isMobileDevice()) {
+              userInput.focus();
+            }
 
             if (receivedData.id) {
                 saveid(receivedData.id)
@@ -739,7 +741,9 @@ function connect() {
         } else if (receivedData.text && receivedData.text === 'THE_END_哈哈哈') {
             isTyping = false;
             chatContent.scrollTop = chatContent.scrollHeight;
-            userInput.focus();
+            if (!isMobileDevice()) {
+              userInput.focus();
+            }
             // 停止监听 element 的子节点变化
             observer.disconnect();
         }
@@ -767,7 +771,10 @@ function connect() {
 
             chatContent.scrollTop = chatContent.scrollHeight;
             blinkElement.classList.remove('blink'); // 去除闪烁光标
-            userInput.focus();
+            if (!isMobileDevice()) {
+              userInput.focus();
+            }
+
 
 
             setTimeout(connect, retryInterval); // 定时器中执行重连
