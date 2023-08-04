@@ -1362,6 +1362,7 @@ async def get_chat17(msgdict: Dict[str, Any],token: Optional[str] = None,max_ret
                                 yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                                 return
                         if data.get('is_end'):
+                            yield {"choices": [{"delta": {"content": data["result"]}}]}
                             yield {"choices": [{"delta": {"content": "THE_END_哈哈哈"}}]}
                             return
 
@@ -1460,7 +1461,7 @@ async def chat(websocket: WebSocket):
                 "16": [get_chat16, lastmsg16],
                 "17": [get_chat17, lastmsg17],
             }
-            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12", "14", "15"]
+            needlastmsg = ["3", "4", "5", "6", "7", "8", "9", "12", "14", "15", "16", "17"]
 
             selected_site = data.get("site", "1")
             site_config = SITE_CONFIF_DICT[selected_site]
