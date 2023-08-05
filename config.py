@@ -396,5 +396,25 @@ SITE_CONFIF_DICT = {
         "model": "ErnieBotTurbo",
         "max_retries": 2,
     },
+    "18": {
+        "headers": {
+            "Accept": "text/event-stream",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Content-Type": "text/plain;charset=UTF-8",
+            "Origin": f"https://ai.{AISET15}",
+            "Referer": f"https://ai.{AISET15}/",
+            "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"99\", \"Microsoft Edge\";v=\"115\", \"Chromium\";v=\"115\"",
+            "Sec-Ch-Ua-Mobile": "?0",
+            "Sec-Ch-Ua-Platform": "\"Windows\"",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-site",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188"
+        },
+        "url": f"https://gpt.{AISET15}/api/send_bot",
+        "model": "gpt-3.5-turbo-16k-0613",
+        "max_retries": 2,
+    },
 
 }

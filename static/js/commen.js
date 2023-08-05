@@ -1948,9 +1948,9 @@ updateMessageInputPosition();
 
 function checkInput() {
   if (messageInput.value.length > 0) {
-    sendButton.style.backgroundColor = "#18a058";
+    sendButton.style.background = "linear-gradient(to right, #77a7e7, #ea607b)";
   } else {
-    sendButton.style.backgroundColor = "#8bcfab";
+    sendButton.style.background  = "#8bcfab";
   }
 }
 
