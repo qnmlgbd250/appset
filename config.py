@@ -266,7 +266,7 @@ SITE_CONFIF_DICT = {
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
         },
         "url": f"https://{AISET10}/api/send_bot",
-        "model": "gpt-4-0613",
+        "model": "gpt-4-0314",
         "max_retries": 2,
     },
     "12": {
