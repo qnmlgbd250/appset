@@ -41,6 +41,9 @@ for (var i = 0; i < divs.length; i++) {
         if (this.id === 'signBtn') {
             loadsigntime();
         }
+        if (this.id === 'dataBtn') {
+            loadtaskdata();
+        }
     };
 }
 
@@ -236,6 +239,12 @@ function dataTransform(inputText) {
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
+
+    localStorage.setItem('taskid', inputText);
+    setTimeout(function () {
+        localStorage.setItem('taskdata', output.value);
+    }, 1000);
+
 
 }
 
@@ -1055,6 +1064,11 @@ function loadsigntime() {
         input.value = localStorage.getItem('signtimeinput');
         output.value = localStorage.getItem('signtimeoutput');
 }
+function loadtaskdata() {
+        input.value = localStorage.getItem('taskid');
+        output.value = localStorage.getItem('taskdata');
+}
+
 
 
 function saveid(id) {
