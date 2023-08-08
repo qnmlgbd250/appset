@@ -1972,5 +1972,6 @@ sendButton.addEventListener('click', function() {
     sendMessage();
     const messageInput = document.getElementById('messageInput');
     messageInput.value = '';
+    sendButton.style.background  = "#8bcfab";
     setmessageInputsize();
 });
