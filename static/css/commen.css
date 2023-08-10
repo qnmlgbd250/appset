@@ -396,7 +396,7 @@ a:hover {
     padding: 10px;
     resize: none;
     overflow-y: auto;
-    width: calc(100% - 50px);
+    width: calc(100% - 120px);
     margin-top: 8px;
 
     font: 14px 微软雅黑;

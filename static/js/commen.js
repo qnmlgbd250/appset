@@ -1922,7 +1922,8 @@ if (wrapperRect.bottom > windowHeight) {
   if (isMobileDevice()) {
       messageInput.style.bottom = '10px';
       messageInput.style.marginBottom = "30px"
-      messageInput.style.width = "calc(100% - 35px)"
+      messageInput.style.width = "calc(100% - 85px)"
+      messageInput.style.paddingRight = "60px"
       messageInputWrapper.style.height = "0"
       messageInputWrapper.style.bottom = '10px';
        sendButton.style.marginTop = "-60px"
@@ -1932,6 +1933,7 @@ if (wrapperRect.bottom > windowHeight) {
   } else {
         messageInput.style.bottom = '20px';
         messageInput.style.marginBottom = "0"
+       messageInput.style.paddingRight = "80px"
       sendButton.style.marginTop = "100px"
       sendButton.style.marginRight = "calc(-100% + 80px)"
 
@@ -1941,13 +1943,15 @@ if (wrapperRect.bottom > windowHeight) {
   if (isMobileDevice()) {
       messageInput.style.bottom = '10px';
       messageInput.style.marginBottom = "30px"
-      messageInput.style.width = "calc(100% - 35px)"
+      messageInput.style.width = "calc(100% - 85px)"
+      messageInput.style.paddingRight = "60px"
       messageInputWrapper.style.height = "0"
       messageInputWrapper.style.bottom = '10px';
         sendButton.style.marginTop = "-60px"
       sendButton.style.marginRight = "calc(-100% + 60px)"
   } else {
   messageInput.style.bottom = '20px';
+  messageInput.style.paddingRight = "80px"
   messageInput.style.marginBottom = "0";
   sendButton.style.marginTop = "100px"
   sendButton.style.marginRight = "calc(-100% + 80px)"
