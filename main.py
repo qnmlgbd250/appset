@@ -1359,7 +1359,8 @@ async def get_chat17(msgdict: Dict[str, Any], token: Optional[str] = None, max_r
         "scene_preset": [],
         "model_is_select": model,
         "answer_num": 8,
-        "answer_tem": 0.8
+        "answer_tem": 0.8,
+        "now_choose_knowledge": [],
     }
     for attempt in range(max_retries):
         try:
