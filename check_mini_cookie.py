@@ -348,7 +348,7 @@ if __name__ == '__main__':
         send_msg.send_dingding('小号token过期，请及时处理')
     if not get_gpt4_by_redis():
         send_msg.send_dingding('gpt4plus token过期，请及时处理')
-    if not get_gpt4199_token():
-        send_msg.send_dingding('gpt4 token过期，请及时处理')
+    # if not get_gpt4199_token():
+    #     send_msg.send_dingding('gpt4 token过期，请及时处理')
     if not get_gptciyun_token():
         send_msg.send_dingding('gpt4p token过期，请及时处理')
