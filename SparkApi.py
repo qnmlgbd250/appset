@@ -11,17 +11,18 @@ from time import mktime
 from urllib.parse import urlencode
 from wsgiref.handlers import format_date_time
 
-import websocket
+import websocket  # 使用websocket_client
+answer = ""
 
 class Ws_Param(object):
     # 初始化
-    def __init__(self, APPID, APIKey, APISecret, gpt_url):
+    def __init__(self, APPID, APIKey, APISecret, Spark_url):
         self.APPID = APPID
         self.APIKey = APIKey
         self.APISecret = APISecret
-        self.host = urlparse(gpt_url).netloc
-        self.path = urlparse(gpt_url).path
-        self.gpt_url = gpt_url
+        self.host = urlparse(Spark_url).netloc
+        self.path = urlparse(Spark_url).path
+        self.Spark_url = Spark_url
 
     # 生成url
     def create_url(self):
@@ -51,7 +52,7 @@ class Ws_Param(object):
             "host": self.host
         }
         # 拼接鉴权参数，生成url
-        url = self.gpt_url + '?' + urlencode(v)
+        url = self.Spark_url + '?' + urlencode(v)
         # 此处打印出建立连接时候的url,参考本demo的时候可取消上方打印的注释，比对相同参数时生成的url与自己代码生成的url是否一致
         return url
 
@@ -62,8 +63,8 @@ def on_error(ws, error):
 
 
 # 收到websocket关闭的处理
-def on_close(ws):
-    print("### closed ###")
+def on_close(ws,one,two):
+    print(" ")
 
 
 # 收到websocket连接建立的处理
@@ -72,27 +73,31 @@ def on_open(ws):
 
 
 def run(ws, *args):
-    data = json.dumps(gen_params(appid=ws.appid, question=ws.question))
+    data = json.dumps(gen_params(appid=ws.appid, domain= ws.domain,question=ws.question))
     ws.send(data)
 
 
 # 收到websocket消息的处理
 def on_message(ws, message):
-    data = json.loads(message)
-    code = data['header']['code']
-    if code != 0:
-        print(f'请求错误: {code}, {data}')
-        ws.close()
-    else:
-        choices = data["payload"]["choices"]
-        status = choices["status"]
-        content = choices["text"][0]["content"]
-        print(content, end='')
-        if status == 2:
-            ws.close()
+    print(message)
+    # data = json.loads(message)
+    # code = data['header']['code']
+    # if code != 0:
+    #     print(f'请求错误: {code}, {data}')
+    #     ws.close()
+    # else:
+    #     choices = data["payload"]["choices"]
+    #     status = choices["status"]
+    #     content = choices["text"][0]["content"]
+    #     print(content,end ="")
+    #     global answer
+    #     answer += content
+    #     # print(1)
+    #     if status == 2:
+    #         ws.close()
 
 
-def gen_params(appid, question):
+def gen_params(appid, domain,question):
     """
     通过appid和用户的提问来生成请参数
     """
@@ -103,7 +108,7 @@ def gen_params(appid, question):
         },
         "parameter": {
             "chat": {
-                "domain": "general",
+                "domain": domain,
                 "random_threshold": 0.5,
                 "max_tokens": 2048,
                 "auditing": "default"
@@ -111,29 +116,41 @@ def gen_params(appid, question):
         },
         "payload": {
             "message": {
-                "text": [
-                    {"role": "user", "content": question}
-                ]
+                "text": question
             }
         }
     }
     return data
 
 
-def main(appid, api_key, api_secret, gpt_url, question):
-    wsParam = Ws_Param(appid, api_key, api_secret, gpt_url)
+def main(appid, api_key, api_secret, Spark_url,domain, question):
+    # print("星火:")
+    wsParam = Ws_Param(appid, api_key, api_secret, Spark_url)
     websocket.enableTrace(False)
     wsUrl = wsParam.create_url()
     ws = websocket.WebSocketApp(wsUrl, on_message=on_message, on_error=on_error, on_close=on_close, on_open=on_open)
     ws.appid = appid
     ws.question = question
+    ws.domain = domain
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
+#以下密钥信息从控制台获取
+appid = "41ff96e9"     #填写控制台中获取的 APPID 信息
+api_secret = "ZWJmZjc2MWI2YTQxNmJjZDg2NTk0MWZk"   #填写控制台中获取的 APISecret 信息
+api_key ="29f4bb960509a99aa6ad4e215bb236e7"    #填写控制台中获取的 APIKey 信息
 
+#用于配置大模型版本，默认“general/generalv2”
+domain = "general"   # v1.5版本
+# domain = "generalv2"    # v2.0版本
+#云端环境的服务地址
+Spark_url = "wss://spark-api.xf-yun.com/v1.1/chat"  # v1.5环境的地址
+# Spark_url = "ws://spark-api.xf-yun.com/v2.1/chat"  # v2.0环境的地址
+text = []
+def getText(role,content):
+    jsoncon = {}
+    jsoncon["role"] = role
+    jsoncon["content"] = content
+    text.append(jsoncon)
+    return text
+if __name__ == '__main__':
+    main(appid, api_key, api_secret, Spark_url, domain, getText("user",'说出鲁迅的作品？'))
 
-if __name__ == "__main__":
-    # 测试时候在此处正确填写相关信息即可运行
-    main(appid="41ff96e9",
-         api_key="29f4bb960509a99aa6ad4e215bb236e7",
-         api_secret="",
-         gpt_url="wss://spark-api.xf-yun.com/v1.1/chat",
-         question="你是谁？你能做什么？")
