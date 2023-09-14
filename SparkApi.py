@@ -13,6 +13,10 @@ from wsgiref.handlers import format_date_time
 
 import websocket  # 使用websocket_client
 answer = ""
+from queue import Queue
+import threading
+
+message_queue = Queue()
 
 class Ws_Param(object):
     # 初始化
@@ -79,7 +83,10 @@ def run(ws, *args):
 
 # 收到websocket消息的处理
 def on_message(ws, message):
-    print(message)
+    # print(message)
+    global message_queue
+
+    message_queue.put(message)
     # data = json.loads(message)
     # code = data['header']['code']
     # if code != 0:
@@ -95,6 +102,13 @@ def on_message(ws, message):
     #     # print(1)
     #     if status == 2:
     #         ws.close()
+
+def message_generator():
+    global message_queue
+    while True:
+        message = message_queue.get()
+        yield message
+        message_queue.task_done()
 
 
 def gen_params(appid, domain,question):
@@ -151,6 +165,22 @@ def getText(role,content):
     jsoncon["content"] = content
     text.append(jsoncon)
     return text
+def other_function():
+    for message in message_generator():
+        print(message)
+
 if __name__ == '__main__':
-    main(appid, api_key, api_secret, Spark_url, domain, getText("user",'说出鲁迅的作品？'))
+    # main(appid, api_key, api_secret, Spark_url, domain, getText("user",'帮我写出一个200字的小说'))
+    # other_function()
+
+    # 创建并启动生产者线程和消费者线程
+    producer_thread = threading.Thread(target=main(appid, api_key, api_secret, Spark_url, domain, getText("user",'帮我写出一个200字的小说')))
+    consumer_thread = threading.Thread(target=other_function())
+
+    producer_thread.start()
+    consumer_thread.start()
+
+    # 等待两个线程都完成
+    producer_thread.join()
+    consumer_thread.join()
 
