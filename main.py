@@ -135,7 +135,7 @@ def turn(taskid: str):
         response = requests.get(url, headers=headers, params=params,proxies=proxies).json()
         for key, value in response.items():
             if taskid in value:
-                output.update({key: value})
+                output.update({key[:-4]: value})
 
     except Exception as e:
         output = str(e)

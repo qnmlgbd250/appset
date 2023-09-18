@@ -45,6 +45,9 @@ for (var i = 0; i < divs.length; i++) {
         if (this.id === 'dataBtn') {
             loadtaskdata();
         }
+        if (this.id === 'smsBtn') {
+            loadsjhdata();
+        }
     };
 }
 
@@ -1096,6 +1099,13 @@ function loadtaskdata() {
         input.value = localStorage.getItem('taskid');
         output.value = localStorage.getItem('taskdata');
 }
+
+function loadsjhdata() {
+        input.value = localStorage.getItem('sjh');
+        output.value = localStorage.getItem('sjhdata');
+}
+
+
 
 
 
