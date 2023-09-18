@@ -11,6 +11,7 @@ const menuFunctions = {
     'curlBtn': curlTransform,
     'rsaBtn': rsaTransform,
     'dataBtn': dataTransform,
+    'smsBtn': smsTransform,
     'transBtn': transTransform,
     'signBtn': signTransform,
     'ocrBtn': ocrTransform,
@@ -243,6 +244,33 @@ function dataTransform(inputText) {
     localStorage.setItem('taskid', inputText);
     setTimeout(function () {
         localStorage.setItem('taskdata', output.value);
+    }, 1000);
+
+
+}
+
+function smsTransform(inputText) {
+    inputText = inputText.trim();
+    const url = '/tool/s/';
+    fetch(url + inputText)
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // 将response对象转换为JSON格式
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+        })
+        .then(data => {
+            console.log(data); // 输出JSON格式的数据
+            output.value = JSON.stringify(data.output, null, 2); // 将返回的数据放入output元素中
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
+    localStorage.setItem('sjh', inputText);
+    setTimeout(function () {
+        localStorage.setItem('sjhdata', output.value);
     }, 1000);
 
 
