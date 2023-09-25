@@ -503,8 +503,8 @@ function showChatBox(show) {
         chatContent.style.display = 'block';
     } else {
         div3.style.display = 'block';
-        div3.style.borderRight = '1px solid #ccc';
-        div4.style.borderLeft = '1px solid #ccc';
+        div3.style.borderRight = '1px solid #5a5a6c';
+        div4.style.borderLeft = '1px solid #5a5a6c';
         div4.style.display = 'block';
         div6.style.display = 'none';
         output.style.display = 'block';

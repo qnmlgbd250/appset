@@ -83,7 +83,7 @@ a:hover {
 
 .div3 {
     grid-area: 1 / 2 / 6 / 5;
-    border-right: 1px solid #ccc;
+
 
 }
 
@@ -106,7 +106,7 @@ a:hover {
 
 .div4 {
     grid-area: 1 / 5 / 6 / 8;
-    border-left: 1px solid #ccc;
+
 }
 
 
@@ -698,6 +698,7 @@ code {
 .light-theme .output {
     background-color: #ffffff;
     color: #000000;
+
 }
 
 .light-theme .button-div:hover {
@@ -735,6 +736,20 @@ code {
 .dark-theme .output {
     background-color: #444654;
     color: #ffffff;
+    border-color: #5a5a6c;
+}
+.dark-theme #messageInput {
+    border-color: #5a5a6c;
+}
+.dark-theme #messageInput:focus {
+    border-color: #86dfba;
+    box-shadow: 0 0 5px rgba(134, 223, 186, 0.5); /* 添加此行 */
+}
+.dark-theme .div3{
+    border-right-color: #5a5a6c;
+}
+.dark-theme .div4{
+    border-left-color: #5a5a6c;
 }
 
 .dark-theme .user .message {
@@ -1103,9 +1118,13 @@ h5 {
     opacity: 1; /* 显示弹窗时的状态 */
     /* transition属性在.modal中已定义，此处无需再次定义 */
 }
+.dark-theme .modal-show{
+    border-color: #5a5a6c;
+}
 
 .modal-content {
     background-color: #fefefe;
+    border-color: #5a5a6c;
     margin: 15% auto;
     padding: 20px;
     border-radius: 4px;
