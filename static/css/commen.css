@@ -745,6 +745,9 @@ code {
     border-color: #86dfba;
     box-shadow: 0 0 5px rgba(134, 223, 186, 0.5); /* 添加此行 */
 }
+.dark-theme .menu-div.selected {
+    border-color: #86dfba;
+}
 .dark-theme .div3{
     border-right-color: #5a5a6c;
 }
