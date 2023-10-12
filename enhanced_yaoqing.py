@@ -28,11 +28,11 @@ h1 = {
 }
 
 headers = {
-    "authority": "www.chatgptenhanced.com",
+    "authority": "www.lingjingai2.com",
     "accept": "*/*",
     "accept-language": "zh-CN,zh;q=0.9",
     "content-type": "application/json",
-    "referer": "https://www.chatgptenhanced.com/register?code=ad3374",
+    "referer": "https://www.lingjingai2.com/register?code=ad3374",
     "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": "\"Windows\"",
@@ -45,7 +45,7 @@ session = requests.Session()
 session1 = requests.Session()
 
 email_af = ['nqmo.com', 'qabq.com', 'uuf.me', "yzm.de", "end.tw"]
-for _ in range(100):
+for _ in range(400):
     try:
         email_af_str = random.choice(email_af)
         letters = string.ascii_lowercase
@@ -54,7 +54,7 @@ for _ in range(100):
         print(email)
 
 
-        send_url = "https://www.chatgptenhanced.com/api/user/register/code"
+        send_url = "https://www.lingjingai2.com/api/user/register/code"
         params = {
             "email": email
         }
@@ -106,12 +106,12 @@ for _ in range(100):
         email_code = re.findall(r'您的激活码是：(\d+)，', response.json()['body']['text'])[0]
 
         headers = {
-            "authority": "www.chatgptenhanced.com",
+            "authority": "www.lingjingai2.com",
             "accept": "*/*",
             "accept-language": "zh-CN,zh;q=0.9",
             "content-type": "application/json",
-            "origin": "https://www.chatgptenhanced.com",
-            "referer": "https://www.chatgptenhanced.com/register",
+            "origin": "https://www.lingjingai2.com",
+            "referer": "https://www.lingjingai2.com/register",
             "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
@@ -120,13 +120,13 @@ for _ in range(100):
             "sec-fetch-site": "same-origin",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
         }
-        url = "https://www.chatgptenhanced.com/api/user/register"
+        url = "https://www.lingjingai2.com/api/user/register"
         data = {
             "email": email,
             "password": "88888888",
             "code": email_code,
             "code_type": "email",
-            "invitation_code": "a18498"
+            "invitation_code": "abb424"   #abb424  #6028f7
         }
         data = json.dumps(data, separators=(',', ':'))
         response = session.post(url, headers=headers, data=data, proxies=proxies)
@@ -141,13 +141,13 @@ for _ in range(100):
 #
 #
 # headers = {
-#     "authority": "www.chatgptenhanced.com",
+#     "authority": "www.lingjingai2.com",
 #     "accept": "*/*",
 #     "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
 #     "authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InExeW5wbXJmQHFhYnEuY29tIiwiZXhwIjoxNjg1OTc0ODI0LCJpYXQiOjE2ODUzNzAwMjQsIm5iZiI6MTY4NTM3MDAyNH0.y75XRPLVqRmt1wMro_4f7XhBz9J9ddNgjfrzmKTeDpY",
 #     "content-type": "application/json",
-#     "origin": "https://www.chatgptenhanced.com",
-#     "referer": "https://www.chatgptenhanced.com/",
+#     "origin": "https://www.lingjingai2.com",
+#     "referer": "https://www.lingjingai2.com/",
 #     "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
 #     "sec-ch-ua-mobile": "?0",
 #     "sec-ch-ua-platform": "\"Windows\"",
@@ -156,7 +156,7 @@ for _ in range(100):
 #     "sec-fetch-site": "same-origin",
 #     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
 # }
-# url = "https://www.chatgptenhanced.com/api/bots/openai"
+# url = "https://www.lingjingai2.com/api/bots/openai"
 # data = {
 #     "model": "gpt-4",
 #     "conversation": [
@@ -187,12 +187,12 @@ for _ in range(100):
 #
 #
 # headers = {
-#     "authority": "www.chatgptenhanced.com",
+#     "authority": "www.lingjingai2.com",
 #     "accept": "*/*",
 #     "accept-language": "zh-CN,zh;q=0.9",
 #     "content-type": "application/json",
-#     "origin": "https://www.chatgptenhanced.com",
-#     "referer": "https://www.chatgptenhanced.com/login",
+#     "origin": "https://www.lingjingai2.com",
+#     "referer": "https://www.lingjingai2.com/login",
 #     "sec-ch-ua": "\"Microsoft Edge\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"",
 #     "sec-ch-ua-mobile": "?0",
 #     "sec-ch-ua-platform": "\"Windows\"",
@@ -201,7 +201,7 @@ for _ in range(100):
 #     "sec-fetch-site": "same-origin",
 #     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
 # }
-# url = "https://www.chatgptenhanced.com/api/user/login"
+# url = "https://www.lingjingai2.com/api/user/login"
 # data = {
 #     "email": "agkkybt@yzm.de",
 #     "password": "88888888"
