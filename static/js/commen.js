@@ -48,7 +48,7 @@ for (var i = 0; i < divs.length; i++) {
         if (this.id === 'smsBtn') {
             loadsjhdata();
             layer.msg('刷新短信中.....', {
-            time: 3000, // 设置显示时间，单位为毫秒
+            time: 500, // 设置显示时间，单位为毫秒
             // skin: getLayerSkin(), // 设置样式
             offset: '100px', // 设置距离顶部的距离
             icon: 1,
