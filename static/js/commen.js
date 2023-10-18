@@ -53,6 +53,7 @@ for (var i = 0; i < divs.length; i++) {
             icon: 1,
         });
             loadsjhdata();
+            output.value = ''
             smsTransform(input.value);
         }
 
