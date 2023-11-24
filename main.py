@@ -222,15 +222,15 @@ async def ocr(request: Request):
 
 
 @app.post("/tool/ocr-code")
-async def ocr2code(file: UploadFile = File(...)):
+async def ocr2code(img: UploadFile = File(...)):
     try:
-        contents = await file.read()
+        contents = await img.read()
         resp = requests.post("http://127.0.0.1:9898/ocr/file", files={'image': contents})
         vcode = resp.text
-        return {"filename": file.filename, "vcode": vcode}
+        return {"filename": img.filename, "vcode": vcode}
     except Exception as e:
         logging.error(e)
-        return {"filename": file.filename, "vcode": "error"}
+        return {"filename": img.filename, "vcode": "error"}
 
 
 @app.post("/tool/c")
