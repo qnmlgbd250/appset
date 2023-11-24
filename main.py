@@ -7,7 +7,7 @@ import asyncio
 import threading
 from httpx import AsyncClient
 import httpx
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, UploadFile, File
 import uvicorn
 import urllib.parse
 from fastapi.templating import Jinja2Templates
@@ -219,6 +219,18 @@ async def ocr(request: Request):
         logging.error(e)
 
     return {'output': output}
+
+
+@app.post("/tool/ocr-code")
+async def ocr2code(file: UploadFile = File(...)):
+    try:
+        contents = await file.read()
+        resp = requests.post("http://127.0.0.1:9898/ocr/file", files={'image': contents})
+        vcode = resp.text
+        return {"filename": file.filename, "vcode": vcode}
+    except Exception as e:
+        logging.error(e)
+        return {"filename": file.filename, "vcode": "error"}
 
 
 @app.post("/tool/c")
