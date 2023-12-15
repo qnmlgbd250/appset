@@ -1344,7 +1344,7 @@ hr {
   position: relative;
   margin-bottom: 50px;
     line-height: 1.667;
-    max-height: 300px;      /* 设置最大高度 */
+    max-height: 350px;      /* 设置最大高度 */
     overflow-y: auto;       /* 设置当内容超出容器时显示垂直滚动条 */
 }
 .event {

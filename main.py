@@ -61,7 +61,7 @@ def getdate(request: Request):
 
 @app.get("/tool")
 def getdate(request: Request):
-    return templates.TemplateResponse('main.html', context={'request': request})
+    return templates.TemplateResponse('mainvue.html', context={'request': request})
 
 
 @app.get("/tool/d/{taskid}")

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gadget</title>
+    <link rel="icon" href="../static/img/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" type="text/css" href="../static/css/commen.css">
+    <link rel="stylesheet" href="../static/css/highlight/styles/shades-of-purple.min.css" class="hljs-theme-light">
+    <link rel="stylesheet" href="../static/css/highlight/styles/vs2015.min.css" class="hljs-theme-dark">
+    <script src="../static/js/hightlocal.js"></script>
+
+
+</head>
+<body>
+<div class="title-bar">
+
+    <svg id="toggleButton" xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true" role="img" class="toggle-button" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M3 4h18v2H3V4Zm0 15h18v2H3v-2Zm0-5h18v2H3v-2Zm0-5h18v2H3V9Z"></path>
+    </svg>
+    Gadget
+
+    <svg id="shareButton" xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true" role="img" class="share-button" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="currentColor"
+              d="M18 22q-1.25 0-2.125-.875T15 19q0-.175.025-.363t.075-.337l-7.05-4.1q-.425.375-.95.588T6 15q-1.25 0-2.125-.875T3 12q0-1.25.875-2.125T6 9q.575 0 1.1.213t.95.587l7.05-4.1q-.05-.15-.075-.337T15 5q0-1.25.875-2.125T18 2q1.25 0 2.125.875T21 5q0 1.25-.875 2.125T18 8q-.575 0-1.1-.212t-.95-.588L8.9 11.3q.05.15.075.338T9 12q0 .175-.025.363T8.9 12.7l7.05 4.1q.425-.375.95-.587T18 16q1.25 0 2.125.875T21 19q0 1.25-.875 2.125T18 22Z"></path>
+    </svg>
+</div>
+<div class="parent" id="app1">
+
+
+    <div class="div1">
+        <div class="menu">
+            <div class="menu-div" v-for="(item,index) in opList" :key="item.id" id="item.divid" @click="runFn(item.divid)" :class="{ selected: selectedMenu === item.divid }">[[item.name]]</div>
+        </div>
+    </div>
+    <div class="div2">
+        <div class="button-div" id="clearBtn" @click="clear()">
+            <svg style="margin-bottom: -3px;margin-right: 5px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+            </svg>
+            清 空
+        </div>
+        <div id="confirmBox" class="confirm-box" style="display: none;">
+            <div>
+                <svg width="1.5em" height="1.5em" style="margin-bottom: -5px;margin-right: 5px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="none" stroke-width="1" fill-rule="evenodd">
+                        <g fill-rule="nonzero">
+                            <path fill="#f0a020"
+                                  d="M12,2 C17.523,2 22,6.478 22,12 C22,17.522 17.523,22 12,22 C6.477,22 2,17.522 2,12 C2,6.478 6.477,2 12,2 Z M12.0018002,15.0037242 C11.450254,15.0037242 11.0031376,15.4508407 11.0031376,16.0023869 C11.0031376,16.553933 11.450254,17.0010495 12.0018002,17.0010495 C12.5533463,17.0010495 13.0004628,16.553933 13.0004628,16.0023869 C13.0004628,15.4508407 12.5533463,15.0037242 12.0018002,15.0037242 Z M11.99964,7 C11.4868042,7.00018474 11.0642719,7.38637706 11.0066858,7.8837365 L11,8.00036004 L11.0018003,13.0012393 L11.00857,13.117858 C11.0665141,13.6151758 11.4893244,14.0010638 12.0021602,14.0008793 C12.514996,14.0006946 12.9375283,13.6145023 12.9951144,13.1171428 L13.0018002,13.0005193 L13,7.99964009 L12.9932303,7.8830214 C12.9352861,7.38570354 12.5124758,6.99981552 11.99964,7 Z"></path>
+                        </g>
+                    </g>
+                </svg>
+                确认删除聊天?
+            </div>
+            <button class="confirm-btn-n" id="noBtn">取消</button>
+            <button class="confirm-btn-y" id="yesBtn">确定</button>
+        </div>
+        <div class="button-div" id="copyBtn" @click="copy()">
+            <svg style="margin-bottom: -3px;margin-right: 5px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
+                <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"/>
+            </svg>
+            复 制
+        </div>
+        <div class="color-buttons">
+            <svg id="settingsButton" xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true" role="img" class=" iconify iconify--ri" width="1.5em" height="1.5em"
+                 viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M2 12c0-.865.11-1.704.316-2.504A3 3 0 0 0 4.99 4.867a9.99 9.99 0 0 1 4.335-2.506a3 3 0 0 0 5.348 0a9.99 9.99 0 0 1 4.335 2.506a3 3 0 0 0 2.675 4.63c.206.8.316 1.638.316 2.503c0 .864-.11 1.703-.316 2.503a3 3 0 0 0-2.675 4.63a9.99 9.99 0 0 1-4.335 2.505a3 3 0 0 0-5.348 0a9.99 9.99 0 0 1-4.335-2.505a3 3 0 0 0-2.675-4.63C2.11 13.703 2 12.864 2 12Zm4.804 3c.63 1.091.81 2.346.564 3.524c.408.29.842.541 1.297.75A4.993 4.993 0 0 1 12 18c1.26 0 2.438.471 3.335 1.274c.455-.209.889-.46 1.297-.75A4.993 4.993 0 0 1 17.196 15a4.993 4.993 0 0 1 2.77-2.25a8.142 8.142 0 0 0 0-1.5A4.993 4.993 0 0 1 17.195 9a4.993 4.993 0 0 1-.564-3.524a7.991 7.991 0 0 0-1.297-.75A4.993 4.993 0 0 1 12 6a4.993 4.993 0 0 1-3.335-1.274a7.99 7.99 0 0 0-1.297.75A4.993 4.993 0 0 1 6.804 9a4.993 4.993 0 0 1-2.77 2.25a8.125 8.125 0 0 0 0 1.5A4.993 4.993 0 0 1 6.805 15ZM12 15a3 3 0 1 1 0-6a3 3 0 0 1 0 6Zm0-2a1 1 0 1 0 0-2a1 1 0 0 0 0 2Z"></path>
+            </svg>
+            <svg id="noticeButton" xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true" role="img" class="ml-2 mr-2 text-sm iconify iconify--mdi" width="1.5em"
+                 height="1.5em" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M12.04 2.5L9.53 5h5l-2.49-2.5M4 7v13h16V7H4m8-7l5 5h3a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3l5-5M7 18v-4h5v4H7m7-1v-7h4v7h-4m-8-5V9h5v3H6Z"></path>
+            </svg>
+        </div>
+
+
+    </div>
+
+    <div class="div3" id="div3" v-show="div3Show">
+        <textarea v-show="inputTexShow" class="input" id="input" v-model="obj.input" spellcheck="false"></textarea>
+        <div v-show="inputImgShow" v-html="obj.inputImg" class="input" contenteditable="true" id="image-container" @paste="handlePaste" :style="{ display: this.inputImgShow }"></div>
+    </div>
+
+    <div class="div4" id="div4" v-show="div4Show">
+        <textarea class="output" id="output" v-model="obj.output" spellcheck="false"></textarea>
+    </div>
+
+    <div class="div5" id="chat-content" v-show="div5Show">
+
+    </div>
+    <div class="div6" v-show="div6Show" id="div6">
+        <div class="messageInputWrapper" id="messageInputWrapper">
+            <textarea type="text" id="messageInput" spellcheck="false" onkeyup="checkInput()"
+                      placeholder='说点什么吧...     Shift + Enter 换行    输入 "/" 弹出提问模板'></textarea>
+            <button class="sendButton" id="sendButton">
+                <svg data-v-34a525f7="" style="margin-bottom: -3px;margin-right: 3px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class=" iconify iconify--ri" width="1em" height="1em" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M1.946 9.316c-.522-.175-.526-.456.011-.635L21.043 2.32c.529-.176.832.12.684.638l-5.453 19.086c-.151.529-.456.547-.68.045L12 14l6-8l-8 6l-8.054-2.684Z"></path>
+                </svg>
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+
+        <p>微信扫描二维码访问</p>
+        <img src="../static/img/share.png" alt="分享的图片"/>
+    </div>
+</div>
+
+<div id="templatePopup" class="template-popup" style="display: none;"></div>
+<div id="customContextMenu" class="custom-context-menu">
+    <div class="menu-option" id="copyOption">复 制</div>
+</div>
+
+
+<div id="colorPickerModal" class="custom-modal" onclick="handleClickOutside(event)">
+
+    <div class="modal-content">
+        <span id="closeColorPickerModal" class="close" onclick="event.stopPropagation(); closeModal();">
+            <svg viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g stroke="none" stroke-width="1" fill-rule="evenodd">
+                  <g fill-rule="nonzero">
+                      <path d="M2.08859116,2.2156945 L2.14644661,2.14644661 C2.32001296,1.97288026 2.58943736,1.95359511 2.7843055,2.08859116 L2.85355339,2.14644661 L6,5.293 L9.14644661,2.14644661 C9.34170876,1.95118446 9.65829124,1.95118446 9.85355339,2.14644661 C10.0488155,2.34170876 10.0488155,2.65829124 9.85355339,2.85355339 L6.707,6 L9.85355339,9.14644661 C10.0271197,9.32001296 10.0464049,9.58943736 9.91140884,9.7843055 L9.85355339,9.85355339 C9.67998704,10.0271197 9.41056264,10.0464049 9.2156945,9.91140884 L9.14644661,9.85355339 L6,6.707 L2.85355339,9.85355339 C2.65829124,10.0488155 2.34170876,10.0488155 2.14644661,9.85355339 C1.95118446,9.65829124 1.95118446,9.34170876 2.14644661,9.14644661 L5.293,6 L2.14644661,2.85355339 C1.97288026,2.67998704 1.95359511,2.41056264 2.08859116,2.2156945 L2.14644661,2.14644661 L2.08859116,2.2156945 Z"></path>
+                  </g>
+              </g>
+          </svg>
+        </span>
+
+        <h5 class="model-label model-label-custom">设 置</h5>
+        <hr/>
+        <div class="option">
+            <label class="model-label">主 题</label>
+            <div class="color-option black">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                     role="img" class="iconify iconify--ri black-icon" width="1em" height="1em" viewBox="0 0 20 20">
+                    <path fill="currentColor"
+                          d="M16 20.335v-2.2a7.523 7.523 0 0 0 3.623-4.281a9 9 0 0 1-10.622-8.99A7.518 7.518 0 0 0 5.151 10H3.117a9.505 9.505 0 0 1 8.538-7.963a7 7 0 0 0 10.316 8.728A9.503 9.503 0 0 1 16 20.335ZM7 20h7v2H7v-2Zm-3-8h6v2H4v-2Zm-2 4h10v2H2v-2Z"></path>
+                </svg>
+            </div>
+            <div class="color-option white">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                     role="img" class="iconify iconify--ri white-icon" width="1em" height="1em" viewBox="0 0 20 20">
+                    <path fill="currentColor"
+                          d="M8 12h2v2H4v-2h2a6 6 0 1 1 6 6v-2a4 4 0 1 0-4-4Zm-2 8h9v2H6v-2Zm-4-4h8v2H2v-2Zm9-15h2v3h-2V1ZM3.515 4.929l1.414-1.414L7.05 5.636L5.636 7.05L3.515 4.93ZM16.95 18.364l1.414-1.414l2.121 2.121l-1.414 1.414l-2.121-2.121Zm2.121-14.85l1.414 1.415l-2.121 2.121l-1.414-1.414l2.121-2.121ZM23 11v2h-3v-2h3Z"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="option">
+            <label class="model-label">模 型</label>
+            <div class="site-selection">
+
+
+                <div class="custom-dropdown">
+         <span class="dropdown-btn" id="dropdownBtn">请选择<span id="arrowIcon">
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"
+         class="text-2xl iconify iconify--ri" width="1em" height="1em" viewBox="0 0 20 20">
+      <path fill="currentColor" d="m12 13.171l4.95-4.95l1.414 1.415L12 16L5.636 9.636L7.05 8.222l4.95 4.95Z"></path>
+    </svg>
+  </span></span>
+                    <div class="dropdown-content" id="siteSelectDiv">
+                        <div data-value="12" onclick="getOptionValue(this)" class="default-option" title="【推荐】 速度快 相对稳定">gpt-3.5-pro</div>
+                        <div data-value="15" onclick="getOptionValue(this)" title="【推荐】 清华大模型 对中文有更好的理解 无限制">chatglm</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal" onclick="handleClickOutside(event)">
+    <div id="niticemodelcontent" class="modal-content">
+        <div class="modal-header">
+            <div class="arco-modal-title arco-modal-title-align-center">[[etitle]]</div>
+            <span id="closeModal1" class="close" onclick="event.stopPropagation(); closeModal();">
+                <svg viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g stroke="none" stroke-width="1" fill-rule="evenodd">
+                  <g fill-rule="nonzero">
+                      <path d="M2.08859116,2.2156945 L2.14644661,2.14644661 C2.32001296,1.97288026 2.58943736,1.95359511 2.7843055,2.08859116 L2.85355339,2.14644661 L6,5.293 L9.14644661,2.14644661 C9.34170876,1.95118446 9.65829124,1.95118446 9.85355339,2.14644661 C10.0488155,2.34170876 10.0488155,2.65829124 9.85355339,2.85355339 L6.707,6 L9.85355339,9.14644661 C10.0271197,9.32001296 10.0464049,9.58943736 9.91140884,9.7843055 L9.85355339,9.85355339 C9.67998704,10.0271197 9.41056264,10.0464049 9.2156945,9.91140884 L9.14644661,9.85355339 L6,6.707 L2.85355339,9.85355339 C2.65829124,10.0488155 2.34170876,10.0488155 2.14644661,9.85355339 C1.95118446,9.65829124 1.95118446,9.34170876 2.14644661,9.14644661 L5.293,6 L2.14644661,2.85355339 C1.97288026,2.67998704 1.95359511,2.41056264 2.08859116,2.2156945 L2.14644661,2.14644661 L2.08859116,2.2156945 Z"></path>
+                  </g>
+              </g>
+          </svg>
+            </span>
+        </div>
+        <div class="modal-body">
+            <div class="timeline">
+                <div class="timeline-event">
+                    <div class="event" v-for="(item,index) in reversedTipsList" :key="item.id">
+                        <div class="timeline-icon"></div>
+                        <span class="timeline-description" style="font-size: 12px; margin-top: 4px;" v-html="item.tips"></span>
+                        <div class="timeline-date">[[item.time]]</div>
+                        <img v-if="item.img" class="timeline-img" :src="item.img" width="150px" height="150px" alt="分享的图片"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="acknowledged" class="right-bottom-button">[[acknowledged]]</button>
+        </div>
+    </div>
+</div>
+
+<script src="../static/js/vue2p.js"></script>
+<script src="../static/js/methods.js"></script>
+<script>
+    const app = new Vue({
+        el: '#app1',
+        delimiters: ['[[', ']]'],
+        data: {
+            opList: [
+                {id: 1, divid: 'headerBtn', name: 'Headers 转换', method: headersTransform},
+                {id: 2, divid: 'cookieBtn', name: 'Cookie 转换', method: cookieTransform},
+                {id: 3, divid: 'curlBtn', name: 'Curl 转 requests', method: curlTransform},
+                {id: 4, divid: 'rsaBtn', name: 'Pwd 密码解密', method: rsaTransform},
+                {id: 5, divid: 'dataBtn', name: 'TaskId 提取参数', method: dataTransform},
+                {id: 6, divid: 'smsBtn', name: 'Sms 提取验证码', method: smsTransform},
+                {id: 7, divid: 'transBtn', name: 'AI 翻 译', method: transTransform},
+                {id: 8, divid: 'signBtn', name: 'Work 时间计算', method: signTransform},
+                {id: 9, divid: 'ocrBtn', name: 'OCR 文字识别', method: ocrTransform},
+                {id: 10, divid: 'chatBtn', name: 'ChatGPT', method: null},
+            ],
+            currentMethod: null,
+            selectedMenu: localStorage.getItem('selectedMenu') || '',
+            obj: {
+                input: "",
+                inputImg: "",
+                output: "",
+                debounceTimer: null
+            },
+            inputImgShow: false,
+            inputTexShow: true,
+            outputTexShow: true,
+            div3Show: true,
+            div4Show: true,
+            div5Show: false,
+            div6Show: false,
+        },
+        methods: {
+            getMethodByDivId(divid) {
+                const op = this.opList.find(op => op.divid === divid);
+                return op ? op.method : null;
+            },
+            runFn(divid) {
+                this.selectedMenu = divid;
+                localStorage.setItem('selectedMenu', divid);
+                this.currentMethod = this.getMethodByDivId(divid);
+                const storedInput = localStorage.getItem(divid + '_input');
+                const storedOutput = localStorage.getItem(divid + '_output');
+                if (divid === 'chatBtn') {
+                    this.div3Show = false
+                    this.div4Show = false
+                    this.inputImgShow = false
+                    this.div5Show = true
+                    this.div6Show = true
+                } else {
+                    this.div3Show = true
+                    this.div4Show = true
+                    this.div5Show = false
+                    this.div6Show = false
+                    this.outputTexShow = true
+                    if (divid === 'ocrBtn') {
+                        this.inputImgShow = true
+                        this.inputTexShow = false
+                        this.obj.inputImg = '';
+                        this.obj.output = ""
+                    } else {
+                        this.inputTexShow = true
+                        this.inputImgShow = false
+                        if (storedInput !== null) {
+                            this.obj.input = storedInput;
+                        } else {
+                            this.obj.input = ""
+                        }
+                        if (storedOutput !== null) {
+                            this.obj.output = storedOutput;
+                        } else {
+                            this.obj.output = ""
+                        }
+                        if (divid === 'smsBtn' && this.obj.input) {
+                            layer.msg('刷新短信中.....', {
+                                time: 500, // 设置显示时间，单位为毫秒
+                                // skin: getLayerSkin(), // 设置样式
+                                offset: '100px', // 设置距离顶部的距离
+                                icon: 1,
+                            });
+                            this.handleDebouncedChange(this.obj.input)
+                        }
+                    }
+                }
+            },
+            handlePaste(event) {
+                const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                for (const item of items) {
+                    if (item.type.indexOf('image') === 0) {
+                        const blob = item.getAsFile();
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.obj.inputImg = `<img src="${e.target.result}" alt="">`;
+                            // 使用 $nextTick 确保在 DOM 更新后执行
+                            this.$nextTick(() => {
+                                this.handleDebouncedChange(this.obj.inputImg);
+                            });
+                        };
+                        reader.readAsDataURL(blob);
+                    }
+                }
+            }
+            ,
+            handleDebouncedChange(newValue) {
+                clearTimeout(this.debounceTimer);
+                this.debounceTimer = setTimeout(async () => {
+                    try {
+                        const output = await this.currentMethod(newValue);
+                        this.obj.output = output;
+                        if (!['ocrBtn', 'transBtn'].includes(this.selectedMenu)) {
+                            localStorage.setItem(this.selectedMenu + '_input', newValue);
+                            localStorage.setItem(this.selectedMenu + '_output', output);
+                        }
+
+                    } catch (error) {
+                        console.error('执行失败:', error);
+                        this.obj.output = '';
+                    }
+                }, 100);
+            },
+            clear() {
+                this.obj.input = '';
+                this.obj.output = '';
+                localStorage.removeItem(this.selectedMenu + '_input');
+                localStorage.removeItem(this.selectedMenu + '_output');
+                if (this.selectedMenu === 'chatBtn') {
+                    confirmBox.style.display = 'block';
+                    confirmBox.classList.add('show');
+                    yesBtn.addEventListener('click', () => {
+                        confirmBox.classList.remove('show');
+                        deleteMessages();
+                    });
+                    noBtn.addEventListener('click', () => {
+                        confirmBox.classList.remove('show');
+                    });
+                }
+                if (this.selectedMenu === 'ocrBtn') {
+                    this.obj.inputImg = '';
+                }
+            },
+            async copy() {
+                if (this.obj.output) {
+                    try {
+                        await navigator.clipboard.writeText(this.obj.output);
+                        layer.msg('复制成功!', {
+                            time: 500,
+                            offset: '100px',
+                            icon: 1,
+                        });
+                    } catch (err) {
+                        console.log(err)
+                    }
+                }
+            }
+
+
+        },
+        watch: {
+            'obj.input': {
+                handler(newValue) {
+                    this.handleDebouncedChange(newValue);
+                },
+                deep: true
+            }
+        },
+        mounted() {
+            this.runFn(this.selectedMenu)
+        }
+
+
+    })
+    const app1 = new Vue({
+        el: '#myModal',
+        delimiters: ['[[', ']]'],
+        data: {
+            tipsList: [
+                {id: 1, tips: '😘😘【打赏】请我喝咖啡', time: '', img: '../static/img/shoukuan.jpg'},
+                {id: 2, tips: `🎁🎁【导航】更多ai对话前往<a target="_blank" href="https://ai.chat250.top"><span class="text-blue-500">https://ai.chat250.top</span></a>体验。`, time: '2023-09-01', img: null},
+                {id: 3, tips: '🔐🔐【Beta】重构部分前端代码(采用Vue框架)提高性能', time: '2023-12-16', img: null},
+            ],
+            etitle:"温馨提醒",
+            acknowledged:"我知道了, 24小时不再弹出"
+        },
+        computed: {
+            reversedTipsList() {
+                return this.tipsList.slice().reverse();
+            },
+        },
+    })
+</script>
+<script src="../static/js/markmin.js"></script>
+<script src="../static/js/mark.js"></script>
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/layer.js"></script>
+<script src="../static/js/commen.js"></script>
+<script src="../static/js/cloudjs.js"></script>
+
+
+</body>
+</html>
