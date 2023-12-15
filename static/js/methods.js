@@ -98,6 +98,9 @@ function curlTransform(inputText) {
 function dataTransform(inputText) {
     return new Promise((resolve, reject) => {
         inputText = inputText.trim();
+        if (!inputText) {
+            return;
+        }
         const url = '/tool/d/';
         fetch(url + inputText)
             .then(response => {
@@ -123,6 +126,9 @@ function dataTransform(inputText) {
 function smsTransform(inputText) {
     return new Promise((resolve, reject) => {
         inputText = inputText.trim();
+        if (!inputText) {
+            return;
+        }
         const url = '/tool/s/';
         fetch(url + inputText)
             .then(response => {
@@ -140,8 +146,6 @@ function smsTransform(inputText) {
                 console.error('There was a problem with the fetch operation:', error);
                 reject(error);
             });
-
-        localStorage.setItem('sjh', inputText);
     });
 }
 
@@ -150,6 +154,9 @@ function smsTransform(inputText) {
 function transTransform(inputText) {
     return new Promise((resolve, reject) => {
         inputText = inputText.trim();
+        if (!inputText) {
+            return;
+        }
         const url = '/tool/t';
         fetch(url, {
             method: 'POST',

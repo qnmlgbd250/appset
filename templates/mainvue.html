@@ -289,9 +289,8 @@
                         }
                         if (divid === 'smsBtn' && this.obj.input) {
                             layer.msg('刷新短信中.....', {
-                                time: 500, // 设置显示时间，单位为毫秒
-                                // skin: getLayerSkin(), // 设置样式
-                                offset: '100px', // 设置距离顶部的距离
+                                time: 500,
+                                offset: '100px',
                                 icon: 1,
                             });
                             this.handleDebouncedChange(this.obj.input)
@@ -307,7 +306,6 @@
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             this.obj.inputImg = `<img src="${e.target.result}" alt="">`;
-                            // 使用 $nextTick 确保在 DOM 更新后执行
                             this.$nextTick(() => {
                                 this.handleDebouncedChange(this.obj.inputImg);
                             });
