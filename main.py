@@ -1723,5 +1723,82 @@ async def get_360cookie_by_redis():
     return token
 
 
+@app.get("/dog")
+async def get_dg():
+    random_uuid = uuid.uuid4()
+    random_uuid = str(random_uuid)
+    email = get_ramdom_email()
+    try:
+        headers = {
+            "authority": "api.shadog.net",
+            "accept": "application/json, text/plain, */*",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "content-type": "application/json",
+            "origin": "https://xundog.net",
+            "referer": "https://xundog.net/",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
+            "x-identifier": random_uuid,
+            "x-organization": "dogxx",
+            "x-platform": "web",
+            "x-source": "{\"channel\":\"official\",\"mr\":\"official\"}",
+            "x-web": "true"
+        }
+        url = "https://api.shadog.net/api/v1/captcha/email"
+        data = {
+            "captcha": {
+                "answer": "string",
+                "email": email,
+                "id": "string",
+                "scene": "email.register"
+            }
+        }
+        data = json.dumps(data, separators=(',', ':'))
+        response = requests.post(url, headers=headers, data=data, proxies=PROXIES)
+
+        print(response.json())
+        id_ = response.json()['data']['id']
+
+        code = get_email_code(email)
+        code = re.findall(r'\d+', code['body']['text'])[0]
+        print(code)
+
+        headers = {
+            "authority": "api.shadog.net",
+            "accept": "application/json, text/plain, */*",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "content-type": "application/json",
+            "origin": "https://xundog.net",
+            "referer": "https://xundog.net/",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
+            "x-identifier": random_uuid,
+            "x-organization": "dogxx",
+            "x-platform": "web",
+            "x-source": "{\"channel\":\"official\",\"mr\":\"official\"}",
+            "x-web": "true"
+        }
+        url = "https://api.shadog.net/api/v1/member/register"
+        data = {
+            "email": email,
+            "invite_code": "126902",
+            "password": email,
+            "captcha": {
+                "answer": code,
+                "scene": "email.register",
+                "email": email,
+                "id": id_
+            },
+            "method": "email-password"
+        }
+        data = json.dumps(data, separators=(',', ':'))
+        response = requests.post(url, headers=headers, data=data, proxies=PROXIES)
+
+        print(response.json())
+        if response.json().get("code") == 0:
+            return {"cd":200,"user":email}
+    except Exception as e:
+        print(e)
+        return {"cd": 500, "msg": "获取失败"}
+
+
 if __name__ == '__main__':
     uvicorn.run('main:app', host="0.0.0.0", port=20235, reload=True)

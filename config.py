@@ -6,6 +6,11 @@ import send_msg
 import logging
 import requests
 from dotenv import load_dotenv
+from functools import wraps
+import time
+import string
+import random
+import uuid
 
 load_dotenv(".env")
 
@@ -418,3 +423,58 @@ SITE_CONFIF_DICT = {
     },
 
 }
+
+
+def retry_decorator(max_retries=3, delay=1):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for i in range(max_retries):
+                try:
+                    result = func(*args, **kwargs)
+                    if result is False:
+                        raise ValueError("函数执行返回非预期")
+                except Exception as e:
+                    if i < max_retries - 1:
+                        time.sleep(delay)
+                        logging.info(f'{func.__name__} 重试次数 {i+1}, 异常信息：{str(e)}')
+                        continue
+                    else:
+                        raise
+                else:
+                    return result
+        return wrapper
+    return decorator
+
+def get_ramdom_email():
+    email_af = ['nqmo.com', 'qabq.com', 'uuf.me', "yzm.de", "end.tw"]
+    email_af_str = random.choice(email_af)
+    letters = string.ascii_lowercase
+    email_be = ''.join(random.choice(letters) for i in range(7))
+    email = f"{email_be}@{email_af_str}"
+    logging.info(email)
+    return email
+
+@retry_decorator(max_retries=3,delay=2)
+def get_email_code(email):
+    session1 = requests.Session()
+    headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer undefined"
+    }
+    url = "https://api.mail.cx/api/v1/auth/authorize_token"
+    authorization = session1.post(url, headers=headers,proxies=PROXIES,timeout=10).text
+    authorization = str(authorization[1:-2])
+    headers.update({
+        "Authorization": "Bearer " + authorization
+    })
+    url = f"https://api.mail.cx/api/v1/mailbox/{email}"
+    respons = session1.get(url, headers=headers, proxies=PROXIES,timeout=10)
+    logging.info(respons.json())
+
+    mid = respons.json()[0]['id']
+
+    url = f"https://api.mail.cx/api/v1/mailbox/{email}/{mid}"
+    response = session1.get(url, headers=headers, proxies=PROXIES,timeout=10)
+
+    return response.json()
