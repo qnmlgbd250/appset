@@ -455,7 +455,7 @@ def get_ramdom_email():
     logging.info(email)
     return email
 
-@retry_decorator(max_retries=3,delay=5)
+@retry_decorator(max_retries=3,delay=9)
 def get_email_code(email):
     session1 = requests.Session()
     headers = {
